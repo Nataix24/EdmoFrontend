@@ -17,7 +17,7 @@ const createScene = async function () {
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
   //Adding an Arc Rotate Camera
-  var camera = new BABYLON.ArcRotateCamera("Camera", 0.4, 0.9, 160, BABYLON.Vector3.Zero(), scene);
+  var camera = new BABYLON.ArcRotateCamera("Camera", 0.4, 0.9, 260, BABYLON.Vector3.Zero(), scene);
   camera.attachControl(canvas, false);
 
   // Load the model
@@ -28,10 +28,12 @@ const createScene = async function () {
     // Set the target of the camera to the first imported mesh
 
     camera.target = newMeshes[0]; // Let the camera target the origin of the entire model
-
-    importedModel = newMeshes[2]; // The part we want to control is the arm, not the whole thing
+    importedModel = newMeshes[1]; // The part we want to control is the arm, not the whole thing
     importedModel.rotationQuaternion = null; // Babylon will prefer the quartenion if it is present, so we null that out
-
+    const Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
+    // importedModel.rotation.z =0* Deg2RadFactor;
+    importedModel.rotation.y =-90* Deg2RadFactor;
+    importedModel.position.z = -63; // Adjust the value as needed
     console.log(newMeshes);
     // Now that the model is loaded, you can manipulate its properties
   }
@@ -77,7 +79,7 @@ const createScene = async function () {
   }
 
   //Create a Slider
-  function createSlider(minimum, maximum, initialValue, topOffset, leftText, topText) {
+  function createSlider(minimum, maximum, initialValue, topOffset, leftText, topText,stringFunctionDecider) {
     const slider = new GUI.Slider();
     slider.minimum = minimum; // Set the minimum value
     slider.maximum = maximum; // Set the maximum value
@@ -98,14 +100,40 @@ const createScene = async function () {
     header.color = "white";
     advancedTexture.addControl(header);
 
-    slider.onValueChangedObservable.add(function (value) {
-      header.text = value.toFixed(1);
-      if (importedModel) {
-        var Deg2RadFactor = 3.1415 / 180; // Babylon rotation is in radians
-        importedModel.rotation.z = value * Deg2RadFactor;
-        console.log("New Rotation Y:", importedModel.rotation.z);
-      }
-    });
+    if(stringFunctionDecider=="Position") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
+          importedModel.rotation.x = value * Deg2RadFactor;
+          console.log("New Rotation Y:", importedModel.rotation.x);
+        }
+      });
+    }
+    else if(stringFunctionDecider=="Frequency") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          console.log("Frequency value: ", value);
+        }
+      });
+    }
+    else if(stringFunctionDecider=="Amplitude") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          console.log("Frequency value: ", value);
+        }
+      });
+    }
+    else if(stringFunctionDecider=="Relation") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          console.log("Frequency value: ", value);
+        }
+      });
+    }
     // Add the slider to the advanced dynamic texture
     advancedTexture.addControl(slider);
   }
@@ -123,19 +151,57 @@ const createScene = async function () {
     header.outlineColor = "#6B1919FF"; // Set the outline color
     advancedTexture.addControl(header);
   }
+  // Create an image on the overlay
+  const image = new GUI.Image("robotImage", "/Models/robot1.png");
+  image.width = 0.2; // Set the width of the image
+  image.height = 0.4; // Set the height of the image
+  image.top=280;
+  image.left=-750;
+  advancedTexture.addControl(image);
 
+// Array to store paths of individual robot images
+  const robotImages = [
+    "/Models/robot1.png",
+    "/Models/robot2.png",
+    "/Models/robot3.png",
+    "/Models/robot4.png"
+  ];
+
+  // Animation logic
+    let currentRobotIndex = 0;
+    let timeElapsed = 0; // Variable to track time
+
+    scene.onBeforeRenderObservable.add(() => {
+      // Update the image every 500 milliseconds (adjust as needed)
+      timeElapsed += scene.getEngine().getDeltaTime();
+      if (timeElapsed > 500) {
+        // Change the image to the next robot in the array
+        image.source = robotImages[currentRobotIndex];
+
+        // Increment the robot index for the next iteration
+        currentRobotIndex = (currentRobotIndex + 1) % robotImages.length;
+
+        // Reset the time elapsed
+        timeElapsed = 0;
+      }
+    });
 
   createRectangle(0.2, "600px");
-  createSlider(-90, 90, 0, "-190px", "830px", "-220px");
-  createSlider(0, 90, 0, "-100px", "830px", "-130px");
-  createSlider(0, 90, 0, "-10px", "830px", "-40px");
+  createSlider(-90, 90, 0, "-190px", "830px", "-220px","Position");
+  createSlider(0, 90, 0, "-100px", "830px", "-130px","Frequency");
+  createSlider(0, 90, 0, "-10px", "830px", "-40px","Amplitude");
+  createSlider(0, 90, 0, "80px", "830px", "50px","Relation");
   createLabel("Position", "683px", "-220px");
   createLabel("Frequency", "683px", "-130px");
-  createLabel("Amplitude", "683px", "-40px");
+  createLabel("Amplitude", "683px", "-40px")
+  createLabel("Relation", "683px", "50px");
+
 
 
   return scene;
 }
+// Function to handle window resize
+
 
 //Assigning it to a variable to use later on in the render loop
 const scene = await createScene();
@@ -148,3 +214,4 @@ engine.runRenderLoop(function () {
 window.addEventListener('resize', function () {
   engine.resize();
 });
+
