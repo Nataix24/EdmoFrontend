@@ -1,4 +1,5 @@
 // Importing Babylon.js
+//new
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D'
@@ -10,6 +11,13 @@ const canvas = document.getElementById('renderCanvas');
 const engine = new BABYLON.Engine(canvas);
 const taskManager = new TaskManager();
 var importedModel = null;
+
+// Connection status
+var connect =false;
+
+// Model color
+var colorMesh;
+
 
 /**
  * Method that defines all the tasks
@@ -23,6 +31,21 @@ function defineTasks() {
   taskManager.addTask(task1);
   taskManager.addTask(task2);
   taskManager.addTask(task3);
+}
+
+// Set connection status
+function setConnectSuccess(){
+  connect =true;
+}
+
+// Set color of mesh before scene creation
+function setColor(color){
+colorMesh =color;
+}
+
+// Function to refresh the webpage
+function refreshPage() {
+  location.reload(true); // Pass true to force a reload from the server, ignoring the cache
 }
 
 /**
@@ -78,56 +101,6 @@ function createLabel(text, left, top,outlineColor,color) {
  * @param header - the label that showcase the value of the slider
  * @returns {Slider}
  */
-function createSlider(minimum, maximum, initialValue, topOffset,stringFunctionDecider,header) {
-  const slider = new GUI.Slider();
-  slider.minimum = minimum; // Set the minimum value
-  slider.maximum = maximum; // Set the maximum value
-  slider.value = initialValue; // Set the initial value
-  slider.width = 0.17;
-  slider.height = "27px";
-  slider.top = topOffset; // Set the position below the rectangle
-  slider.left = "1480px"
-  slider.background = "#4E3650FF";
-  slider.color = "#512858FF";
-  slider.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
-
-  header.text=slider.value;
-  if(stringFunctionDecider=="Position") {
-    slider.onValueChangedObservable.add(function (value) {
-      header.text = value.toFixed(1);
-      if (importedModel) {
-        var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
-        importedModel.rotation.x = value * Deg2RadFactor;
-        console.log("New Rotation Y:", importedModel.rotation.x);
-      }
-    });
-  }
-  else if(stringFunctionDecider=="Frequency") {
-    slider.onValueChangedObservable.add(function (value) {
-      header.text = value.toFixed(1);
-      if (importedModel) {
-        console.log("Frequency value: ", value);
-      }
-    });
-  }
-  else if(stringFunctionDecider=="Amplitude") {
-    slider.onValueChangedObservable.add(function (value) {
-      header.text = value.toFixed(1);
-      if (importedModel) {
-        console.log("Frequency value: ", value);
-      }
-    });
-  }
-  else if(stringFunctionDecider=="Relation") {
-    slider.onValueChangedObservable.add(function (value) {
-      header.text = value.toFixed(1);
-      if (importedModel) {
-        console.log("Frequency value: ", value);
-      }
-    });
-  }
-  return slider;
-}
 
 /**
  *This funciton handles first - 3D model Rendering and second - GUI elements in 2D space
@@ -135,6 +108,7 @@ function createSlider(minimum, maximum, initialValue, topOffset,stringFunctionDe
 const createScene = async function () {
   //Define a scene
   const scene = new BABYLON.Scene(engine);
+
   /**
    * 3D Element Rendering on web
    */
@@ -144,7 +118,7 @@ const createScene = async function () {
   camera.attachControl(canvas, false);
 
   // Load the model
-  var importedModel;
+  //var importedModel;
   BABYLON.SceneLoader.ImportMesh("", "/Models/", "untitled.glb", scene, function (newMeshes) {
     camera.target = newMeshes[0]; // Let the camera target the origin of the entire model
     importedModel = newMeshes[1]; // The part we want to control is the arm, not the whole thing
@@ -153,6 +127,20 @@ const createScene = async function () {
     importedModel.rotation.y =-90* Deg2RadFactor;
     importedModel.position.z = -63;
     console.log(newMeshes);
+
+
+    // Iterate through meshes in model
+    newMeshes.forEach(function (mesh) {
+      // Create a new material
+      var material = new BABYLON.StandardMaterial("material", scene);
+
+      // Set color
+      material.diffuseColor = colorMesh; // Red color, change as needed
+
+      // Apply the material
+      mesh.material = material;
+  });
+
   }
     , function (event) {
       // Loading progress
@@ -205,16 +193,80 @@ const createScene = async function () {
   // creating rectangle menu
   const rect = createRectangle(0.2,"600px");
   advancedTexture.addControl(rect);
+  ///////////////////
+  function createSlider(minimum, maximum, initialValue, topOffset,stringFunctionDecider,header) {
+    const slider = new GUI.Slider();
+    slider.minimum = minimum; // Set the minimum value
+    slider.maximum = maximum; // Set the maximum value
+    slider.value = initialValue; // Set the initial value
+    slider.width = 0.17;
+    slider.height = "27px";
+    slider.top = topOffset; // Set the position below the rectangle
+    slider.left = "1480px"
+    slider.background = "#4E3650FF";
+    slider.color = "#512858FF";
+    slider.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
+  
+    header.text=slider.value;
+    if(stringFunctionDecider=="Position") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
+          importedModel.rotation.x = value * Deg2RadFactor;
+          console.log("New Rotation Y:", importedModel.rotation.x);
+        }
+      });
+    }
+    else if(stringFunctionDecider=="Frequency") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          console.log("Frequency value: ", value);
+        }
+      });
+    }
+    else if(stringFunctionDecider=="Amplitude") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          console.log("Frequency value: ", value);
+        }
+      });
+    }
+    else if(stringFunctionDecider=="Relation") {
+      slider.onValueChangedObservable.add(function (value) {
+        header.text = value.toFixed(1);
+        if (importedModel) {
+          console.log("Frequency value: ", value);
+        }
+      });
+    }
+    return slider;
+  }
 
   // creating labels
   const positionLabel = createLabel("Position", "683px", "-220px","#6B1919FF","#5A1B83FF");
   const frequencyLabel = createLabel("Frequency", "683px", "-130px","#6B1919FF","#5A1B83FF");
   const amplitudeLabel = createLabel("Amplitude", "683px", "-40px","#6B1919FF","#5A1B83FF")
   const relationLabel =  createLabel("Relation", "683px", "50px","#6B1919FF","#5A1B83FF");
+  const statusLabel =  createLabel("STATUS", "683px", "200px","#6B1919FF","#5A1B83FF");
+
+  //Connection label based on the connection status at creation
+  var connectLabel;
+
+  if (connect){
+    connectLabel = createLabel("CONNECTED", "683px", "230px","#90EE90","#90EE90");
+  }else{
+    connectLabel = createLabel("Not connected", "683px", "230px","#FFA500","#FFA500")
+  }
+
   advancedTexture.addControl(positionLabel);
   advancedTexture.addControl(frequencyLabel);
   advancedTexture.addControl(amplitudeLabel);
   advancedTexture.addControl(relationLabel);
+  advancedTexture.addControl(statusLabel);
+  advancedTexture.addControl(connectLabel);
 
   //creating sliders and sliders labels
   var slider1Label = createLabel(0,"830px","-220px","white","white");
@@ -240,18 +292,42 @@ const createScene = async function () {
   return scene;
 }
 
-// Function to handle window resize
+//SET COLOR OF MODEL BEFORE SCENE CREATION
+setColor(new BABYLON.Color3(1, 0, 0));
+//new BABYLON.Color3(0, 1, 0);
+//new BABYLON.Color3(1, 0, 0);
+//new BABYLON.Color3(0, 0, 1);
 
+//CHANGE STATUS OF CONNECTION BEFORE SCENE RENDER
+setConnectSuccess();
 
-//Assigning it to a variable to use later on in the render loop
+//Create scene
 const scene = await createScene();
+
+//This resize function sccures that with resizing the window the objects wont change their shapes
+// ----- To mess with this, in style.css change width and height to percentage
+
+// window.addEventListener('resize', function () {
+//   engine.resize();
+// });
 
 engine.runRenderLoop(function () {
   scene.render();
 });
 
-//This resize function sccures that with resizing the window the objects wont change their shapes
-window.addEventListener('resize', function () {
-  engine.resize();
-});
+// Messing around with resizing
+
+// window.addEventListener("resize", function () {
+//   //advancedTexture.scaleTo(engine.getRenderWidth(), engine.getRenderHeight());
+//   //advancedTexture.scaleTo(advancedTexture.getScene()!.getEngine().getRenderWidth(), advancedTexture.getScene()!.getEngine().getRenderHeight());
+//   engine.setSize(window.innerWidth, window.innerHeight);
+//   // engine.resize();
+//   this.forceUpdate();
+//   //advancedTexture.markAsDirty(); // Mark GUI as dirty to trigger update
+// });
+
+
+//cd C:\Users\schre\OneDrive\Desktop\EdmoFrontend-main
+
+
 

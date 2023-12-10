@@ -7,7 +7,13 @@ html,body{
 }
 
 #renderCanvas{
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
+
+  /* box-sizing: border-box; */
+
+  /* Resizes correctly, but control of vecotors are lost */
+  width: 100vw; 
+  height: 100vh;
   touch-action: none;
 }
