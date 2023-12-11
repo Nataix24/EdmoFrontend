@@ -4,8 +4,11 @@ export class Task {
         this.completed = false;
     }
 
-    complete() {
+    completeTask() {
         this.completed = true;
+    }
+    notComplete() {
+        this.completed = false;
     }
 
     toString() {
@@ -32,6 +35,10 @@ export class TaskManager {
         } else {
             console.error('Invalid task index.');
         }
+    }
+    getTask(taskIndex) {
+        const task = this.tasks[taskIndex];
+        return task.toString();
     }
 
     listTasks() {

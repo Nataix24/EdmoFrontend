@@ -25,9 +25,9 @@ var colorMesh;
  */
 function defineTasks() {
   // Create instances of Task
-  const task1 = new Task('Complete assignment');
-  const task2 = new Task('Go for a run');
-  const task3 = new Task('Read a book');
+  const task1 = new Task('Find the parameters that will make the robot walk');
+  const task2 = new Task('Walk the robot to the mountain');
+  const task3 = new Task('make the robot run as fast as possible');
   // Add tasks to the TaskManager
   taskManager.addTask(task1);
   taskManager.addTask(task2);
@@ -55,15 +55,18 @@ function refreshPage() {
  * @param height - height of the rectangle
  * @returns {Rectangle}
  */
-function createRectangle(width, height) {
+function createRectangle(width, height,top,left,color) {
   // Create a rectangle
   const rect = new GUI.Rectangle();
   rect.widthInPixels = 400; // Set the width of the rectangle
   rect.height = height; // Set the height of the rectangle
+  rect.width=width;
   rect.background = "#9C5586FF"; // Set the desired background color
   rect.cornerRadius = 20; // Set the corner radius
-  rect.color = "#9C5586FF"; // Set the color of the rectangle
+  rect.color = color; // Set the color of the rectangle
   rect.alpha = 0.74;
+  rect.top=top;
+  rect.left=left;
   rect.autoScale = true; // Automatically fit children
   return rect;
 }
@@ -189,27 +192,58 @@ const createScene = async function () {
     "/Models/robot4.png"
   ];
 
-  // Animation logic
-  let currentRobotIndex = 0;
-  let timeElapsed = 0; // Variable to track time
+  //  Task logic
+  let isTaskPressed = false; //Defining a flag booblean for task toggling
+  let cloud;
+  let taskText;
+  //  for robot image clicking
+  image.onPointerClickObservable.add(() => {
+    // If the task is not displayed then create the task
+    if(!isTaskPressed) {
+      console.log("in create loop");
+      // Robot animation waving hand up
+      async function changeImagesWithDelay() {
+        for (let i = 0; i < robotImages.length; i++) {
+          image.source = robotImages[i];
 
-  scene.onBeforeRenderObservable.add(() => {
-    // Update the image every 500 milliseconds (adjust as needed)
-    timeElapsed += scene.getEngine().getDeltaTime();
-    if (timeElapsed > 500) {
-      // Change the image to the next robot in the array
-      image.source = robotImages[currentRobotIndex];
+          // Introduce a delay of 1000 milliseconds (1 second) before the next iteration
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+      }
+      changeImagesWithDelay();
+      //Create task frame
+      cloud = createRectangle("600px","300px",0,0,"white");
+      cloud.background="white";
+      advancedTexture.addControl(cloud);
 
-      // Increment the robot index for the next iteration
-      currentRobotIndex = (currentRobotIndex + 1) % robotImages.length;
+      //Adding text to the cloud
+      taskText=createLabel(taskManager.getTask(1),0,0,"black","black");
+      cloud.addControl(taskText);
 
-      // Reset the time elapsed
-      timeElapsed = 0;
+      isTaskPressed=true;
+    }
+    else if(isTaskPressed){
+      console.log("in dispose loop");
+      cloud.dispose();
+      isTaskPressed=false;
+      async function changeImagesWithDelay() {
+        for (let i = robotImages.length; i >= 0; i--) {
+          image.source = robotImages[i];
+
+          // Introduce a delay of 1000 milliseconds (1 second) before the next iteration
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+      }
+      changeImagesWithDelay();
     }
   });
 
+
+
+
+
   // creating rectangle menu
-  const rect = createRectangle(0.2, "600px");
+  const rect = createRectangle(0.2, "600px",0,0,"#9C5586FF");
   rect.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT; // Align to the left
   rect.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Align to the top
   rect.paddingRight = 40;
@@ -326,7 +360,7 @@ const createScene = async function () {
 };
 
 //SET COLOR OF MODEL BEFORE SCENE CREATION
-setColor(new BABYLON.Color3(1, 0, 0));
+setColor(new BABYLON.Color3(242/255.0, 187/255.0, 233/255.0));
 //new BABYLON.Color3(0, 1, 0);
 //new BABYLON.Color3(1, 0, 0);
 //new BABYLON.Color3(0, 0, 1);
