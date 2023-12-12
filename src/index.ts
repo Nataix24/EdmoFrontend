@@ -5,20 +5,24 @@ import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import { Task, TaskManager } from './taskMenager.js';
+import { EDMOClient } from './EDMOClient';
+import { Color3 } from '@babylonjs/core';
 // Assign canvas to a variable
-const canvas = document.getElementById('renderCanvas');
+const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 // Create instance of babylonjs class and pass the canvas to constructor
 // In this way we are telling the scene to render this canvas element
 const engine = new BABYLON.Engine(canvas);
 
+const client = new EDMOClient();
+
 const taskManager = new TaskManager();
-var importedModel = null;
+var importedModel: BABYLON.AbstractMesh;
 
 // Connection status
-var connect =false;
+var connect = false;
 
 // Model color
-var colorMesh;
+var colorMesh: Color3;
 
 /**
  * Method that defines all the tasks
@@ -40,13 +44,13 @@ function setConnectSuccess() {
 }
 
 // Set color of mesh before scene creation
-function setColor(color) {
+function setColor(color: Color3) {
   colorMesh = color;
 }
 
 // Function to refresh the webpage
 function refreshPage() {
-  location.reload(true); // Pass true to force a reload from the server, ignoring the cache
+  location.reload(); // Pass true to force a reload from the server, ignoring the cache
 }
 
 /**
@@ -55,19 +59,18 @@ function refreshPage() {
  * @param height - height of the rectangle
  * @returns {Rectangle}
  */
-function createRectangle(width, height,top,left,color) {
+function createRectangle(width: string | number, height: string | number, top: string | number, left: string | number, color: string) {
   // Create a rectangle
   const rect = new GUI.Rectangle();
   rect.widthInPixels = 400; // Set the width of the rectangle
   rect.height = height; // Set the height of the rectangle
-  rect.width=width;
+  rect.width = width;
   rect.background = "#9C5586FF"; // Set the desired background color
   rect.cornerRadius = 20; // Set the corner radius
   rect.color = color; // Set the color of the rectangle
   rect.alpha = 0.74;
-  rect.top=top;
-  rect.left=left;
-  rect.autoScale = true; // Automatically fit children
+  rect.top = top;
+  rect.left = left;
   return rect;
 }
 
@@ -80,9 +83,9 @@ function createRectangle(width, height,top,left,color) {
  * @param color
  * @returns {TextBlock}
  */
-function createLabel(text, left, top, outlineColor, color) {
+function createLabel(text: string | number, left: string | number, top: string | number, outlineColor: string, color: string) {
   var header = new GUI.TextBlock();
-  header.text = text;
+  header.text = text.toString();
   header.height = "30px";
   header.top = top;
   header.color = color;
@@ -125,7 +128,7 @@ const createScene = async function () {
   // Load the model
   //var importedModel;
   BABYLON.SceneLoader.ImportMesh("", "./Assets/Models/", "untitled.glb", scene, function (newMeshes) {
-    camera.target = newMeshes[0]; // Let the camera target the origin of the entire model
+    //camera.target = newMeshes[0]; // Let the camera target the origin of the entire model
     importedModel = newMeshes[1]; // The part we want to control is the arm, not the whole thing
     importedModel.rotationQuaternion = null; // Babylon will prefer the quartenion if it is present, so we null that out
     const Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
@@ -144,7 +147,7 @@ const createScene = async function () {
 
       // Apply the material
       mesh.material = material;
-  });
+    });
 
 
 
@@ -168,7 +171,8 @@ const createScene = async function () {
   );
 
   scene.registerBeforeRender(function () {
-    light.position = camera.position;
+    //light.position = camera.position;
+    // ^ How did this get written beats me, but it's not needed
   });
 
   /**
@@ -194,46 +198,48 @@ const createScene = async function () {
 
   //  Task logic
   let isTaskPressed = false; //Defining a flag booblean for task toggling
-  let cloud;
+  let cloud: GUI.Rectangle;
   let taskText;
   //  for robot image clicking
   image.onPointerClickObservable.add(() => {
     // If the task is not displayed then create the task
-    if(!isTaskPressed) {
+    if (!isTaskPressed) {
       console.log("in create loop");
       // Robot animation waving hand up
-      async function changeImagesWithDelay() {
+      const changeImagesWithDelay = async () => {
         for (let i = 0; i < robotImages.length; i++) {
           image.source = robotImages[i];
 
           // Introduce a delay of 1000 milliseconds (1 second) before the next iteration
           await new Promise(resolve => setTimeout(resolve, 500));
         }
-      }
+      };
+
       changeImagesWithDelay();
       //Create task frame
-      cloud = createRectangle("600px","300px",0,0,"white");
-      cloud.background="white";
+      cloud = createRectangle("600px", "300px", 0, 0, "white");
+      cloud.background = "white";
       advancedTexture.addControl(cloud);
 
       //Adding text to the cloud
-      taskText=createLabel(taskManager.getTask(1),0,0,"black","black");
+      taskText = createLabel(taskManager.getTask(1), 0, 0, "black", "black");
       cloud.addControl(taskText);
 
-      isTaskPressed=true;
+      isTaskPressed = true;
     }
-    else if(isTaskPressed){
+    else if (isTaskPressed) {
       console.log("in dispose loop");
       cloud.dispose();
-      isTaskPressed=false;
-      async function changeImagesWithDelay() {
+
+      isTaskPressed = false;
+      const changeImagesWithDelay = async () => {
         for (let i = robotImages.length; i >= 0; i--) {
           image.source = robotImages[i];
 
           // Introduce a delay of 1000 milliseconds (1 second) before the next iteration
           await new Promise(resolve => setTimeout(resolve, 500));
         }
-      }
+      };
       changeImagesWithDelay();
     }
   });
@@ -243,14 +249,14 @@ const createScene = async function () {
 
 
   // creating rectangle menu
-  const rect = createRectangle(0.2, "600px",0,0,"#9C5586FF");
+  const rect = createRectangle(0.2, "600px", 0, 0, "#9C5586FF");
   rect.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT; // Align to the left
   rect.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Align to the top
   rect.paddingRight = 40;
   advancedTexture.addControl(rect);
 
   ///////////////////
-  function createSlider(minimum, maximum, initialValue, topOffset, stringFunctionDecider, header) {
+  function createSlider(minimum: number, maximum: number, initialValue: number, topOffset: string | number, stringFunctionDecider: string, header: GUI.TextBlock) {
     const slider = new GUI.Slider();
     slider.minimum = minimum; // Set the minimum value
     slider.maximum = maximum; // Set the maximum value
@@ -264,11 +270,14 @@ const createScene = async function () {
     slider.paddingLeft = 20;
     slider.paddingRight = 20;
 
-    header.text = slider.value;
+    header.text = slider.value.toString();
     if (stringFunctionDecider == "Position") {
       slider.onValueChangedObservable.add(function (value) {
         header.text = value.toFixed(1);
         if (importedModel) {
+          if (client.ID >= 0)
+            client.sendMessage(`off ${value.toFixed(1)}`);
+
           var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
           importedModel.rotation.x = value * Deg2RadFactor;
           console.log("New Rotation Y:", importedModel.rotation.x);
@@ -287,7 +296,9 @@ const createScene = async function () {
       slider.onValueChangedObservable.add(function (value) {
         header.text = value.toFixed(1);
         if (importedModel) {
-          console.log("Frequency value: ", value);
+          if (client.ID >= 0)
+            client.sendMessage(`amp ${value.toFixed(1)}`);
+          console.log("Amplitude value: ", value);
         }
       });
     }
@@ -295,7 +306,7 @@ const createScene = async function () {
       slider.onValueChangedObservable.add(function (value) {
         header.text = value.toFixed(1);
         if (importedModel) {
-          console.log("Frequency value: ", value);
+          console.log("RElation value: ", value);
         }
       });
     }
@@ -360,7 +371,7 @@ const createScene = async function () {
 };
 
 //SET COLOR OF MODEL BEFORE SCENE CREATION
-setColor(new BABYLON.Color3(242/255.0, 187/255.0, 233/255.0));
+setColor(new BABYLON.Color3(242 / 255.0, 187 / 255.0, 233 / 255.0));
 //new BABYLON.Color3(0, 1, 0);
 //new BABYLON.Color3(1, 0, 0);
 //new BABYLON.Color3(0, 0, 1);
