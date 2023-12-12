@@ -59,12 +59,11 @@ function refreshPage() {
  * @param height - height of the rectangle
  * @returns {Rectangle}
  */
-function createRectangle(width: string | number, height: string | number, top: string | number, left: string | number, color: string) {
+function createRectangle(width: number, height: string | number, top: string | number, left: string | number, color: string) {
   // Create a rectangle
   const rect = new GUI.Rectangle();
-  rect.widthInPixels = 400; // Set the width of the rectangle
+  rect.widthInPixels = width; // Set the width of the rectangle
   rect.height = height; // Set the height of the rectangle
-  rect.width = width;
   rect.background = "#9C5586FF"; // Set the desired background color
   rect.cornerRadius = 20; // Set the corner radius
   rect.color = color; // Set the color of the rectangle
@@ -217,7 +216,7 @@ const createScene = async function () {
 
       changeImagesWithDelay();
       //Create task frame
-      cloud = createRectangle("600px", "300px", 0, 0, "white");
+      cloud = createRectangle(600, "300px", 0, 0, "white");
       cloud.background = "white";
       advancedTexture.addControl(cloud);
 
@@ -244,12 +243,8 @@ const createScene = async function () {
     }
   });
 
-
-
-
-
   // creating rectangle menu
-  const rect = createRectangle(0.2, "600px", 0, 0, "#9C5586FF");
+  const rect = createRectangle(400, "600px", 0, 0, "#9C5586FF");
   rect.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT; // Align to the left
   rect.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Align to the top
   rect.paddingRight = 40;
