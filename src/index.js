@@ -4,7 +4,7 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
-import { Task, TaskManager } from '/taskMenager.js';
+import { Task, TaskManager } from './taskMenager.js';
 // Assign canvas to a variable
 const canvas = document.getElementById('renderCanvas');
 // Create instance of babylonjs class and pass the canvas to constructor
@@ -124,7 +124,7 @@ const createScene = async function () {
 
   // Load the model
   //var importedModel;
-  BABYLON.SceneLoader.ImportMesh("", "/Models/", "untitled.glb", scene, function (newMeshes) {
+  BABYLON.SceneLoader.ImportMesh("", "./Assets/Models/", "untitled.glb", scene, function (newMeshes) {
     camera.target = newMeshes[0]; // Let the camera target the origin of the entire model
     importedModel = newMeshes[1]; // The part we want to control is the arm, not the whole thing
     importedModel.rotationQuaternion = null; // Babylon will prefer the quartenion if it is present, so we null that out
@@ -177,7 +177,7 @@ const createScene = async function () {
   const advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
   // Create an image on the overlay
-  const image = new GUI.Image("robotImage", "/Models/robot1.png");
+  const image = new GUI.Image("robotImage", "./Assets/Textures/robot1.png");
   image.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
   image.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_BOTTOM; // Align to the top
   image.widthInPixels = 300;
@@ -186,10 +186,10 @@ const createScene = async function () {
 
   // Array to store paths of individual robot images
   const robotImages = [
-    "/Models/robot1.png",
-    "/Models/robot2.png",
-    "/Models/robot3.png",
-    "/Models/robot4.png"
+    "./Assets/Textures/robot1.png",
+    "./Assets/Textures/robot2.png",
+    "./Assets/Textures/robot3.png",
+    "./Assets/Textures/robot4.png"
   ];
 
   //  Task logic
