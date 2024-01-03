@@ -9,6 +9,7 @@ import { Color3 } from '@babylonjs/core';
 //importing GUI customized classes
 import { RecrangleFactory } from './GUIComponents/RecrangleFactory';
 import { LabelFactory } from './GUIComponents/LabelFactory';
+import { SliderFactory } from "./GUIComponents/SliderFactory";
 // Create an instance of imported gui classes
 const rectangleMenu = new RecrangleFactory(400, "600px", 0, 0, "#9C5586FF");
 
@@ -195,64 +196,6 @@ const createScene = async function () {
   rectangleMenu.createRectangle();
   advancedTexture.addControl(rectangleMenu);
 
-  ///////////////////
-  function createSlider(minimum: number, maximum: number, initialValue: number, topOffset: string | number, stringFunctionDecider: string, header: GUI.TextBlock) {
-    const slider = new GUI.Slider();
-    slider.minimum = minimum; // Set the minimum value
-    slider.maximum = maximum; // Set the maximum value
-    slider.value = initialValue; // Set the initial value
-    slider.width = 1;
-    slider.height = "27px";
-    slider.top = topOffset; // Set the position below the rectangle
-    slider.background = "#4E3650FF";
-    slider.color = "#512858FF";
-    slider.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER; // Align to the left
-    slider.paddingLeft = 20;
-    slider.paddingRight = 20;
-
-    header.text = slider.value.toString();
-    if (stringFunctionDecider == "Position") {
-      slider.onValueChangedObservable.add(function (value) {
-        header.text = value.toFixed(1);
-        if (importedModel) {
-          if (client.ID >= 0)
-            client.sendMessage(`off ${value.toFixed(1)}`);
-
-          var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
-          importedModel.rotation.x = value * Deg2RadFactor;
-          console.log("New Rotation Y:", importedModel.rotation.x);
-        }
-      });
-    }
-    else if (stringFunctionDecider == "Frequency") {
-      slider.onValueChangedObservable.add(function (value) {
-        header.text = value.toFixed(1);
-        if (importedModel) {
-          console.log("Frequency value: ", value);
-        }
-      });
-    }
-    else if (stringFunctionDecider == "Amplitude") {
-      slider.onValueChangedObservable.add(function (value) {
-        header.text = value.toFixed(1);
-        if (importedModel) {
-          if (client.ID >= 0)
-            client.sendMessage(`amp ${value.toFixed(1)}`);
-          console.log("Amplitude value: ", value);
-        }
-      });
-    }
-    else if (stringFunctionDecider == "Relation") {
-      slider.onValueChangedObservable.add(function (value) {
-        header.text = value.toFixed(1);
-        if (importedModel) {
-          console.log("RElation value: ", value);
-        }
-      });
-    }
-    return slider;
-  }
-
   const positionLabel = new LabelFactory("Position", "0px", "-220px", "#6B1919FF", "#5A1B83FF").createLabel();
   positionLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
   const frequencyLabel = new LabelFactory("Frequency", "0px", "-130px", "#6B1919FF", "#5A1B83FF").createLabel();
@@ -264,20 +207,11 @@ const createScene = async function () {
   const statusLabel = new LabelFactory("STATUS", "0px", "200px", "#6B1919FF", "#5A1B83FF").createLabel();
 
   //Connection label based on the connection status at creation
-  var connectLabel;
-
-  if (connect) {
-    connectLabel = new LabelFactory("CONNECTED", "0px", "230px", "#90EE90", "#90EE90").createLabel();
-  } else {
-    connectLabel = new LabelFactory("Not connected", "0px", "230px", "#FFA500", "#FFA500").createLabel();
-  }
-
   rectangleMenu.addControl(positionLabel);
   rectangleMenu.addControl(frequencyLabel);
   rectangleMenu.addControl(amplitudeLabel);
   rectangleMenu.addControl(relationLabel);
   rectangleMenu.addControl(statusLabel);
-  rectangleMenu.addControl(connectLabel);
 
   //creating sliders and sliders labels
   var slider1Label = new LabelFactory(0, "0px", "-220px", "white", "white").createLabel();
@@ -293,14 +227,35 @@ const createScene = async function () {
   rectangleMenu.addControl(slider3Label);
   rectangleMenu.addControl(slider4Label);
 
-  const positionSlider = createSlider(-90, 90, 0, "-190px", "Position", slider1Label);
-  const frequancySlider = createSlider(0, 90, 0, "-100px", "Frequency", slider2Label);
-  const amplitudeSlider = createSlider(0, 90, 0, "-10px", "Amplitude", slider3Label);
-  const relationSlider = createSlider(0, 90, 0, "80px", "Relation", slider4Label);
+  const positionSlider = new SliderFactory(-90, 90, 0, "-190px", slider1Label).createSlider();
+  positionSlider.onValueChangedObservable.add(function (value) {
+    slider1Label.text = value.toFixed(1);
+    if (importedModel) {
+      if (client.ID >= 0)
+        client.sendMessage(`off ${value.toFixed(1)}`);
+      var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
+      importedModel.rotation.x = value * Deg2RadFactor;
+      console.log("New Rotation Y:", importedModel.rotation.x);
+    }
+  });
+  const frequencySlider = new SliderFactory(0, 90, 0, "-100px", slider2Label).createSlider();
+  frequencySlider.setActionSliding();
+  const amplitudeSlider = new SliderFactory(0, 90, 0, "-10px", slider3Label).createSlider();
+  amplitudeSlider.setActionSliding();
+  const relationSlider = new SliderFactory(0, 90, 0, "80px", slider4Label).createSlider();
+  relationSlider.setActionSliding();
   rectangleMenu.addControl(positionSlider);
-  rectangleMenu.addControl(frequancySlider);
+  rectangleMenu.addControl(frequencySlider);
   rectangleMenu.addControl(amplitudeSlider);
   rectangleMenu.addControl(relationSlider);
+
+  var connectLabel;
+  if (connect) {
+    connectLabel = new LabelFactory("CONNECTED", "0px", "230px", "#90EE90", "#90EE90").createLabel();
+  } else {
+    connectLabel = new LabelFactory("Not connected", "0px", "230px", "#FFA500", "#FFA500").createLabel();
+  }
+  rectangleMenu.addControl(connectLabel);
 
   //creating tasks
   defineTasks();
