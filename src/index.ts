@@ -1,18 +1,23 @@
 // Importing Babylon.js
-//new
-//new
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import { Task, TaskManager } from './taskMenager.js';
 import { EDMOClient } from './EDMOClient';
 import { Color3 } from '@babylonjs/core';
+
+//importing GUI customized classes
+import { RecrangleFactory } from './GUIComponents/RecrangleFactory';
+import { LabelFactory } from './GUIComponents/LabelFactory';
+// Create an instance of imported gui classes
+const rectangleMenu = new RecrangleFactory(400, "600px", 0, 0, "#9C5586FF");
+
+
 // Assign canvas to a variable
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 // Create instance of babylonjs class and pass the canvas to constructor
 // In this way we are telling the scene to render this canvas element
 const engine = new BABYLON.Engine(canvas);
-
 const client = new EDMOClient();
 
 const taskManager = new TaskManager();
@@ -53,25 +58,8 @@ function refreshPage() {
   location.reload(); // Pass true to force a reload from the server, ignoring the cache
 }
 
-/**
- * Method that defines a 2D Rectangle in desired coordinates
- * @param width - width of the rectangle
- * @param height - height of the rectangle
- * @returns {Rectangle}
- */
-function createRectangle(width: number, height: string | number, top: string | number, left: string | number, color: string) {
-  // Create a rectangle
-  const rect = new GUI.Rectangle();
-  rect.widthInPixels = width; // Set the width of the rectangle
-  rect.height = height; // Set the height of the rectangle
-  rect.background = "#9C5586FF"; // Set the desired background color
-  rect.cornerRadius = 20; // Set the corner radius
-  rect.color = color; // Set the color of the rectangle
-  rect.alpha = 0.74;
-  rect.top = top;
-  rect.left = left;
-  return rect;
-}
+
+
 
 /**
  * This function defines a label in a 2D space
@@ -197,8 +185,8 @@ const createScene = async function () {
 
   //  Task logic
   let isTaskPressed = false; //Defining a flag booblean for task toggling
-  let cloud: GUI.Rectangle;
   let taskText;
+  let cloud = new RecrangleFactory(600, "300px", 0, 0, "white");
   //  for robot image clicking
   image.onPointerClickObservable.add(() => {
     // If the task is not displayed then create the task
@@ -216,12 +204,12 @@ const createScene = async function () {
 
       changeImagesWithDelay();
       //Create task frame
-      cloud = createRectangle(600, "300px", 0, 0, "white");
+      cloud.createRectangle();
       cloud.background = "white";
       advancedTexture.addControl(cloud);
 
       //Adding text to the cloud
-      taskText = createLabel(taskManager.getTask(1), 0, 0, "black", "black");
+      taskText = new LabelFactory(taskManager.getTask(1), 0, 0, "black", "black").createLabel();
       cloud.addControl(taskText);
 
       isTaskPressed = true;
@@ -243,12 +231,9 @@ const createScene = async function () {
     }
   });
 
-  // creating rectangle menu
-  const rect = createRectangle(400, "600px", 0, 0, "#9C5586FF");
-  rect.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT; // Align to the left
-  rect.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Align to the top
-  rect.paddingRight = 40;
-  advancedTexture.addControl(rect);
+  //creating rectangle menu
+  rectangleMenu.createRectangle();
+  advancedTexture.addControl(rectangleMenu);
 
   ///////////////////
   function createSlider(minimum: number, maximum: number, initialValue: number, topOffset: string | number, stringFunctionDecider: string, header: GUI.TextBlock) {
@@ -308,56 +293,54 @@ const createScene = async function () {
     return slider;
   }
 
-
-  const positionLabel = createLabel("Position", "683px", "-220px", "#6B1919FF", "#5A1B83FF");
+  const positionLabel = new LabelFactory("Position", "0px", "-220px", "#6B1919FF", "#5A1B83FF").createLabel();
   positionLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
-  const frequencyLabel = createLabel("Frequency", "683px", "-130px", "#6B1919FF", "#5A1B83FF");
+  const frequencyLabel = new LabelFactory("Frequency", "0px", "-130px", "#6B1919FF", "#5A1B83FF").createLabel();
   frequencyLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
-  const amplitudeLabel = createLabel("Amplitude", "683px", "-40px", "#6B1919FF", "#5A1B83FF");
+  const amplitudeLabel = new LabelFactory("Amplitude", "0px", "-40px", "#6B1919FF", "#5A1B83FF").createLabel();
   amplitudeLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
-  const relationLabel = createLabel("Relation", "683px", "50px", "#6B1919FF", "#5A1B83FF");
+  const relationLabel = new LabelFactory("Relation", "0px", "50px", "#6B1919FF", "#5A1B83FF").createLabel();
   relationLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
-  const statusLabel = createLabel("STATUS", "683px", "200px", "#6B1919FF", "#5A1B83FF");
-  statusLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
+  const statusLabel = new LabelFactory("STATUS", "0px", "200px", "#6B1919FF", "#5A1B83FF").createLabel();
 
   //Connection label based on the connection status at creation
   var connectLabel;
 
   if (connect) {
-    connectLabel = createLabel("CONNECTED", "683px", "230px", "#90EE90", "#90EE90");
+    connectLabel = new LabelFactory("CONNECTED", "0px", "230px", "#90EE90", "#90EE90").createLabel();
   } else {
-    connectLabel = createLabel("Not connected", "683px", "230px", "#FFA500", "#FFA500");
+    connectLabel = new LabelFactory("Not connected", "0px", "230px", "#FFA500", "#FFA500").createLabel();
   }
 
-  rect.addControl(positionLabel);
-  rect.addControl(frequencyLabel);
-  rect.addControl(amplitudeLabel);
-  rect.addControl(relationLabel);
-  rect.addControl(statusLabel);
-  rect.addControl(connectLabel);
+  rectangleMenu.addControl(positionLabel);
+  rectangleMenu.addControl(frequencyLabel);
+  rectangleMenu.addControl(amplitudeLabel);
+  rectangleMenu.addControl(relationLabel);
+  rectangleMenu.addControl(statusLabel);
+  rectangleMenu.addControl(connectLabel);
 
   //creating sliders and sliders labels
-  var slider1Label = createLabel(0, "830px", "-220px", "white", "white");
+  var slider1Label = new LabelFactory(0, "0px", "-220px", "white", "white").createLabel();
   slider1Label.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  var slider2Label = createLabel(0, "830px", "-130px", "white", "white");
+  var slider2Label = new LabelFactory(0, "0px", "-130px", "white", "white").createLabel();
   slider2Label.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  var slider3Label = createLabel(0, "830px", "-40px", "white", "white");
+  var slider3Label = new LabelFactory(0, "0px", "-40px", "white", "white").createLabel();
   slider3Label.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  var slider4Label = createLabel(0, "830px", "50px", "white", "white");
+  var slider4Label = new LabelFactory(0, "0px", "50px", "white", "white").createLabel();
   slider4Label.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
-  rect.addControl(slider1Label);
-  rect.addControl(slider2Label);
-  rect.addControl(slider3Label);
-  rect.addControl(slider4Label);
+  rectangleMenu.addControl(slider1Label);
+  rectangleMenu.addControl(slider2Label);
+  rectangleMenu.addControl(slider3Label);
+  rectangleMenu.addControl(slider4Label);
 
   const positionSlider = createSlider(-90, 90, 0, "-190px", "Position", slider1Label);
   const frequancySlider = createSlider(0, 90, 0, "-100px", "Frequency", slider2Label);
   const amplitudeSlider = createSlider(0, 90, 0, "-10px", "Amplitude", slider3Label);
   const relationSlider = createSlider(0, 90, 0, "80px", "Relation", slider4Label);
-  rect.addControl(positionSlider);
-  rect.addControl(frequancySlider);
-  rect.addControl(amplitudeSlider);
-  rect.addControl(relationSlider);
+  rectangleMenu.addControl(positionSlider);
+  rectangleMenu.addControl(frequancySlider);
+  rectangleMenu.addControl(amplitudeSlider);
+  rectangleMenu.addControl(relationSlider);
 
   //creating tasks
   defineTasks();
