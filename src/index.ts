@@ -57,46 +57,6 @@ function setColor(color: Color3) {
 function refreshPage() {
   location.reload(); // Pass true to force a reload from the server, ignoring the cache
 }
-
-
-
-
-/**
- * This function defines a label in a 2D space
- * @param text
- * @param left - x coordinate
- * @param top - y coordinate
- * @param outlineColor
- * @param color
- * @returns {TextBlock}
- */
-function createLabel(text: string | number, left: string | number, top: string | number, outlineColor: string, color: string) {
-  var header = new GUI.TextBlock();
-  header.text = text.toString();
-  header.height = "30px";
-  header.top = top;
-  header.color = color;
-  header.fontFamily = "Courier New"; // Set the font style
-  header.fontSize = 24;
-  header.outlineWidth = 1; // Set the outline width
-  header.outlineColor = outlineColor; // Set the outline color
-  header.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_CENTER; // Align to the left
-  header.paddingLeft = 40;
-  header.paddingRight = 40;
-  return header;
-}
-
-/**
- * Function that defines a slider in a 2D space used to control the EDMO arm
- * @param minimum - minimum value a slider can have
- * @param maximum - maximum value a slider can have
- * @param initialValue - initial value of a slider
- * @param topOffset - x coordinate
- * @param stringFunctionDecider - String representing what the slider control (example: Position)
- * @param header - the label that showcase the value of the slider
- * @returns {Slider}
- */
-
 /**
  *This funciton handles first - 3D model Rendering and second - GUI elements in 2D space
  */
@@ -350,22 +310,12 @@ const createScene = async function () {
 
 //SET COLOR OF MODEL BEFORE SCENE CREATION
 setColor(new BABYLON.Color3(242 / 255.0, 187 / 255.0, 233 / 255.0));
-//new BABYLON.Color3(0, 1, 0);
-//new BABYLON.Color3(1, 0, 0);
-//new BABYLON.Color3(0, 0, 1);
 
 //CHANGE STATUS OF CONNECTION BEFORE SCENE RENDER
 setConnectSuccess();
 
 //Create scene
 const scene = await createScene();
-
-//This resize function sccures that with resizing the window the objects wont change their shapes
-// ----- To mess with this, in style.css change width and height to percentage
-
-// window.addEventListener('resize', function () {
-//   engine.resize();
-// });
 
 engine.runRenderLoop(function () {
   scene.render();
@@ -374,19 +324,3 @@ engine.runRenderLoop(function () {
 window.addEventListener('resize', function () {
   engine.resize();
 });
-
-
-
-// Messing around with resizing
-
-// window.addEventListener("resize", function () {
-//   //advancedTexture.scaleTo(engine.getRenderWidth(), engine.getRenderHeight());
-//   //advancedTexture.scaleTo(advancedTexture.getScene()!.getEngine().getRenderWidth(), advancedTexture.getScene()!.getEngine().getRenderHeight());
-//   engine.setSize(window.innerWidth, window.innerHeight);
-//   // engine.resize();
-//   this.forceUpdate();
-//   //advancedTexture.markAsDirty(); // Mark GUI as dirty to trigger update
-// });
-
-
-//cd C:\Users\schre\OneDrive\Desktop\EdmoFrontend-main
