@@ -5,55 +5,32 @@ import * as GUI from '@babylonjs/gui/2D';
 import { Task, TaskManager } from './taskMenager.js';
 import { EDMOClient } from './EDMOClient';
 import { Color3 } from '@babylonjs/core';
-
 //importing GUI customized classes
-import { RecrangleFactory } from './GUIComponents/RecrangleFactory';
+import { RectangleFactory } from './GUIComponents/RecrangleFactory';
 import { LabelFactory } from './GUIComponents/LabelFactory';
 import { SliderFactory } from "./GUIComponents/SliderFactory";
+import { RobotTaskFactory} from "./GUIComponents/RobotTaskFactory";
 // Create an instance of imported gui classes
-const rectangleMenu = new RecrangleFactory(400, "600px", 0, 0, "#9C5586FF");
-
-
+const rectangleMenu = new RectangleFactory(400, "600px", 0, 0, "#9C5586FF");
 // Assign canvas to a variable
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 // Create instance of babylonjs class and pass the canvas to constructor
 // In this way we are telling the scene to render this canvas element
 const engine = new BABYLON.Engine(canvas);
 const client = new EDMOClient();
-
-const taskManager = new TaskManager();
 var importedModel: BABYLON.AbstractMesh;
-
 // Connection status
 var connect = false;
-
 // Model color
 var colorMesh: Color3;
-
-/**
- * Method that defines all the tasks
- */
-function defineTasks() {
-  // Create instances of Task
-  const task1 = new Task('Find the parameters that will make the robot walk');
-  const task2 = new Task('Walk the robot to the mountain');
-  const task3 = new Task('make the robot run as fast as possible');
-  // Add tasks to the TaskManager
-  taskManager.addTask(task1);
-  taskManager.addTask(task2);
-  taskManager.addTask(task3);
-}
-
 // Set connection status
 function setConnectSuccess() {
   connect = true;
 }
-
 // Set color of mesh before scene creation
 function setColor(color: Color3) {
   colorMesh = color;
 }
-
 // Function to refresh the webpage
 function refreshPage() {
   location.reload(); // Pass true to force a reload from the server, ignoring the cache
@@ -72,7 +49,6 @@ const createScene = async function () {
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
   var camera = new BABYLON.ArcRotateCamera("Camera", 0.4, 0.9, 260, BABYLON.Vector3.Zero(), scene);
   camera.attachControl(canvas, false);
-
   // Load the model
   //var importedModel;
   BABYLON.SceneLoader.ImportMesh("", "./Assets/Models/", "untitled.glb", scene, function (newMeshes) {
@@ -83,8 +59,6 @@ const createScene = async function () {
     importedModel.rotation.y = -90 * Deg2RadFactor;
     importedModel.position.z = -63;
     console.log(newMeshes);
-
-
     // Iterate through meshes in model
     newMeshes.forEach(function (mesh) {
       // Create a new material
@@ -96,28 +70,22 @@ const createScene = async function () {
       // Apply the material
       mesh.material = material;
     });
-
-
-
     // Iterate through meshes in model
     newMeshes.forEach(function (mesh) {
       // Create a new material
       var material = new BABYLON.StandardMaterial("material", scene);
-
       // Set color
       material.diffuseColor = colorMesh; // Red color, change as needed
 
       // Apply the material
       mesh.material = material;
     });
-
   }
     , function (event) {
       // Loading progress
       console.log(event.loaded, event.total);
     }
   );
-
   scene.registerBeforeRender(function () {
     //light.position = camera.position;
     // ^ How did this get written beats me, but it's not needed
@@ -128,74 +96,16 @@ const createScene = async function () {
    */
   const advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI('UI');
 
-  // Create an image on the overlay
-  const image = new GUI.Image("robotImage", "./Assets/Textures/robot1.png");
-  image.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
-  image.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_BOTTOM; // Align to the top
-  image.widthInPixels = 300;
-  image.heightInPixels = 300;
-  advancedTexture.addControl(image);
-
-  // Array to store paths of individual robot images
-  const robotImages = [
-    "./Assets/Textures/robot1.png",
-    "./Assets/Textures/robot2.png",
-    "./Assets/Textures/robot3.png",
-    "./Assets/Textures/robot4.png"
-  ];
-
-  //  Task logic
-  let isTaskPressed = false; //Defining a flag booblean for task toggling
-  let taskText;
-  let cloud = new RecrangleFactory(600, "300px", 0, 0, "white");
-  //  for robot image clicking
-  image.onPointerClickObservable.add(() => {
-    // If the task is not displayed then create the task
-    if (!isTaskPressed) {
-      console.log("in create loop");
-      // Robot animation waving hand up
-      const changeImagesWithDelay = async () => {
-        for (let i = 0; i < robotImages.length; i++) {
-          image.source = robotImages[i];
-
-          // Introduce a delay of 1000 milliseconds (1 second) before the next iteration
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-      };
-
-      changeImagesWithDelay();
-      //Create task frame
-      cloud.createRectangle();
-      cloud.background = "white";
-      advancedTexture.addControl(cloud);
-
-      //Adding text to the cloud
-      taskText = new LabelFactory(taskManager.getTask(1), 0, 0, "black", "black").createLabel();
-      cloud.addControl(taskText);
-
-      isTaskPressed = true;
-    }
-    else if (isTaskPressed) {
-      console.log("in dispose loop");
-      cloud.dispose();
-
-      isTaskPressed = false;
-      const changeImagesWithDelay = async () => {
-        for (let i = robotImages.length; i >= 0; i--) {
-          image.source = robotImages[i];
-
-          // Introduce a delay of 1000 milliseconds (1 second) before the next iteration
-          await new Promise(resolve => setTimeout(resolve, 500));
-        }
-      };
-      changeImagesWithDelay();
-    }
-  });
+  // Create robot waving animation
+  const robotAnimation = new RobotTaskFactory(advancedTexture);
+  const image = robotAnimation.createImage("robotImage", "./Assets/Textures/robot1.png");
+  robotAnimation.createAnimation(image);
 
   //creating rectangle menu
   rectangleMenu.createRectangle();
+  rectangleMenu.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT; // Align to the left
+  rectangleMenu.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Align to the top
   advancedTexture.addControl(rectangleMenu);
-
   const positionLabel = new LabelFactory("Position", "0px", "-220px", "#6B1919FF", "#5A1B83FF").createLabel();
   positionLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
   const frequencyLabel = new LabelFactory("Frequency", "0px", "-130px", "#6B1919FF", "#5A1B83FF").createLabel();
@@ -256,16 +166,11 @@ const createScene = async function () {
     connectLabel = new LabelFactory("Not connected", "0px", "230px", "#FFA500", "#FFA500").createLabel();
   }
   rectangleMenu.addControl(connectLabel);
-
-  //creating tasks
-  defineTasks();
-  taskManager.listTasks();
   return scene;
 };
 
 //SET COLOR OF MODEL BEFORE SCENE CREATION
 setColor(new BABYLON.Color3(242 / 255.0, 187 / 255.0, 233 / 255.0));
-
 //CHANGE STATUS OF CONNECTION BEFORE SCENE RENDER
 setConnectSuccess();
 
