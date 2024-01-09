@@ -1,5 +1,8 @@
 export class Task {
-    constructor(description) {
+    private readonly description: string;
+    private completed: boolean;
+
+    constructor(description: string) {
         this.description = description;
         this.completed = false;
     }
@@ -15,30 +18,24 @@ export class Task {
         return `${this.completed ? '[X]' : '[ ]'} ${this.description}`;
     }
 }
+
 export class TaskManager {
-    constructor() {
-        this.tasks = [];
+    private readonly tasks: Array<Task> = [];
+
+    addTask(task: Task) {
+        this.tasks.push(task);
     }
 
-    addTask(task) {
-        if (task instanceof Task) {
-            this.tasks.push(task);
-        } else {
-            console.error('Invalid task object. Expected an instance of Task.');
-        }
-    }
-
-    completeTask(taskIndex) {
+    completeTask(taskIndex: number) {
         const task = this.tasks[taskIndex];
         if (task) {
-            task.complete();
+            task.completeTask();
         } else {
             console.error('Invalid task index.');
         }
     }
-    getTask(taskIndex) {
+    getTask(taskIndex: number) {
         const task = this.tasks[taskIndex];
-        return task.toString();
     }
 
     listTasks() {

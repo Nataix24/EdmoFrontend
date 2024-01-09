@@ -2,14 +2,14 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
-import { Task, TaskManager } from './taskMenager.js';
+import { Task, TaskManager } from './TaskManager.js';
 import { EDMOClient } from './EDMOClient';
 import { Color3 } from '@babylonjs/core';
 //importing GUI customized classes
 import { RectangleFactory } from './GUIComponents/RecrangleFactory';
 import { LabelFactory } from './GUIComponents/LabelFactory';
 import { SliderFactory } from "./GUIComponents/SliderFactory";
-import { RobotTaskFactory} from "./GUIComponents/RobotTaskFactory";
+import { RobotTaskFactory } from "./GUIComponents/RobotTaskFactory";
 // Create an instance of imported gui classes
 const rectangleMenu = new RectangleFactory(400, "600px", 0, 0, "#9C5586FF");
 // Assign canvas to a variable
