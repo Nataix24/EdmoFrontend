@@ -16,6 +16,9 @@
   "dependencies": {
     "@babylonjs/core": "^6.33.1",
     "@babylonjs/gui": "^6.33.1",
-    "@babylonjs/loaders": "^6.33.1"
+    "@babylonjs/loaders": "^6.33.1",
+    "pkg-dir": "^8.0.0",
+    "resolve-cwd": "^3.0.0",
+    "resolve-from": "^5.0.0"
   }
 }

@@ -2,34 +2,31 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
-import { Task, TaskManager } from './taskMenager.js';
 import { EDMOClient } from './EDMOClient';
 import { Color3 } from '@babylonjs/core';
 //importing GUI customized classes
+import { GUIManager} from "./GUIComponents/GUIMenager";
 import { RectangleFactory } from './GUIComponents/RecrangleFactory';
 import { LabelFactory } from './GUIComponents/LabelFactory';
 import { SliderFactory } from "./GUIComponents/SliderFactory";
 import { RobotTaskFactory} from "./GUIComponents/RobotTaskFactory";
+import { ModelFactory3D} from "./GUIComponents/ModelFactory3D";
+
 // Create an instance of imported gui classes
 const rectangleMenu = new RectangleFactory(400, "600px", 0, 0, "#9C5586FF");
+const button = new RectangleFactory(150, "50px", 0, 0, "#4E3650FF");
+
 // Assign canvas to a variable
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 // Create instance of babylonjs class and pass the canvas to constructor
 // In this way we are telling the scene to render this canvas element
 const engine = new BABYLON.Engine(canvas);
 const client = new EDMOClient();
-var importedModel: BABYLON.AbstractMesh;
 // Connection status
 var connect = false;
-// Model color
-var colorMesh: Color3;
 // Set connection status
 function setConnectSuccess() {
   connect = true;
-}
-// Set color of mesh before scene creation
-function setColor(color: Color3) {
-  colorMesh = color;
 }
 // Function to refresh the webpage
 function refreshPage() {
@@ -49,46 +46,15 @@ const createScene = async function () {
   var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
   var camera = new BABYLON.ArcRotateCamera("Camera", 0.4, 0.9, 260, BABYLON.Vector3.Zero(), scene);
   camera.attachControl(canvas, false);
-  // Load the model
-  //var importedModel;
-  BABYLON.SceneLoader.ImportMesh("", "./Assets/Models/", "untitled.glb", scene, function (newMeshes) {
-    //camera.target = newMeshes[0]; // Let the camera target the origin of the entire model
-    importedModel = newMeshes[1]; // The part we want to control is the arm, not the whole thing
-    importedModel.rotationQuaternion = null; // Babylon will prefer the quartenion if it is present, so we null that out
-    const Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
-    importedModel.rotation.y = -90 * Deg2RadFactor;
-    importedModel.position.z = -63;
-    console.log(newMeshes);
-    // Iterate through meshes in model
-    newMeshes.forEach(function (mesh) {
-      // Create a new material
-      var material = new BABYLON.StandardMaterial("material", scene);
 
-      // Set color
-      material.diffuseColor = colorMesh; // Red color, change as needed
-
-      // Apply the material
-      mesh.material = material;
+  const model = new ModelFactory3D(scene);
+  // Due to asynchronous nature of the createModel method. When you assign importedModel outside the createModel callback,
+  // it's likely being assigned before the asynchronous operation is complete. Which causes it to be unidentified
+  // To fix this issue we work with Promise
+  const modelPromise = new Promise<BABYLON.AbstractMesh[]>((resolve) => {
+    model.createModel((importedModel) => {
+      resolve(importedModel);
     });
-    // Iterate through meshes in model
-    newMeshes.forEach(function (mesh) {
-      // Create a new material
-      var material = new BABYLON.StandardMaterial("material", scene);
-      // Set color
-      material.diffuseColor = colorMesh; // Red color, change as needed
-
-      // Apply the material
-      mesh.material = material;
-    });
-  }
-    , function (event) {
-      // Loading progress
-      console.log(event.loaded, event.total);
-    }
-  );
-  scene.registerBeforeRender(function () {
-    //light.position = camera.position;
-    // ^ How did this get written beats me, but it's not needed
   });
 
   /**
@@ -106,6 +72,11 @@ const createScene = async function () {
   rectangleMenu.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT; // Align to the left
   rectangleMenu.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_CENTER; // Align to the top
   advancedTexture.addControl(rectangleMenu);
+  //creating button
+  button.createRectangle();
+  button.horizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
+  button.verticalAlignment = GUI.Control.VERTICAL_ALIGNMENT_BOTTOM; // Align to the top
+  rectangleMenu.addControl(button);
   const positionLabel = new LabelFactory("Position", "0px", "-220px", "#6B1919FF", "#5A1B83FF").createLabel();
   positionLabel.textHorizontalAlignment = GUI.Control.HORIZONTAL_ALIGNMENT_LEFT; // Align to the left
   const frequencyLabel = new LabelFactory("Frequency", "0px", "-130px", "#6B1919FF", "#5A1B83FF").createLabel();
@@ -138,16 +109,7 @@ const createScene = async function () {
   rectangleMenu.addControl(slider4Label);
 
   const positionSlider = new SliderFactory(-90, 90, 0, "-190px", slider1Label).createSlider();
-  positionSlider.onValueChangedObservable.add(function (value) {
-    slider1Label.text = value.toFixed(1);
-    if (importedModel) {
-      if (client.ID >= 0)
-        client.sendMessage(`off ${value.toFixed(1)}`);
-      var Deg2RadFactor = 3.1415 / 180; // Babylon's rotation is in radians
-      importedModel.rotation.x = value * Deg2RadFactor;
-      console.log("New Rotation Y:", importedModel.rotation.x);
-    }
-  });
+  positionSlider.setActionSlidingPosition(modelPromise);
   const frequencySlider = new SliderFactory(0, 90, 0, "-100px", slider2Label).createSlider();
   frequencySlider.setActionSliding();
   const amplitudeSlider = new SliderFactory(0, 90, 0, "-10px", slider3Label).createSlider();
@@ -159,6 +121,14 @@ const createScene = async function () {
   rectangleMenu.addControl(amplitudeSlider);
   rectangleMenu.addControl(relationSlider);
 
+  //getting sliders in array
+  var sliderCollection = [positionSlider,frequencySlider,amplitudeSlider,relationSlider];
+  const guiManager= new GUIManager(rectangleMenu,modelPromise,model,sliderCollection,advancedTexture);
+  button.setActionButton(guiManager);
+
+  // const guiManager= new GUIManager(rectangleMenu,modelPromise);
+  // guiManager.optionGUI2D();
+
   var connectLabel;
   if (connect) {
     connectLabel = new LabelFactory("CONNECTED", "0px", "230px", "#90EE90", "#90EE90").createLabel();
@@ -168,9 +138,6 @@ const createScene = async function () {
   rectangleMenu.addControl(connectLabel);
   return scene;
 };
-
-//SET COLOR OF MODEL BEFORE SCENE CREATION
-setColor(new BABYLON.Color3(242 / 255.0, 187 / 255.0, 233 / 255.0));
 //CHANGE STATUS OF CONNECTION BEFORE SCENE RENDER
 setConnectSuccess();
 

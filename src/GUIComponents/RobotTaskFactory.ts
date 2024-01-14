@@ -6,8 +6,10 @@ import {LabelFactory} from "./LabelFactory";
 import {Task, TaskManager} from "../taskMenager";
 export class RobotTaskFactory extends GUI.Rectangle{
     private taskManager: TaskManager = new TaskManager();
-    // @ts-ignore
     private taskText: LabelFactory;
+    nextLabel: LabelFactory;
+    currentTaskNumber: number;
+    previousLabel: LabelFactory;
     /**
      * Method that defines all the tasks
      */
@@ -35,6 +37,7 @@ export class RobotTaskFactory extends GUI.Rectangle{
         super();
         this.associatedTexture=advancedTexture;
         this.defineTasks();
+        this.currentTaskNumber=0;
     }
     createImage(nameImg: string,urlImg: string) {
         const image = new GUI.Image("robotImage", "./Assets/Textures/robot1.png");
@@ -82,8 +85,18 @@ export class RobotTaskFactory extends GUI.Rectangle{
         cloud.background = "white";
         this.associatedTexture.addControl(cloud);
         //Adding text to the cloud
-        this.taskText = new LabelFactory(this.taskManager.getTask(1), 0, 0, "black", "black").createLabel();
+        this.taskText = new LabelFactory(this.taskManager.getTask(this.currentTaskNumber), 0, 0, "black", "black").createLabel();
+        //add next task label
+        this.nextLabel = new LabelFactory("Next", 100, 50, "black", "black").createLabel();
+        this.nextLabel.setWidth(0.3);
+        this.currentTaskNumber=this.nextLabel.setActionLabel(this.taskManager,this.currentTaskNumber,this.taskText);
+        //add previous task label
+        this.previousLabel = new LabelFactory("Previous", -100, 50, "black", "black").createLabel();
+        this.previousLabel.setWidth(0.4);
+        this.currentTaskNumber=this.previousLabel.setActionLabel(this.taskManager,this.currentTaskNumber,this.taskText);
         cloud.addControl(this.taskText);
+        cloud.addControl(this.nextLabel);
+        cloud.addControl(this.previousLabel);
     }
     imageAnimationWaveDown(cloud: RectangleFactory, robotImg: GUI.Image){
         cloud.dispose();
