@@ -24,6 +24,12 @@ const engine = new BABYLON.Engine(canvas);
 const client = new EDMOClient();
 // Connection status
 var connect = false;
+
+//Setting variables
+var language ="EN";
+var display ="2D";
+var url ="";
+
 // Set connection status
 function setConnectSuccess() {
   connect = true;
