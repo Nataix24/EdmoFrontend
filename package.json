@@ -19,6 +19,7 @@
     "@babylonjs/loaders": "^6.33.1",
     "pkg-dir": "^8.0.0",
     "resolve-cwd": "^3.0.0",
-    "resolve-from": "^5.0.0"
+    "resolve-from": "^5.0.0",
+    "src": "^1.1.2"
   }
 }

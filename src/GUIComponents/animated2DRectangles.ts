@@ -3,14 +3,29 @@ import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import {GUIManager} from "./GUIMenager";
 import {RectangleFactory} from "./RecrangleFactory";
+import * as BABYLON from "@babylonjs/core";
+import {Scene, Animation, Vector3, EasingFunction, AnimationGroup, Animatable} from '@babylonjs/core';
 
 export class animated2DRectangles {
     rectangleUp: RectangleFactory;
     rectangleDown: RectangleFactory;
+    private amplitude: number;
+    private frequency: number;
+    private originalY: number;
+
     constructor(x: number,y: number) {
         //define two rectangles that will be used for the animation
         this.rectangleDown= new RectangleFactory(60,"35px",x,y,"#000000");
         this.rectangleUp= new RectangleFactory(60,"35px",x,y-25,"#000000");
+    }
+    setAmplitude(amplitude:number){
+        this.amplitude=amplitude;
+    }
+    setFrequency(frequency: number){
+        this.frequency=frequency;
+    }
+    setOffset(position: number){
+        this.originalY=position;
     }
     /**
      * Method that defines a 2D Rectangle in desired coordinates
@@ -25,9 +40,80 @@ export class animated2DRectangles {
         this.rectangleDown.setPadding(0);
         associatedTexture.addControl(this.rectangleDown);
         associatedTexture.addControl(this.rectangleUp);
+        this.setAmplitude(10);
+        this.setFrequency(20);
+        this.setOffset(10);
     }
     dispose(){
         this.rectangleDown.dispose();
         this.rectangleUp.dispose();
     }
+    animation: Animatable;
+    addAnimation(scene: Scene): Animatable {
+        // Set the desired frames per second (fps)
+        // start of working width animation
+        const rotationResolution = 10;
+
+        //Create rotation animation
+        var Deg2RadFactor = 3.1415 / 180;
+        var value = -90;
+        const keysRot = [];
+        keysRot.push({
+            frame: 0,
+            value: Deg2RadFactor*value
+        });
+        keysRot.push({
+            frame: rotationResolution - 1,
+            value: Deg2RadFactor*90 // Adjust this value for the desired width change
+        });
+        // Create width animation
+        const rotAnimationForward = new BABYLON.Animation(
+            "rotAnimation",
+            "rotation",
+            this.frequency,
+            BABYLON.Animation.ANIMATIONTYPE_FLOAT,
+            BABYLON.Animation.ANIMATIONLOOPMODE_YOYO,
+        );
+        rotAnimationForward.setKeys(keysRot);
+
+        console.log("Before animation:", this.rectangleUp.rotation);
+        this.animation =scene.beginDirectAnimation(this.rectangleUp, [rotAnimationForward], 0, rotationResolution - 1, true);
+        console.log("After animation:", this.rectangleUp.rotation);
+        // animation.pause();
+        // animation.restart();
+        console.log("Before method Freq  even left" + this.animation);
+        return this.animation;
+    }
+
+    // addAnimation(scene: Scene): void {
+    //     const rotationAnimation = new Animation(
+    //         "rotationAnimation",
+    //         "rotation.y",
+    //         60,
+    //         Animation.ANIMATIONTYPE_FLOAT,
+    //         Animation.ANIMATIONLOOPMODE_CYCLE
+    //     );
+    //
+    //     const keys = [];
+    //     keys.push({
+    //         frame: 0,
+    //         value: this.originalY
+    //     });
+    //     keys.push({
+    //         frame: 100,
+    //         value: this.originalY + Math.PI * 2
+    //     });
+    //
+    //     rotationAnimation.setKeys(keys);
+    //
+    //     const animationGroup = new AnimationGroup("animationGroup");
+    //     animationGroup.addTargetedAnimation(rotationAnimation, this.rectangleUp);
+    //
+    //     // Use EASINGMODE_EASEINOUT on the animation group
+    //     animationGroup.easingFunction = new EasingFunction(EasingFunction.EASINGMODE_EASEINOUT);
+    //
+    //     animationGroup.normalize(0, 100);
+    //     scene.beginAnimation(this.rectangleUp, 0, 100, true, this.frequency * 1000);
+    // }
+
 }

@@ -3,7 +3,7 @@ import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import {RectangleFactory} from "./RecrangleFactory";
 import {LabelFactory} from "./LabelFactory";
-import {Task, TaskManager} from "../taskMenager";
+import {Task, TaskManager} from "./taskMenager";
 export class RobotTaskFactory extends GUI.Rectangle{
     private taskManager: TaskManager = new TaskManager();
     private taskText: LabelFactory;

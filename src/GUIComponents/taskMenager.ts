@@ -17,12 +17,17 @@ export class Task {
         return `${this.completed ? '[X]' : '[ ]'} ${this.description}`;
     }
 }
+
 export class TaskManager {
     private readonly tasks: Array<Task> = [];
 
     addTask(task: Task) {
         this.tasks.push(task);
     }
+    addTask(task: Task) {
+        this.tasks.push(task);
+    }
+
     completeTask(taskIndex: number) {
         const task = this.tasks[taskIndex];
         if (task) {
@@ -31,6 +36,7 @@ export class TaskManager {
             console.error('Invalid task index.');
         }
     }
+
     size(){
         var size=0;
         this.tasks.forEach((task, index) => {
@@ -38,9 +44,9 @@ export class TaskManager {
         });
         return size;
     }
+
     getTask(taskIndex: number) {
         const task = this.tasks[taskIndex];
-        return task.toString();
     }
 
     listTasks() {

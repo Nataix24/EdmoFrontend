@@ -3,7 +3,7 @@ import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import { EDMOClient } from './EDMOClient';
-import { Color3 } from '@babylonjs/core';
+import {Animatable, Color3, EasingFunction} from '@babylonjs/core';
 //importing GUI customized classes
 import { GUIManager} from "./GUIComponents/GUIMenager";
 import { RectangleFactory } from './GUIComponents/RecrangleFactory';
@@ -108,10 +108,15 @@ const createScene = async function () {
   rectangleMenu.addControl(slider3Label);
   rectangleMenu.addControl(slider4Label);
 
+  //model animation
+  let animationFreqPromise = model.setAnimation(modelPromise,scene)
+  animationFreqPromise.then((animation) => {
+    animation.speedRatio=1;
+  });
   const positionSlider = new SliderFactory(-90, 90, 0, "-190px", slider1Label).createSlider();
   positionSlider.setActionSlidingPosition(modelPromise);
   const frequencySlider = new SliderFactory(0, 90, 0, "-100px", slider2Label).createSlider();
-  frequencySlider.setActionSliding();
+  frequencySlider.setActionSliding3D(animationFreqPromise);
   const amplitudeSlider = new SliderFactory(0, 90, 0, "-10px", slider3Label).createSlider();
   amplitudeSlider.setActionSliding();
   const relationSlider = new SliderFactory(0, 90, 0, "80px", slider4Label).createSlider();
@@ -123,7 +128,7 @@ const createScene = async function () {
 
   //getting sliders in array
   var sliderCollection = [positionSlider,frequencySlider,amplitudeSlider,relationSlider];
-  const guiManager= new GUIManager(rectangleMenu,modelPromise,model,sliderCollection,advancedTexture);
+  const guiManager= new GUIManager(rectangleMenu,modelPromise,model,sliderCollection,advancedTexture,scene);
   button.setActionButton(guiManager);
 
   // const guiManager= new GUIManager(rectangleMenu,modelPromise);

@@ -1,7 +1,7 @@
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import {GUIManager} from "./GUIMenager";
-import {TaskManager} from "../taskMenager";
+import {TaskManager} from "./taskMenager";
 
 export class LabelFactory extends GUI.TextBlock{
 

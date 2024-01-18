@@ -2,6 +2,7 @@
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
 import {GUIManager} from "./GUIMenager";
+import * as BABYLON from "@babylonjs/core";
 
     export class RectangleFactory extends GUI.Rectangle{
     clicked: boolean;

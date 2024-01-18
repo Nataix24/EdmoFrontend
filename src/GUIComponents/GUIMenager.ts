@@ -9,7 +9,7 @@ import * as GUI from '@babylonjs/gui/2D';
 import { RectangleFactory } from './RecrangleFactory';
 import * as BABYLON from "@babylonjs/core";
 import {SliderFactory} from "./SliderFactory";
-import {Color3} from "@babylonjs/core";
+import {Animatable, Color3} from "@babylonjs/core";
 
 export class GUIManager {
     associatedMenu: RectangleFactory;
@@ -17,17 +17,19 @@ export class GUIManager {
     associatedModel: ModelFactory3D;
     associatedSliders: SliderFactory[];
     associatedTexture: GUI.AdvancedDynamicTexture;
+    associatedScene: BABYLON.Scene;
     animationPosition: animated2DRectangles;
     animationFrequency: animated2DRectangles;
     animationAmplitude: animated2DRectangles;
     animationRelation: animated2DRectangles;
 
-    constructor( menu: RectangleFactory,promise: Promise<BABYLON.AbstractMesh[]>,model: ModelFactory3D,sliders: SliderFactory[],texture: GUI.AdvancedDynamicTexture) {
+    constructor( menu: RectangleFactory,promise: Promise<BABYLON.AbstractMesh[]>,model: ModelFactory3D,sliders: SliderFactory[],texture: GUI.AdvancedDynamicTexture,scene: BABYLON.Scene) {
         this.associatedMenu=menu;
         this.associatedPromise=promise;
         this.associatedModel=model;
         this.associatedSliders=sliders;
         this.associatedTexture=texture;
+        this.associatedScene=scene;
     }
     switchGUI(checker: boolean){
         if(checker){
@@ -36,6 +38,7 @@ export class GUIManager {
             this.optionGUI3D();
         }
     }
+    animationFreq: Animatable;
     optionGUI2D() {
         //remove 3D model
         this.remove3DModel(this.associatedPromise);
@@ -50,9 +53,13 @@ export class GUIManager {
         this.animationAmplitude.create2DAnimaiton(this.associatedTexture);
         this.animationRelation = new animated2DRectangles(-170,80);
         this.animationRelation.create2DAnimaiton(this.associatedTexture);
+        //set animation for rectangles
+        this.animationFrequency.setFrequency(10);
+        this.animationFreq=this.animationFrequency.addAnimation(this.associatedScene);
+        console.log("Before method Freq " + this.animationFreq);
         //change slider logic
         this.associatedSliders[0].setActionPosition2D(this.animationPosition.rectangleUp);
-        //this.associatedSliders[1].setActionPosition2D(this.animationPosition.rectangleUp);
+        this.associatedSliders[1].setActionSliding(this.animationFreq,this.animationFrequency);
         //this.associatedSliders[2].setActionPosition2D(this.animationPosition.rectangleUp);
         //this.associatedSliders[3].setActionPosition2D(this.animationPosition.rectangleUp);
 
