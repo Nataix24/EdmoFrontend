@@ -143,6 +143,143 @@ const createScene = async function () {
   rectangleMenu.addControl(connectLabel);
   return scene;
 };
+
+// Method to create setup screen
+const createSetup = async function () {
+  var scene = new BABYLON.Scene(engine);
+
+  //Defining a light and camera for the 3D scene
+  var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+  var camera = new BABYLON.ArcRotateCamera("Camera", 0.4, 0.9, 260, BABYLON.Vector3.Zero(), scene);
+  camera.attachControl(canvas, false);
+
+  // Create GUI
+  var advancedTexture = GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+  
+  // Create settings icon
+  var image = new GUI.Image("settings", "./Assets/Textures/settings.png");
+  image.top = "-150px";
+  image.width = "80px";
+  image.height = "80px";
+
+  advancedTexture.addControl(image);
+
+  //https://www.babylonjs-playground.com/#U9AC0N#13
+
+  // Rectangle background
+  const rectangle = new RectangleFactory(600, "250px", 0, 0, "#9C5586FF");
+  rectangle.left = "20px";
+  rectangle.top  = "40px";
+  rectangle.createRectangle();
+
+  advancedTexture.addControl(rectangle);
+
+  // Stack panel setup to hold radiobuttons
+  var panel = new GUI.StackPanel();
+  panel.width = "150px";  // Set the width of the StackPanel
+  panel.top = "0px"; // Set the top position in pixels
+  panel.left = "150px"; // Set the left position in pixels
+  panel.fontFamily = "Courier New";
+  advancedTexture.addControl(panel);
+
+  var panel2 = new GUI.StackPanel();
+  panel2.width = "150px";  // Set the width of the StackPanel
+  panel2.top = "0px"; // Set the top position in pixels
+  panel2.left = "-150px"; // Set the left position in pixels
+  panel2.fontFamily = "Courier New";
+  advancedTexture.addControl(panel2);
+
+  // Radiobutton groups, do not delete
+  var group = new GUI.RadioGroup("G1");
+  var group2 = new GUI.RadioGroup("G2");
+
+  // Fucntion to add a radio button to a stack panel and a given radio group
+  var addRadio = function(text: string, parent: GUI.StackPanel, groupval: BABYLON.int, selected: boolean) {
+    var button = new GUI.RadioButton();
+    button.width = "20px";
+    button.height = "20px";
+    button.color = "white";
+    button.background = "#5A1B83FF";     
+    
+    if (groupval ==1) {
+      button.group = "G1";
+      //console.log(button.group);
+      
+    }else{button.group = "G2";
+    //console.log(button.group);
+    }
+
+    if (selected) {
+      button.isChecked =true;
+    }
+
+    //#6B1919FF red
+    //#5A1B83FF purple
+
+    // Update global variables based on selection
+    button.onIsCheckedChangedObservable.add(function(state) {
+        if (button.group =="G1") {
+            language = text;
+        }else{
+          display = text;
+        }
+    }); 
+
+    var header = GUI.Control.AddHeader(button, text, "100px", { isHorizontal: true, controlFirst: true});
+    header.height = "30px";
+
+    parent.addControl(header);    
+  }
+
+  // Add radio buttons to respective panels and groups
+  addRadio("EN", panel, 1, true);
+  addRadio("NL", panel, 1, false);
+
+  addRadio("2D", panel2, 2, true);
+  addRadio("3D", panel2, 2, false);
+  addRadio("Model", panel2, 2, false);
+  
+  // Text box setup
+  var inputText = new GUI.InputText();
+  inputText.text = "";
+  inputText.width = "500px";
+  inputText.height = "40px";
+  inputText.color = "white"; ////pink
+  inputText.background = "#6673fa";
+  inputText.top = "130px";
+  inputText.fontFamily = "Courier New";
+  inputText.onTextChangedObservable.add(function (newText) {
+      url =inputText.text;
+  });
+
+  // URL label
+  var urlLabel = new LabelFactory("URL", "0px", "85px", "black", "black").createLabel();
+ 
+  advancedTexture.addControl(urlLabel);
+  advancedTexture.addControl(inputText);
+  
+  // Create start button
+  var button = GUI.Button.CreateSimpleButton("button", "✓");
+  button.background = "#a832a8";
+  button.width = "200px";
+  button.height = "40px";
+  button.top = "200px";
+  
+  // When start button is pressed
+  button.onPointerUpObservable.add(function () {
+    // Basic check for empty textbox
+    if (url == "") {
+      alert("URL REQUIRED");
+      // Open main scene
+    }else{openScene();}
+  });
+  
+  advancedTexture.addControl(button);
+
+  return scene;
+};
+
+
 //CHANGE STATUS OF CONNECTION BEFORE SCENE RENDER
 setConnectSuccess();
 
