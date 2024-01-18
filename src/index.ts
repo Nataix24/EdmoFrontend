@@ -284,7 +284,23 @@ const createSetup = async function () {
 setConnectSuccess();
 
 //Create scene
-const scene = await createScene();
+const scene = await createSetup();
+
+// Function to open main scene
+// Should pass through values, language, display and URL
+async function openScene() {
+  // Prevent memory problem
+  engine.stopRenderLoop();
+  scene.dispose();
+
+  // Create main scene
+  const scene2 = await createScene();
+
+  // Restart render loop with the new scene
+  engine.runRenderLoop(function () {
+    scene2.render();
+  });
+}
 
 engine.runRenderLoop(function () {
   scene.render();
