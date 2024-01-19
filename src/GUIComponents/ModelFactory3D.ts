@@ -4,6 +4,27 @@ import * as BABYLON from "@babylonjs/core";
 import {Animatable, Color3, Nullable, Scene} from "@babylonjs/core";
 
 export class ModelFactory3D {
+    amplitude: number;
+    frequency: number;
+    offset: number;
+    setFreq(freq: number){
+        this.frequency=freq;
+    }
+    getFreq(): number{
+        return this.frequency;
+    }
+    setAmp(amp: number){
+        this.amplitude=amp;
+    }
+    getAmp(): number{
+        return this.amplitude;
+    }
+    setOff(off: number){
+        this.offset=off;
+    }
+    getOff(): number{
+        return this.offset;
+    }
     meshForRotation: BABYLON.AbstractMesh[];
     setMesh(mesh: BABYLON.AbstractMesh[]){
         this.meshForRotation=mesh;

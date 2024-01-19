@@ -39,6 +39,7 @@ export class GUIManager {
         }
     }
     animationFreq: Animatable;
+    animationAmp: Animatable;
     optionGUI2D() {
         //remove 3D model
         this.remove3DModel(this.associatedPromise);
@@ -51,19 +52,22 @@ export class GUIManager {
         this.animationFrequency.create2DAnimaiton(this.associatedTexture);
         this.animationAmplitude = new animated2DRectangles(-170,-5);
         this.animationAmplitude.create2DAnimaiton(this.associatedTexture);
-        this.animationRelation = new animated2DRectangles(-170,80);
-        this.animationRelation.create2DAnimaiton(this.associatedTexture);
+        // this.animationRelation = new animated2DRectangles(-170,80);
+        // this.animationRelation.create2DAnimaiton(this.associatedTexture);
         //set animation for rectangles
-        this.animationFrequency.setFrequency(10);
         this.animationFreq=this.animationFrequency.addAnimation(this.associatedScene);
-        console.log("Before method Freq " + this.animationFreq);
+        this.animationFreq.pause();
+        this.animationAmp=this.animationFrequency.addAnimation(this.associatedScene);
+        this.animationAmp.pause();
         //change slider logic
+        // this.associatedSliders[0].setActionPosition2D(this.animationPosition.rectangleUp);
         this.associatedSliders[0].setActionPosition2D(this.animationPosition.rectangleUp);
-        this.associatedSliders[1].setActionSliding(this.animationFreq,this.animationFrequency);
-        //this.associatedSliders[2].setActionPosition2D(this.animationPosition.rectangleUp);
-        //this.associatedSliders[3].setActionPosition2D(this.animationPosition.rectangleUp);
+        // we need position, freq is static
+        this.associatedSliders[1].setActionFrequency2D(this.animationFreq,this.animationFrequency,this.associatedScene,this.associatedSliders[0].value);
+        this.associatedSliders[2].setActionAmplitude2D(this.animationAmp,this.animationAmplitude,this.associatedScene);
+        this.associatedSliders[3].setActionRelation2D();
 
-        //Set all slides to 0
+        //Set all slides to 0 and EDMO values to 0
         for (let i = 0; i < this.associatedSliders.length; i++) {
             this.associatedSliders[i].value=0;
         }
@@ -82,17 +86,22 @@ export class GUIManager {
         this.associatedPromise=modelPromise;
         this.associatedModel.setMeshColor(this.associatedPromise,new Color3(43 / 164.0, 187 / 255.0, 164 / 255.0))
         //change back slide logic
-        for (let i = 0; i < this.associatedSliders.length; i++) {
-            if(i==0) {
-                this.associatedSliders[0].setActionSlidingPosition(this.associatedPromise);
-            }
-        }
+        //model animation
+        let animationFreqPromise = this.associatedModel.setAnimation(modelPromise,this.associatedScene)
+        animationFreqPromise.then((animation) => {
+            animation.speedRatio=1;
+            animation.pause();
+        });
+        this.associatedSliders[0].setActionSliding3D(animationFreqPromise,this.associatedScene,modelPromise,"position",this.associatedModel);
+        this.associatedSliders[1].setActionSliding3D(animationFreqPromise,this.associatedScene,modelPromise,"frequency",this.associatedModel);
+        this.associatedSliders[2].setActionSliding3D(animationFreqPromise,this.associatedScene,modelPromise,"amplitude",this.associatedModel);
+        this.associatedSliders[3].setActionRelation2D();
+
         //delete cute animations
         this.animationPosition.dispose();
         this.animationFrequency.dispose();
         this.animationAmplitude.dispose();
-        this.animationRelation.dispose();
-        //Set all slides to 0
+        //Set all slides to 0 and EDMO values
         for (let i = 0; i < this.associatedSliders.length; i++) {
             this.associatedSliders[i].value=0;
         }

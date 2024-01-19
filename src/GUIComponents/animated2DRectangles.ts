@@ -11,21 +11,30 @@ export class animated2DRectangles {
     rectangleDown: RectangleFactory;
     private amplitude: number;
     private frequency: number;
-    private originalY: number;
+    private offset: number;
 
     constructor(x: number,y: number) {
         //define two rectangles that will be used for the animation
         this.rectangleDown= new RectangleFactory(60,"35px",x,y,"#000000");
         this.rectangleUp= new RectangleFactory(60,"35px",x,y-25,"#000000");
     }
-    setAmplitude(amplitude:number){
-        this.amplitude=amplitude;
+    setFreq(freq: number){
+        this.frequency=freq;
     }
-    setFrequency(frequency: number){
-        this.frequency=frequency;
+    getFreq(): number{
+        return this.frequency;
     }
-    setOffset(position: number){
-        this.originalY=position;
+    setAmp(amp: number){
+        this.amplitude=amp;
+    }
+    getAmp(): number{
+        return this.amplitude;
+    }
+    setOff(off: number){
+        this.offset=off;
+    }
+    getOff(): number{
+        return this.offset;
     }
     /**
      * Method that defines a 2D Rectangle in desired coordinates
@@ -40,9 +49,6 @@ export class animated2DRectangles {
         this.rectangleDown.setPadding(0);
         associatedTexture.addControl(this.rectangleDown);
         associatedTexture.addControl(this.rectangleUp);
-        this.setAmplitude(10);
-        this.setFrequency(20);
-        this.setOffset(10);
     }
     dispose(){
         this.rectangleDown.dispose();
@@ -79,41 +85,8 @@ export class animated2DRectangles {
         console.log("Before animation:", this.rectangleUp.rotation);
         this.animation =scene.beginDirectAnimation(this.rectangleUp, [rotAnimationForward], 0, rotationResolution - 1, true);
         console.log("After animation:", this.rectangleUp.rotation);
-        // animation.pause();
-        // animation.restart();
         console.log("Before method Freq  even left" + this.animation);
         return this.animation;
     }
-
-    // addAnimation(scene: Scene): void {
-    //     const rotationAnimation = new Animation(
-    //         "rotationAnimation",
-    //         "rotation.y",
-    //         60,
-    //         Animation.ANIMATIONTYPE_FLOAT,
-    //         Animation.ANIMATIONLOOPMODE_CYCLE
-    //     );
-    //
-    //     const keys = [];
-    //     keys.push({
-    //         frame: 0,
-    //         value: this.originalY
-    //     });
-    //     keys.push({
-    //         frame: 100,
-    //         value: this.originalY + Math.PI * 2
-    //     });
-    //
-    //     rotationAnimation.setKeys(keys);
-    //
-    //     const animationGroup = new AnimationGroup("animationGroup");
-    //     animationGroup.addTargetedAnimation(rotationAnimation, this.rectangleUp);
-    //
-    //     // Use EASINGMODE_EASEINOUT on the animation group
-    //     animationGroup.easingFunction = new EasingFunction(EasingFunction.EASINGMODE_EASEINOUT);
-    //
-    //     animationGroup.normalize(0, 100);
-    //     scene.beginAnimation(this.rectangleUp, 0, 100, true, this.frequency * 1000);
-    // }
 
 }

@@ -80,23 +80,23 @@ export class RobotTaskFactory extends GUI.Rectangle{
             }
         };
         changeImagesWithDelay();
-        //Create task frame
-        cloud.createRectangle();
-        cloud.background = "white";
-        this.associatedTexture.addControl(cloud);
-        //Adding text to the cloud
-        this.taskText = new LabelFactory(this.taskManager.getTask(this.currentTaskNumber), 0, 0, "black", "black").createLabel();
-        //add next task label
-        this.nextLabel = new LabelFactory("Next", 100, 50, "black", "black").createLabel();
-        this.nextLabel.setWidth(0.3);
-        this.currentTaskNumber=this.nextLabel.setActionLabel(this.taskManager,this.currentTaskNumber,this.taskText);
-        //add previous task label
-        this.previousLabel = new LabelFactory("Previous", -100, 50, "black", "black").createLabel();
-        this.previousLabel.setWidth(0.4);
-        this.currentTaskNumber=this.previousLabel.setActionLabel(this.taskManager,this.currentTaskNumber,this.taskText);
-        cloud.addControl(this.taskText);
-        cloud.addControl(this.nextLabel);
-        cloud.addControl(this.previousLabel);
+        // //Create task frame
+        // cloud.createRectangle();
+        // cloud.background = "white";
+        // this.associatedTexture.addControl(cloud);
+        // //Adding text to the cloud
+        // this.taskText = new LabelFactory(this.taskManager.getTask(this.currentTaskNumber), 0, 0, "black", "black").createLabel();
+        // //add next task label
+        // this.nextLabel = new LabelFactory("Next", 100, 50, "black", "black").createLabel();
+        // this.nextLabel.setWidth(0.3);
+        // this.currentTaskNumber=this.nextLabel.setActionLabel(this.taskManager,this.currentTaskNumber,this.taskText);
+        // //add previous task label
+        // this.previousLabel = new LabelFactory("Previous", -100, 50, "black", "black").createLabel();
+        // this.previousLabel.setWidth(0.4);
+        // this.currentTaskNumber=this.previousLabel.setActionLabel(this.taskManager,this.currentTaskNumber,this.taskText);
+        // cloud.addControl(this.taskText);
+        // cloud.addControl(this.nextLabel);
+        // cloud.addControl(this.previousLabel);
     }
     imageAnimationWaveDown(cloud: RectangleFactory, robotImg: GUI.Image){
         cloud.dispose();

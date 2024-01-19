@@ -112,13 +112,16 @@ const createScene = async function () {
   let animationFreqPromise = model.setAnimation(modelPromise,scene)
   animationFreqPromise.then((animation) => {
     animation.speedRatio=1;
+    animation.pause();
   });
+  model.setFreq(1);
+  model.setAmp(1);
   const positionSlider = new SliderFactory(-90, 90, 0, "-190px", slider1Label).createSlider();
-  positionSlider.setActionSlidingPosition(modelPromise);
+  positionSlider.setActionSliding3D(animationFreqPromise,scene,modelPromise,"position",model);
   const frequencySlider = new SliderFactory(0, 90, 0, "-100px", slider2Label).createSlider();
-  frequencySlider.setActionSliding3D(animationFreqPromise);
-  const amplitudeSlider = new SliderFactory(0, 90, 0, "-10px", slider3Label).createSlider();
-  amplitudeSlider.setActionSliding();
+  frequencySlider.setActionSliding3D(animationFreqPromise,scene,modelPromise,"frequency",model);
+  const amplitudeSlider = new SliderFactory(0, 180, 0, "-10px", slider3Label).createSlider();
+  amplitudeSlider.setActionSliding3D(animationFreqPromise,scene,modelPromise,"amplitude",model);
   const relationSlider = new SliderFactory(0, 90, 0, "80px", slider4Label).createSlider();
   relationSlider.setActionSliding();
   rectangleMenu.addControl(positionSlider);
@@ -150,6 +153,7 @@ setConnectSuccess();
 const scene = await createScene();
 
 engine.runRenderLoop(function () {
+
   scene.render();
 });
 
