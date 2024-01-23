@@ -17,6 +17,7 @@ export class EdmoSlider extends StackPanel {
         header.heightInPixels = 30;
         header.fontSizeInPixels = 25;
         header.fontWeight = "Bold";
+        header.color="#FFFFFF";
         this.addControl(header);
         let slider = this.slider = new Slider(`EdmoSlider (${label}) slider`);
 
@@ -30,6 +31,7 @@ export class EdmoSlider extends StackPanel {
 
         this.valueLabel = new TextBlock(`EdmoSlider (${label}) value`, value.toString());
         this.valueLabel.widthInPixels = 50;
+        this.valueLabel.color="#FFFFFF";
 
         let sliderArea = new StackPanel();
         sliderArea.isVertical = false;

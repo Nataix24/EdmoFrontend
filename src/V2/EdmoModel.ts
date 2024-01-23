@@ -14,7 +14,7 @@ export class EdmoModel {
     public constructor(scene: Scene, ID: number) {
         this.scene = scene;
         this.color=this.colorIDArray[ID%4];
-        console.log(ID);
+        console.log(ID)
         SceneLoader.ImportMesh("", "/Assets/Models/", "untitled.glb", scene, (loadedMeshes) => {
             this.model = loadedMeshes;
             let armModel = this.armModel = loadedMeshes[1];

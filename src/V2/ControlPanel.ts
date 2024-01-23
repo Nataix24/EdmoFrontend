@@ -1,8 +1,9 @@
 
-import { Button, Control, Rectangle, StackPanel } from "@babylonjs/gui";
+import { Button, Control, Rectangle, StackPanel, TextBlock } from "@babylonjs/gui";
 import { EdmoSlider } from "./SliderControl";
 import { EdmoProperty } from "./EdmoProperty";
 import { IUpdatable } from "./IUpdatable";
+import { Color3 } from "@babylonjs/core";
 
 type EdmoSliderCallback = (type: EdmoProperty, value: number) => void;
 
@@ -17,6 +18,7 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         this.heightInPixels = 600;
         this.alpha = 0.75;
         this.background = "#9C5586";
+        this.color="#9C5586";
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_RIGHT;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_CENTER;
         this.paddingRight = 40;
@@ -46,10 +48,18 @@ export class ControlPanel extends Rectangle implements IUpdatable {
     }
 
     private createButton() {
-        let button = Button.CreateSimpleButton("Reset button", "Reset sliders");
+        let button = Button.CreateSimpleButton("Reset button","");
         button.heightInPixels = 50;
         button.setPaddingInPixels(10);
         button.cornerRadius = 10;
+        button.color="#4e3650ff"
+        button.background="#4e3650ff"
+       
+        // Create a text block for the button
+        var textBlock = new TextBlock();
+        textBlock.text = "Reset Values";
+        textBlock.color = "#FFFFFF"; // Text color of the button
+        button.addControl(textBlock);
 
         button.onPointerClickObservable.add((_, __) => this.resetSliders());
         return button;
