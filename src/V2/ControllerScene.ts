@@ -13,7 +13,7 @@ export class ControllerScene extends Scene {
     public constructor(SimpleView: boolean, edmoClient: EDMOClient, canvas: HTMLCanvasElement, engine: Engine, options?: SceneOptions | undefined) {
         super(engine, options);
         this.client = edmoClient;
-
+        
         const light = new HemisphericLight("Global lights", new Vector3(0, 1, 0), this);
 
         const camera = new ArcRotateCamera("Camera2", 0.4, 0.9, 260, Vector3.ZeroReadOnly, this);
@@ -23,8 +23,7 @@ export class ControllerScene extends Scene {
             this.GUI = new Edmo2DGUI();
         }
         else {
-            this.edmoModel = new EdmoModel(this);
-            this.edmoModel.color = new Color3(1, 0, 0.33333333333);
+            this.edmoModel = new EdmoModel(this,edmoClient.ID);
             this.GUI = new EdmoGUI();
         }
 

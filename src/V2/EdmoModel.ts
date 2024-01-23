@@ -9,10 +9,12 @@ export class EdmoModel {
 
     private isLoaded = false;
     private _color: Color3 = new Color3(1, 1, 1);
+    private colorIDArray = [new Color3(1, 0, 0.333333333),new Color3(0, 1, 0),new Color3(0, 0, 1),new Color3(1, 1, 0)]
 
-    public constructor(scene: Scene) {
+    public constructor(scene: Scene, ID: number) {
         this.scene = scene;
-
+        this.color=this.colorIDArray[ID%4];
+        console.log(ID);
         SceneLoader.ImportMesh("", "/Assets/Models/", "untitled.glb", scene, (loadedMeshes) => {
             this.model = loadedMeshes;
             let armModel = this.armModel = loadedMeshes[1];
