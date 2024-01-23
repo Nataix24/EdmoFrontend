@@ -9,6 +9,6 @@
         "jsx": "react",
         "allowJs": true,
         "moduleResolution": "Node",
-        "sourceMap": true
+        "sourceMap": true,
     }
 }

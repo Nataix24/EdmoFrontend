@@ -2,7 +2,7 @@
 import * as BABYLON from '@babylonjs/core';
 import "@babylonjs/loaders";
 import * as GUI from '@babylonjs/gui/2D';
-import { EDMOClient } from './EDMOClient';
+import { EDMOClient } from '../EDMOClient';
 import {Animatable, Color3, EasingFunction} from '@babylonjs/core';
 //importing GUI customized classes
 import { GUIManager} from "./GUIComponents/GUIMenager";
@@ -21,7 +21,7 @@ const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 // Create instance of babylonjs class and pass the canvas to constructor
 // In this way we are telling the scene to render this canvas element
 const engine = new BABYLON.Engine(canvas);
-const client = new EDMOClient();
+const client = new EDMOClient("ws://192.168.65.246:8080");
 // Connection status
 var connect = false;
 // Set connection status
