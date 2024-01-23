@@ -53,6 +53,11 @@ class ControlPanel2D extends ControlPanel implements IUpdatable {
         const rects = new EdmoRectVisual();
         this.Updatables.push(rects);
         slider.onValueChanged((value: number) => rects.adjustProperty(property, value));
+        if (property==EdmoProperty.Amplitude){
+            rects.frequency=1;
+        } else if (property==EdmoProperty.Frequency){
+            rects.amplitude=90;
+        }
 
         sp.addControl(rects);
         sp.addControl(slider);

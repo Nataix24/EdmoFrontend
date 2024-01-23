@@ -31,8 +31,8 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         stackPanel.paddingTopInPixels = 50;
         stackPanel.spacing = 20;
 
-        stackPanel.addControl(this.createSlider(EdmoProperty.Offset, 0, 180, 1, 90));
         stackPanel.addControl(this.createSlider(EdmoProperty.Frequency, 0, 5, 0.1, 0));
+        stackPanel.addControl(this.createSlider(EdmoProperty.Offset, 0, 180, 1, 90));
         stackPanel.addControl(this.createSlider(EdmoProperty.Amplitude, 0, 90, 1, 0));
         stackPanel.addControl(this.createSlider(EdmoProperty.Relation, 0, 360, 1, 0));
 
@@ -58,7 +58,9 @@ export class ControlPanel extends Rectangle implements IUpdatable {
     protected createSlider(property: EdmoProperty, min: number, max: number, step: number, value: number): Control {
         let slider = new EdmoSlider(EdmoProperty[property], min, max, step, value);
         slider.onValueChanged(v => this.sliderUpdated(property, v));
-
+        if(property==EdmoProperty.Frequency){
+            slider.setColorSlider("#4e3650ff","#5188AE")
+        }
         this.sliders.set(property, slider);
 
         return slider;

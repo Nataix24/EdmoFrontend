@@ -58,4 +58,8 @@ export class EdmoSlider extends StackPanel {
     set Value(value: number) {
         this.slider.value = value;
     }
+   public setColorSlider(backgroundColor: string,fillColor: string){
+        this.slider.color = fillColor;
+        this.slider.background = backgroundColor;
+    }
 }
