@@ -48,18 +48,15 @@ export class ControlPanel extends Rectangle implements IUpdatable {
     }
 
     private createButton() {
-        let button = Button.CreateSimpleButton("Reset button", "");
+        let button = Button.CreateSimpleButton("Reset button", "Reset Values");
         button.heightInPixels = 50;
         button.setPaddingInPixels(10);
         button.cornerRadius = 10;
         button.color = "#4e3650ff";
         button.background = "#4e3650ff";
 
-        // Create a text block for the button
-        var textBlock = new TextBlock();
-        textBlock.text = "Reset Values";
-        textBlock.color = "#FFFFFF"; // Text color of the button
-        button.addControl(textBlock);
+        // We can assert that textblock cannot be null, since we just created it
+        button.textBlock!.color = "#FFFFFF"; // Text color of the button
 
         button.onPointerClickObservable.add((_, __) => this.resetSliders());
         return button;
