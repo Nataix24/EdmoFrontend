@@ -16,7 +16,6 @@ export class EdmoSlider extends StackPanel {
         this.isVertical = true;
         this.precision = precision;
 
-
         let header = new TextBlock(`EdmoSlider (${label}) label`, label);
         header.heightInPixels = 30;
         header.fontSizeInPixels = 25;

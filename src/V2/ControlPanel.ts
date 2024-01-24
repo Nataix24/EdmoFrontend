@@ -5,7 +5,7 @@ import { EdmoProperty } from "./EdmoProperty";
 import { IUpdatable } from "./IUpdatable";
 import { Color3 } from "@babylonjs/core";
 
-type EdmoSliderCallback = (type: EdmoProperty, value: number, userAdjusted : boolean) => void;
+type EdmoSliderCallback = (type: EdmoProperty, value: number, userAdjusted: boolean) => void;
 
 export class ControlPanel extends Rectangle implements IUpdatable {
     private sliders = new Map<EdmoProperty, EdmoSlider>();
@@ -33,10 +33,10 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         stackPanel.paddingTopInPixels = 50;
         stackPanel.spacing = 20;
 
-        stackPanel.addControl(this.createSlider(EdmoProperty.Frequency, 0, 5, 0.1, 0));
-        stackPanel.addControl(this.createSlider(EdmoProperty.Offset, 0, 180, 1, 90));
-        stackPanel.addControl(this.createSlider(EdmoProperty.Amplitude, 0, 90, 1, 0));
-        stackPanel.addControl(this.createSlider(EdmoProperty.Relation, 0, 360, 1, 0));
+        stackPanel.addControl(this.createSlider(EdmoProperty.Frequency, 0, 2, 0.01, 0));
+        stackPanel.addControl(this.createSlider(EdmoProperty.Offset, 0, 180, 1, 90, 0));
+        stackPanel.addControl(this.createSlider(EdmoProperty.Amplitude, 0, 90, 1, 0, 0));
+        stackPanel.addControl(this.createSlider(EdmoProperty.Relation, 0, 360, 1, 0, 0));
 
         stackPanel.addControl(this.createButton());
 
@@ -65,8 +65,8 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         return button;
     }
 
-    protected createSlider(property: EdmoProperty, min: number, max: number, step: number, value: number): Control {
-        let slider = new EdmoSlider(EdmoProperty[property], min, max, step, value);
+    protected createSlider(property: EdmoProperty, min: number, max: number, step: number, value: number, precision: number = 2): Control {
+        let slider = new EdmoSlider(EdmoProperty[property], min, max, step, value, precision);
         slider.onValueChanged((v, u) => this.sliderUpdated(property, v, u));
         if (property == EdmoProperty.Frequency) {
             slider.setColorSlider("#4e3650ff", "#5188AE");
@@ -90,7 +90,7 @@ export class ControlPanel extends Rectangle implements IUpdatable {
 
     private callbacks: EdmoSliderCallback[] = [];
 
-    private sliderUpdated(type: EdmoProperty, value: number, userAdjusted : boolean) {
+    private sliderUpdated(type: EdmoProperty, value: number, userAdjusted: boolean) {
         this.callbacks.forEach(c => c(type, value, userAdjusted));
     }
 
