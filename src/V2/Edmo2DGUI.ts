@@ -6,7 +6,7 @@ import { EdmoProperty } from "./EdmoProperty";
 import { EdmoRectVisual } from "./EdmoRectVisual";
 import { EdmoSlider } from "./SliderControl";
 
-type EdmoSliderCallback = (type: EdmoProperty, value: number) => void;
+type EdmoSliderCallback = (type: EdmoProperty, value: number, userAdjusted : boolean) => void;
 
 export class Edmo2DGUI implements IUpdatable {
 
@@ -27,6 +27,10 @@ export class Edmo2DGUI implements IUpdatable {
     public Update(deltaTime: number) {
         this.robot.Update(deltaTime);
         this.controlPanel.Update(deltaTime);
+    }
+
+    public UpdateFrequencySlider(value: number) {
+        this.controlPanel.UpdateFrequencySlider(value);
     }
 }
 

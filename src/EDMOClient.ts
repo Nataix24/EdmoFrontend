@@ -1,5 +1,4 @@
-// Bloom note: Don't edit this file. It's a copy of the original EDMOClient.ts file from the EDMO client project.
-
+type DataChannelMessageCallback = (receivedMessage: string) => void;
 export class EDMOClient {
     private static readonly ICE_SERVERS: RTCConfiguration = {
         iceServers: [
@@ -32,17 +31,27 @@ export class EDMOClient {
     private readonly pc: RTCPeerConnection;
     private readonly ws: WebSocket;
     private readonly dataChannel: RTCDataChannel;
+    private readonly callbacks : DataChannelMessageCallback[] = [];
 
     private _id = -1;
 
     public constructor(serverURL: string = "ws://localhost:8080") {
+        if (!this.checkWebSocketURL(serverURL))
+            throw new Error("Invalid WebSocket URL");
+
         this.pc = new RTCPeerConnection(EDMOClient.ICE_SERVERS);
         this.ws = new WebSocket(serverURL);
+
+        this.pc.oniceconnectionstatechange = this.onConnectionStateChange.bind(this);
         this.dataChannel = this.pc.createDataChannel('channel');
 
         this.dataChannel.onmessage = this.onDataChannelMessage.bind(this);
         this.ws.onopen = this.webSocketOpen.bind(this);
         this.ws.onmessage = this.onWebSocketMessage.bind(this);
+    }
+
+    private checkWebSocketURL(url: string): boolean {
+        return url.startsWith("ws://") || url.startsWith("wss://");
     }
 
     public get ID(): number {
@@ -51,6 +60,16 @@ export class EDMOClient {
 
     private set ID(id: number) {
         this._id = id;
+    }
+
+    private connectionStateChangedHandlers: ((state: RTCIceConnectionState) => void)[] = [];
+
+    public OnConnectionStateChange(callback: (state: RTCIceConnectionState) => void) {
+        this.connectionStateChangedHandlers.push(callback);
+    }
+
+    private onConnectionStateChange() {
+        this.connectionStateChangedHandlers.forEach(callback => callback(this.pc.iceConnectionState));
     }
 
     public async waitForId(timeout: number) {
@@ -69,8 +88,13 @@ export class EDMOClient {
         this.dataChannel.send(message);
     }
 
-    public onDataChannelMessage(event: MessageEvent<string>): void {
+    private onDataChannelMessage(event: MessageEvent<string>): void {
+        this.callbacks.forEach(callback => callback(event.data));
         console.log("Received message:", event.data);
+    }
+
+    public OnDataChannelMessage(callback: DataChannelMessageCallback) {
+        this.callbacks.push(callback);
     }
 
     private webSocketOpen = (): void => {
@@ -105,5 +129,11 @@ export class EDMOClient {
                 break;
 
         }
+    }
+
+    public close(): void {
+        this.dataChannel.close();
+        this.pc.close();
+        this.ws.close();
     }
 }

@@ -1,23 +1,27 @@
 import { EventState } from "@babylonjs/core";
 import { Slider, StackPanel, TextBlock } from "@babylonjs/gui";
 
-type SliderChangedCallback = (newValue: number) => void;
+type SliderChangedCallback = (newValue: number, userAdjusted: boolean) => void;
 
 export class EdmoSlider extends StackPanel {
     private valueLabel: TextBlock;
     private slider: Slider;
     private callbacks: SliderChangedCallback[] = [];
 
-    public constructor(label: string, min: number, max: number, step: number, value: number = 0) {
+    private precision: number;
+
+    public constructor(label: string, min: number, max: number, step: number, value: number = 0, precision = 2) {
         super();
 
         this.isVertical = true;
+        this.precision = precision;
+
 
         let header = new TextBlock(`EdmoSlider (${label}) label`, label);
         header.heightInPixels = 30;
         header.fontSizeInPixels = 25;
         header.fontWeight = "Bold";
-        header.color="#FFFFFF";
+        header.color = "#FFFFFF";
         this.addControl(header);
         let slider = this.slider = new Slider(`EdmoSlider (${label}) slider`);
 
@@ -31,7 +35,7 @@ export class EdmoSlider extends StackPanel {
 
         this.valueLabel = new TextBlock(`EdmoSlider (${label}) value`, value.toString());
         this.valueLabel.widthInPixels = 50;
-        this.valueLabel.color="#FFFFFF";
+        this.valueLabel.color = "#FFFFFF";
 
         let sliderArea = new StackPanel();
         sliderArea.isVertical = false;
@@ -46,8 +50,8 @@ export class EdmoSlider extends StackPanel {
     }
 
     private valueChanged(newValue: number, eventState: EventState) {
-        this.valueLabel.text = newValue.toFixed(1).toString();
-        this.callbacks.forEach(c => c(newValue));
+        this.valueLabel.text = newValue.toFixed(this.precision).toString();
+        this.callbacks.forEach(c => c(newValue, !this._manuallySetting));
     }
 
     public onValueChanged(callback: SliderChangedCallback) {
@@ -57,10 +61,21 @@ export class EdmoSlider extends StackPanel {
     get Value() {
         return this.slider.value;
     }
+
+    private _manuallySetting = false;
+
     set Value(value: number) {
+        if (this.slider.value == value)
+            return;
+
+        this._manuallySetting = true; // Lets not create a cycle of comms
+
         this.slider.value = value;
+
+        this._manuallySetting = false;
     }
-   public setColorSlider(backgroundColor: string,fillColor: string){
+
+    public setColorSlider(backgroundColor: string, fillColor: string) {
         this.slider.color = fillColor;
         this.slider.background = backgroundColor;
     }

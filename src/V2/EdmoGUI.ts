@@ -4,7 +4,7 @@ import { RobotSprite } from "./RobotSprite";
 import { ControlPanel } from "./ControlPanel";
 import { EdmoProperty } from "./EdmoProperty";
 
-type EdmoSliderCallback = (type: EdmoProperty, value: number) => void;
+type EdmoSliderCallback = (type: EdmoProperty, value: number, userAdjusted : boolean) => void;
 
 export class EdmoGUI implements IUpdatable {
     private fullscreenUI: AdvancedDynamicTexture;
@@ -23,5 +23,9 @@ export class EdmoGUI implements IUpdatable {
 
     public Update(deltaTime: number) {
         this.robot.Update(deltaTime);
+    }
+
+    public UpdateFrequencySlider(value: number) {
+        this.controlPanel.UpdateFrequencySlider(value);
     }
 }

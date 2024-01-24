@@ -13,7 +13,7 @@ export class ControllerScene extends Scene {
     public constructor(SimpleView: boolean, edmoClient: EDMOClient, canvas: HTMLCanvasElement, engine: Engine, options?: SceneOptions | undefined) {
         super(engine, options);
         this.client = edmoClient;
-        
+
         const light = new HemisphericLight("Global lights", new Vector3(0, 1, 0), this);
 
         const camera = new ArcRotateCamera("Camera2", 0.4, 0.9, 260, Vector3.ZeroReadOnly, this);
@@ -23,11 +23,12 @@ export class ControllerScene extends Scene {
             this.GUI = new Edmo2DGUI();
         }
         else {
-            this.edmoModel = new EdmoModel(this,edmoClient.ID);
+            this.edmoModel = new EdmoModel(this, edmoClient.ID);
             this.GUI = new EdmoGUI();
         }
 
         this.GUI.onSliderChanged(this.updateEdmoModel.bind(this));
+        this.client.OnDataChannelMessage(this.onDataChannelMessage.bind(this));
     }
 
     public Update() {
@@ -38,7 +39,13 @@ export class ControllerScene extends Scene {
         this.GUI?.Update(this.deltaTime / 1000);
     }
 
-    private updateEdmoModel(type: EdmoProperty, value: number) {
+    private onDataChannelMessage(message: string) {
+        if (message.startsWith("freq")) {
+            this.GUI.UpdateFrequencySlider(parseFloat(message.substring(5)));
+        }
+    }
+
+    private updateEdmoModel(type: EdmoProperty, value: number, userAdjusted: boolean) {
         if (this.edmoModel)
             switch (type) {
                 case EdmoProperty.Offset:
@@ -52,15 +59,22 @@ export class ControllerScene extends Scene {
                     break;
             }
 
+        if (!userAdjusted)
+            return;
+
+        const formattedValue = value.toFixed(2);
+
         switch (type) {
             case EdmoProperty.Offset:
-                this.client.sendMessage(`off ${value}`);
+                this.client.sendMessage(`off ${formattedValue}`);
                 break;
             case EdmoProperty.Frequency:
-                this.client.sendMessage(`freq ${value}`);
+                this.client.sendMessage(`freq ${formattedValue}`);
                 break;
             case EdmoProperty.Amplitude:
-                this.client.sendMessage(`amp ${value}`);
+                this.client.sendMessage(`amp ${formattedValue}`);
+            case EdmoProperty.Relation:
+                this.client.sendMessage(`phb ${formattedValue}`);
                 break;
         }
     }
