@@ -42,7 +42,7 @@ export class EdmoRectVisual extends StackPanel implements IUpdatable {
     private currentPos: number = 0;
 
     public Update(deltaTime: number): void {
-        this.currentPos = (this.currentPos + deltaTime) % 1;
+        this.currentPos = (this.currentPos + deltaTime) % (1 / this.frequency);
 
         const TWOPI = Math.PI * 2;
         let sin = (90 - this.offset + Math.sin(this.currentPos * TWOPI * this.frequency) * this.amplitude);
