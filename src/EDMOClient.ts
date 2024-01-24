@@ -31,9 +31,10 @@ export class EDMOClient {
     private readonly pc: RTCPeerConnection;
     private readonly ws: WebSocket;
     private readonly dataChannel: RTCDataChannel;
-    private readonly callbacks : DataChannelMessageCallback[] = [];
+    private readonly callbacks: DataChannelMessageCallback[] = [];
 
     private _id = -1;
+    private _simpleMode = false;
 
     public constructor(serverURL: string = "ws://localhost:8080") {
         if (!this.checkWebSocketURL(serverURL))
@@ -52,6 +53,13 @@ export class EDMOClient {
 
     private checkWebSocketURL(url: string): boolean {
         return url.startsWith("ws://") || url.startsWith("wss://");
+    }
+
+    public get simpleMode(): boolean {
+        return this._simpleMode;
+    }
+    public set simpleMode(enabled : boolean) {
+        this._simpleMode = enabled;
     }
 
     public get ID(): number {
@@ -113,8 +121,11 @@ export class EDMOClient {
         const data = JSON.parse(event.data);
 
         switch (data.type) {
+            case "GUIMODE":
+                this.simpleMode = Boolean(data.data);
+                break;
+
             case "SUCCESS":
-                this.ID = data.identifier;
                 const answer = JSON.parse(data.data);
                 console.log(answer);
                 if (answer.type === 'answer')
@@ -122,12 +133,11 @@ export class EDMOClient {
                 else if (answer.candidate) {
                     this.pc.addIceCandidate(new RTCIceCandidate(data));
                 }
-
+                this.ID = data.identifier;
                 break;
             case "SERVER_FULL":
                 console.log("Server is full");
                 break;
-
         }
     }
 

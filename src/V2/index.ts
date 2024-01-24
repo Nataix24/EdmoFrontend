@@ -8,11 +8,11 @@ canvas.style.width = "100vw"
 
 const engine = new Engine(canvas);
 
-const edmoClient = new EDMOClient("ws://192.168.65.246:8080");
+const edmoClient = new EDMOClient("ws://0.0.0.0:8080");
 
 await edmoClient.waitForId(3000);
 
-const scene = new ControllerScene(false, edmoClient, canvas, engine);
+const scene = new ControllerScene(edmoClient.simpleMode, edmoClient, canvas, engine);
 
 engine.runRenderLoop(() => {
     scene.Update();
