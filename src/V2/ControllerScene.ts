@@ -29,6 +29,7 @@ export class ControllerScene extends Scene {
 
         this.GUI.onSliderChanged(this.updateEdmoModel.bind(this));
         this.client.OnDataChannelMessage(this.onDataChannelMessage.bind(this));
+        this.client.OnConnectionStateChange(this.onDataConnectionChanged.bind(this));
     }
 
     public Update() {
@@ -76,6 +77,11 @@ export class ControllerScene extends Scene {
             case EdmoProperty.Relation:
                 this.client.sendMessage(`phb ${value * DEG2RADFACTOR}`);
                 break;
+        }
+    }
+    private onDataConnectionChanged(state: RTCIceConnectionState) {
+        if (state === "closed" || state === "disconnected") {
+            this.GUI.ShowDisconnectionMessage();
         }
     }
 }

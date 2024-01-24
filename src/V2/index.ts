@@ -20,7 +20,7 @@ document.cookie = `websocket=${userInput}`;
 const engine = new Engine(canvas);
 const edmoClient = new EDMOClient(userInput);
 
-await edmoClient.waitForId(3000);
+await edmoClient.waitForId(10000);
 
 const scene = new ControllerScene(edmoClient.simpleMode, edmoClient, canvas, engine);
 
@@ -35,5 +35,5 @@ window.addEventListener('resize', function () {
 
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
-    edmoClient.close();
+    edmoClient.close(true);
 });

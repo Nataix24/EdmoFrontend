@@ -28,4 +28,8 @@ export class EdmoGUI implements IUpdatable {
     public UpdateFrequencySlider(value: number) {
         this.controlPanel.UpdateFrequencySlider(value);
     }
+
+    public ShowDisconnectionMessage() {
+        this.controlPanel.showDisconnectionMessage();
+    }
 }

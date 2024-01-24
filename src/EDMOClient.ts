@@ -58,7 +58,7 @@ export class EDMOClient {
     public get simpleMode(): boolean {
         return this._simpleMode;
     }
-    public set simpleMode(enabled : boolean) {
+    public set simpleMode(enabled: boolean) {
         this._simpleMode = enabled;
     }
 
@@ -93,10 +93,18 @@ export class EDMOClient {
     }
 
     public sendMessage(message: string): void {
+        if (this.dataChannel.readyState === "closed")
+            return;
+
         this.dataChannel.send(message);
     }
 
     private onDataChannelMessage(event: MessageEvent<string>): void {
+        if (event.data === "close") {
+            this.close();
+            return;
+        }
+
         this.callbacks.forEach(callback => callback(event.data));
         console.log("Received message:", event.data);
     }
@@ -141,8 +149,9 @@ export class EDMOClient {
         }
     }
 
-    public close(): void {
-        this.dataChannel.send("close");
+    public close(userTriggered: boolean = false): void {
+        if (userTriggered)
+            this.dataChannel.send("close");
         this.dataChannel.close();
         this.pc.close();
         this.ws.close();

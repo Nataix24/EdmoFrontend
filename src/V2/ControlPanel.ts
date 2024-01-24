@@ -10,6 +10,7 @@ type EdmoSliderCallback = (type: EdmoProperty, value: number, userAdjusted: bool
 export class ControlPanel extends Rectangle implements IUpdatable {
     private sliders = new Map<EdmoProperty, EdmoSlider>();
     protected Updatables: IUpdatable[] = [];
+    private disconnectionMessage: TextBlock;
 
     public constructor() {
         super("Control Panel");
@@ -24,7 +25,6 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         this.paddingRight = 40;
         this.cornerRadius = 50;
 
-
         let stackPanel = new StackPanel();
 
         stackPanel.height = stackPanel.width = 1;
@@ -34,17 +34,41 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         stackPanel.spacing = 20;
 
         stackPanel.addControl(this.createSlider(EdmoProperty.Frequency, 0, 2, 0.01, 0));
+        stackPanel.addControl(this.createGap(5));
         stackPanel.addControl(this.createSlider(EdmoProperty.Offset, 0, 180, 1, 90, 0));
         stackPanel.addControl(this.createSlider(EdmoProperty.Amplitude, 0, 90, 1, 0, 0));
         stackPanel.addControl(this.createSlider(EdmoProperty.Relation, 0, 360, 1, 0, 0));
 
         stackPanel.addControl(this.createButton());
 
+        stackPanel.addControl(this.disconnectionMessage = this.createDisconnectionMessage());
+
         this.addControl(stackPanel);
     }
 
     Update(deltaTime: number): void {
         this.Updatables.forEach(e => e.Update(deltaTime));
+    }
+
+
+    private createGap(height: number = 10) {
+        const box = new Rectangle("Gap");
+        box.heightInPixels = height;
+        box.alpha = 0;
+        box.width = 1;
+        return box;
+    }
+
+    private createDisconnectionMessage() {
+        let message = new TextBlock("disconnection message", "You have been disconnected from the server");
+        message.color = "#FFFFFF";
+        message.fontSize = 20;
+        message.heightInPixels = 50;
+        message.width = 1;
+        message.textHorizontalAlignment = Control.HORIZONTAL_ALIGNMENT_CENTER;
+        message.textVerticalAlignment = Control.VERTICAL_ALIGNMENT_TOP;
+        message.alpha = 0;
+        return message;
     }
 
     private createButton() {
@@ -89,5 +113,9 @@ export class ControlPanel extends Rectangle implements IUpdatable {
 
     public onSliderValueChanged(callback: EdmoSliderCallback) {
         this.callbacks.push(callback);
+    }
+
+    public showDisconnectionMessage() {
+        this.disconnectionMessage.alpha = 1;
     }
 }
