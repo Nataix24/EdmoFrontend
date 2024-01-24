@@ -142,6 +142,7 @@ export class EDMOClient {
     }
 
     public close(): void {
+        this.dataChannel.send("close");
         this.dataChannel.close();
         this.pc.close();
         this.ws.close();
