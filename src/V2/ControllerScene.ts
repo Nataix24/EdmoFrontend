@@ -62,19 +62,19 @@ export class ControllerScene extends Scene {
         if (!userAdjusted)
             return;
 
-        const formattedValue = value.toFixed(2);
+        const DEG2RADFACTOR = Math.PI / 180;
 
         switch (type) {
             case EdmoProperty.Offset:
-                this.client.sendMessage(`off ${formattedValue}`);
+                this.client.sendMessage(`off ${value}`);
                 break;
             case EdmoProperty.Frequency:
-                this.client.sendMessage(`freq ${formattedValue}`);
+                this.client.sendMessage(`freq ${value}`);
                 break;
             case EdmoProperty.Amplitude:
-                this.client.sendMessage(`amp ${formattedValue}`);
+                this.client.sendMessage(`amp ${value}`);
             case EdmoProperty.Relation:
-                this.client.sendMessage(`phb ${formattedValue}`);
+                this.client.sendMessage(`phb ${value * DEG2RADFACTOR}`);
                 break;
         }
     }
