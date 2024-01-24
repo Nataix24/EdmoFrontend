@@ -9,12 +9,14 @@ export class EdmoSlider extends StackPanel {
     private callbacks: SliderChangedCallback[] = [];
 
     private precision: number;
+    private defaultValue: number;
 
     public constructor(label: string, min: number, max: number, step: number, value: number = 0, precision = 2) {
         super();
 
         this.isVertical = true;
         this.precision = precision;
+        this.defaultValue = value;
 
         let header = new TextBlock(`EdmoSlider (${label}) label`, label);
         header.heightInPixels = 30;
@@ -55,6 +57,10 @@ export class EdmoSlider extends StackPanel {
 
     public onValueChanged(callback: SliderChangedCallback) {
         this.callbacks.push(callback);
+    }
+
+    public Reset() {
+        this.slider.value = this.defaultValue;
     }
 
     get Value() {

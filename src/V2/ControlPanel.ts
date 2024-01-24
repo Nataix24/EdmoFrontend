@@ -78,11 +78,7 @@ export class ControlPanel extends Rectangle implements IUpdatable {
     }
 
     private resetSliders() {
-        // Taking a bold "risk", and assuming that everything is non-null in the map
-        this.sliders.get(EdmoProperty.Offset)!.Value = 90;
-        this.sliders.get(EdmoProperty.Frequency)!.Value = 0;
-        this.sliders.get(EdmoProperty.Amplitude)!.Value = 0;
-        this.sliders.get(EdmoProperty.Relation)!.Value = 0;
+        this.sliders.forEach(s => s.Reset());
     }
 
     private callbacks: EdmoSliderCallback[] = [];
