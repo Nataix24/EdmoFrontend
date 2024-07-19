@@ -25,7 +25,7 @@ export class ControlPanel extends Rectangle implements IUpdatable {
         this.paddingRight = 40;
         this.cornerRadius = 50;
 
-        let stackPanel = new StackPanel();
+        let stackPanel : StackPanel = new StackPanel();
 
         stackPanel.height = stackPanel.width = 1;
         stackPanel.isVertical = true;

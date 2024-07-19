@@ -8,21 +8,17 @@ canvas.style.width = "100vw";
 
 const lastUsedWebsocket = document.cookie.replace(/(?:(?:^|.*;\s*)websocket\s*\=\s*([^;]*).*$)|^.*$/, "$1");
 
-var userInput: string | null;
-while (true) {
-    userInput = window.prompt("Please enter the server websocket address", lastUsedWebsocket);
-    if (userInput?.startsWith("ws://") || userInput?.startsWith("wss://"))
-        break;
-}
+var userInput = window.prompt("Please enter the client name");
 
 document.cookie = `websocket=${userInput}`;
 
 const engine = new Engine(canvas);
-const edmoClient = new EDMOClient(userInput);
+const edmoClient = new EDMOClient("ws://localhost:8080/controller/" + userInput);
+
 
 await edmoClient.waitForId(10000);
 
-const scene = new ControllerScene(edmoClient.simpleMode, edmoClient, canvas, engine);
+const scene = new ControllerScene(true, edmoClient, canvas, engine);
 
 engine.runRenderLoop(() => {
     scene.Update();
@@ -35,5 +31,5 @@ window.addEventListener('resize', function () {
 
 window.addEventListener('beforeunload', function (e) {
     e.preventDefault();
-    edmoClient.close(true);
+    edmoClient.close();
 });

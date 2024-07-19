@@ -33,14 +33,14 @@ export class EDMOClient {
     private readonly dataChannel: RTCDataChannel;
     private readonly callbacks: DataChannelMessageCallback[] = [];
 
-    private _id = -1;
+    private _id = 1;
     private _simpleMode = false;
 
     public constructor(serverURL: string = "ws://localhost:8080") {
         if (!this.checkWebSocketURL(serverURL))
             throw new Error("Invalid WebSocket URL");
 
-        this.pc = new RTCPeerConnection(EDMOClient.ICE_SERVERS);
+        this.pc = new RTCPeerConnection(/*EDMOClient.ICE_SERVERS*/);
         this.ws = new WebSocket(serverURL);
 
         this.pc.oniceconnectionstatechange = this.onConnectionStateChange.bind(this);
@@ -80,6 +80,7 @@ export class EDMOClient {
         this.connectionStateChangedHandlers.forEach(callback => callback(this.pc.iceConnectionState));
     }
 
+
     public async waitForId(timeout: number) {
         var counter: number = 0;
         while (counter < timeout) {
@@ -93,18 +94,10 @@ export class EDMOClient {
     }
 
     public sendMessage(message: string): void {
-        if (this.dataChannel.readyState === "closed")
-            return;
-
         this.dataChannel.send(message);
     }
 
     private onDataChannelMessage(event: MessageEvent<string>): void {
-        if (event.data === "close") {
-            this.close();
-            return;
-        }
-
         this.callbacks.forEach(callback => callback(event.data));
         console.log("Received message:", event.data);
     }
@@ -127,31 +120,10 @@ export class EDMOClient {
 
     private onWebSocketMessage(event: MessageEvent<string>): void {
         const data = JSON.parse(event.data);
-
-        switch (data.type) {
-            case "GUIMODE":
-                this.simpleMode = Boolean(data.data);
-                break;
-
-            case "SUCCESS":
-                const answer = JSON.parse(data.data);
-                console.log(answer);
-                if (answer.type === 'answer')
-                    this.pc.setRemoteDescription(new RTCSessionDescription(answer));
-                else if (answer.candidate) {
-                    this.pc.addIceCandidate(new RTCIceCandidate(data));
-                }
-                this.ID = data.identifier;
-                break;
-            case "SERVER_FULL":
-                console.log("Server is full");
-                break;
-        }
+        this.pc.setRemoteDescription(new RTCSessionDescription(data));
     }
 
-    public close(userTriggered: boolean = false): void {
-        if (userTriggered)
-            this.dataChannel.send("close");
+    public close(): void {
         this.dataChannel.close();
         this.pc.close();
         this.ws.close();
