@@ -121,9 +121,12 @@ export class EDMOClient {
     private onWebSocketMessage(event: MessageEvent<string>): void {
         const data = JSON.parse(event.data);
         this.pc.setRemoteDescription(new RTCSessionDescription(data));
+
+        this.ws.close()
     }
 
     public close(): void {
+        this.sendMessage("CLOSE");
         this.dataChannel.close();
         this.pc.close();
         this.ws.close();
