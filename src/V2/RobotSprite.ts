@@ -1,4 +1,4 @@
-import { Control, Image } from "@babylonjs/gui";
+import { Control, Image, Rectangle } from "@babylonjs/gui";
 import { IUpdatable } from "./IUpdatable";
 
 export class RobotSprite extends Image implements IUpdatable {
@@ -24,6 +24,7 @@ export class RobotSprite extends Image implements IUpdatable {
 
     private onMouseOver() {
         this.animating = true;
+        this.taskPopUp();
     }
 
     private readonly animInterval: number = 0.200;
@@ -47,5 +48,14 @@ export class RobotSprite extends Image implements IUpdatable {
             frameNumber = 6 - (frameNumber - 2);
 
         this.source = RobotSprite.robotImages[frameNumber];
+    }
+    private taskPopUp(){
+        let popup = new Rectangle();
+        // Set properties on the Rectangle
+        popup.width = "200px";
+        popup.height = "100px";
+        popup.color = "white";
+        popup.background = "black";
+        console.log("im in method");
     }
 }

@@ -8,7 +8,14 @@
     <title>EDMO App</title>
   </head>
   <body>
-    <canvas id="renderCanvas"></canvas>
+    <div class="canvasContainer">
+      <canvas id="renderCanvas" style="height: 100%; width: 100%;"></canvas>
+    </div>
+    <div style="flex: 1;">
+      <button id="buttonHelp", onload="addButtonListener">Press me if you need help!</button>
+    </div>
     <script type="module" src="/main.js"></script>
+    <script src="Help.js"></script>
+  </script>
   </body>
 </html>

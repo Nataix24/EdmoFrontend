@@ -13,7 +13,7 @@ var userInput = window.prompt("Please enter the client name");
 document.cookie = `websocket=${userInput}`;
 
 const engine = new Engine(canvas);
-const edmoClient = new EDMOClient("ws://localhost:8080/controller/" + userInput);
+const edmoClient = new EDMOClient("ws://192.168.123.62:8080/controller/" + userInput);
 
 
 await edmoClient.waitForId(10000);

@@ -1,13 +1,36 @@
-html,
-body {
+html, body {
   overflow: hidden;
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: row;
+  }
+#buttonHelp {
+  display: flex;
+  position: absolute;
+  top: 1em;
+  background-color: #9C5586;
+  padding: 10px;
+  border-radius: 5px;
+  border: none;
 }
-
-#renderCanvas {
-  width: 100%;
-  height: 100%;
+button,
+p,
+h1{
+  font-size: 20px;
+  color: white;
+  font-weight: bold;
 }
+button:hover {
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;  
+  cursor: pointer;
+}
+.canvasContainer {
+  display: flex;
+  flex: 1;
+  max-height: 20%;
+  max-width: 20%;
+  }
+  

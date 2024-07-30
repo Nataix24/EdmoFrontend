@@ -34,7 +34,7 @@ export class EDMOClient {
     private readonly callbacks: DataChannelMessageCallback[] = [];
 
     private _id = 1;
-    private _simpleMode = false;
+    private _simpleMode = true;
 
     public constructor(serverURL: string = "ws://localhost:8080") {
         if (!this.checkWebSocketURL(serverURL))

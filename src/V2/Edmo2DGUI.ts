@@ -6,6 +6,7 @@ import { EdmoProperty } from "./EdmoProperty";
 import { EdmoRectVisual } from "./EdmoRectVisual";
 import { EdmoSlider } from "./SliderControl";
 
+
 type EdmoSliderCallback = (type: EdmoProperty, value: number, userAdjusted : boolean) => void;
 
 export class Edmo2DGUI implements IUpdatable {
@@ -13,11 +14,13 @@ export class Edmo2DGUI implements IUpdatable {
     private fullscreenUI: AdvancedDynamicTexture;
     private robot: RobotSprite;
     private controlPanel: ControlPanel2D;
+    //private helpButton: HelpButton;
 
     public constructor() {
         this.fullscreenUI = AdvancedDynamicTexture.CreateFullscreenUI("UI 2D", true);
         this.fullscreenUI.addControl(this.controlPanel = new ControlPanel2D());
         this.fullscreenUI.addControl(this.robot = new RobotSprite());
+        //this.fullscreenUI.addControl(this.helpButton = new HelpButton());
     }
 
     public onSliderChanged(callback: EdmoSliderCallback) {
@@ -26,6 +29,7 @@ export class Edmo2DGUI implements IUpdatable {
 
     public Update(deltaTime: number) {
         this.robot.Update(deltaTime);
+
         this.controlPanel.Update(deltaTime);
     }
 
