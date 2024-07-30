@@ -1,12 +1,9 @@
-import { Engine } from "@babylonjs/core";
+import { Engine, SceneOptions } from "@babylonjs/core";
 import { ControllerScene } from "./ControllerScene";
 import { EDMOClient } from "../EDMOClient";
 import { relativeURLWithPort } from "../scripts/API";
 
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
-canvas.style.height = "100vh";
-canvas.style.width = "100vw";
-
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
 
@@ -23,12 +20,10 @@ engine.runRenderLoop(() => {
     scene.render();
 });
 
+
 window.addEventListener('resize', function () {
     engine.resize();
 });
-
-window.onbeforeunload = null;
-window.onunload = null;
 
 window.addEventListener('beforeunload', function (e) {
     //e.preventDefault();

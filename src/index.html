@@ -1,21 +1,24 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css">
-    <title>EDMO App</title>
-  </head>
-  <body>
-    <div class="canvasContainer">
-      <canvas id="renderCanvas" style="height: 100%; width: 100%;"></canvas>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css">
+  <title>EDMO App</title>
+</head>
+
+<body>
+  <div class="controllerContainer">
+    <div class="canvasContainer" id="canvasContainer">
+      <canvas id="renderCanvas" style="height: 100%; width: 100%;display: block;"></canvas>
     </div>
-    <div style="flex: 1;">
-      <button id="buttonHelp", onload="addButtonListener">Press me if you need help!</button>
+    <div class="mainPanel">
+
     </div>
-    <script type="module" src="/main.js"></script>
-    <script src="Help.js"></script>
+  </div>
   </script>
-  </body>
+</body>
+
 </html>

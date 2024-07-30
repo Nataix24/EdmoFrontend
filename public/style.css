@@ -121,21 +121,33 @@ div.wrapContainer {
   border-radius: 5px;
   border: none;
 }
-button,
-p,
-h1{
-  font-size: 20px;
-  color: white;
-  font-weight: bold;
-}
+
 button:hover {
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;  
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
   cursor: pointer;
 }
+
 .canvasContainer {
+  flex: 0 0 auto;
+  height: 100%;
+  width: 50%;
+}
+
+.controllerContainer {
   display: flex;
-  flex: 1;
-  max-height: 20%;
-  max-width: 20%;
+  height: 100%;
+  width: 100%
+}
+
+@media screen and (orientation: portrait) {
+  .controllerContainer {
+    flex-direction: column;
   }
-  
+
+  .canvasContainer {
+    width: 100%;
+    height: 50%;
+
+  }
+
+}

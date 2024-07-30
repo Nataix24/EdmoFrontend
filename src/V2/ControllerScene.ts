@@ -1,4 +1,4 @@
-import { ArcRotateCamera, BinaryFileAssetTask, Color3, Engine, HemisphericLight, Layer, Scene, SceneOptions, Vector3, Viewport } from "@babylonjs/core";
+import { ArcRotateCamera, BinaryFileAssetTask, Color3, Color4, Engine, HemisphericLight, Layer, Scene, SceneOptions, Vector3, Viewport } from "@babylonjs/core";
 import { EdmoModel } from "./EdmoModel";
 import { EdmoGUI } from "./EdmoGUI";
 import { EdmoProperty } from "./EdmoProperty";
@@ -26,6 +26,8 @@ export class ControllerScene extends Scene {
             this.edmoModel = new EdmoModel(this, edmoClient.ID);
             this.GUI = new EdmoGUI();
         }
+
+        this.clearColor = new Color4(0,0,0,0.0000000000000001);
 
         this.GUI.onSliderChanged(this.updateEdmoModel.bind(this));
         this.client.OnDataChannelMessage(this.onDataChannelMessage.bind(this));
