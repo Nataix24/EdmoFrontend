@@ -34,7 +34,7 @@ export class EDMOClient {
     private readonly callbacks: DataChannelMessageCallback[] = [];
 
     private _id = 1;
-    private _simpleMode = true;
+    private _simpleMode = false;
 
     public constructor(serverURL: string = "ws://localhost:8080") {
         if (!this.checkWebSocketURL(serverURL))
@@ -121,9 +121,12 @@ export class EDMOClient {
     private onWebSocketMessage(event: MessageEvent<string>): void {
         const data = JSON.parse(event.data);
         this.pc.setRemoteDescription(new RTCSessionDescription(data));
+
+        this.ws.close()
     }
 
     public close(): void {
+        this.sendMessage("CLOSE");
         this.dataChannel.close();
         this.pc.close();
         this.ws.close();
