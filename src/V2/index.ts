@@ -26,7 +26,10 @@ window.addEventListener('resize', function () {
     engine.resize();
 });
 
+window.onbeforeunload = null;
+window.onunload = null;
+
 window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
+    //e.preventDefault();
     edmoClient.close();
 });
