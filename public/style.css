@@ -1,13 +1,111 @@
-html,
-body {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+:root {
+  --hue: 300;
+  --backgroundColor: hsl(var(--hue), 50%, 75%);
+
+  --baseLayerColor: hsl(var(--hue), 50%, 55%);
+  --baseAccentColor: hsl(var(--hue), 50%, 65%);
+  --baseTextColor: hsl(var(--hue), 50%, 20%);
+
+  --secondaryBaseColor: hsl(var(--hue), 50%, 35%);
+  --secondaryContentColor: hsl(var(--hue), 60%, 55%);
+
+  --mainLayerShadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.3);
+  font-family: sans-serif;
 }
 
-#renderCanvas {
-  width: 100%;
-  height: 100%;
+body {
+  background-color: var(--backgroundColor);
+  display: flex;
+  height: 100dvh;
+  flex-direction: row;
+  margin: 0;
+  overflow: hidden;
+}
+
+div.mainPanel {
+  background-color: var(--baseLayerColor);
+  color: var(--baseTextColor);
+  border-radius: 17px;
+  display: flex;
+  box-shadow: var(--mainLayerShadow);
+  flex: 1 1 auto;
+  padding: 2em;
+  gap: 2em;
+  margin: 1em;
+  flex-direction: column;
+  overflow: auto;
+}
+
+div.mainContent {
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+  overflow: auto;
+  flex: 1;
+}
+
+div.textBox {
+  background-color: var(--backgroundColor);
+  height: 2em;
+  padding: 1em;
+  display: flex;
+  gap: 1em;
+  border-radius: 1em;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: fit-content;
+}
+
+.textBoxInput {
+  background: transparent;
+  outline: none;
+  border: none;
+  padding: 0;
+  flex: 1;
+  resize: vertical;
+}
+
+
+div.wrapContainer {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  gap: 1.5em;
+}
+
+.card {
+  display: flex;
+  padding: 1em 2em;
+  border-radius: 1em;
+  background-color: var(--baseAccentColor);
+  color: var(--baseTextColor);
+  /*gap: 2em;*/
+  text-align: justify;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  min-height: 20%;
+  min-width: 20%;
+}
+
+.selected {
+  border-color: var(--baseTextColor);
+  border-width: thick;
+  border-style: solid;
+}
+
+.button {
+  align-self: flex-end;
+  border-radius: 0.5em;
+  background-color: var(--baseTextColor);
+  color: white;
+  padding: 1em;
+  font-size: x-large;
+}
+
+.spacer {
+  flex: 1
 }

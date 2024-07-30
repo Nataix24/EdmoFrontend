@@ -1,9 +1,18 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 
 module.exports = {
-  entry: './src/V2/index.ts',
-  devtool: 'inline-source-map',
+  entry: {
+    Index: './src/V2/index.ts',
+    Landing: './src/scripts/landing.ts'
+  },
+  output: {
+    filename: '[name].bundle.js',
+    path: path.resolve(__dirname, 'dist'),
+    clean: true,
+  },
   module: {
     rules: [
       {
@@ -13,13 +22,16 @@ module.exports = {
       },
     ],
   },
+  
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
-  output: {
-    filename: 'main.js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath: '/',
-  },
+  plugins: [
+    new HtmlWebpackPlugin({
+        template: './src/landing.html',
+        filename: 'landing.html',
+        chunks: ['Landing'],
+    }),
+  ],
   cache: true,
 };
