@@ -28,6 +28,11 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
+      template: './src/index.html',
+      filename: 'index.html',
+      chunks: ['Index'],
+  }),
+    new HtmlWebpackPlugin({
         template: './src/landing.html',
         filename: 'landing.html',
         chunks: ['Landing'],
