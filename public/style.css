@@ -17,6 +17,7 @@ body {
   background-color: var(--backgroundColor);
   display: flex;
   height: 100dvh;
+  width: 100dvw;
   flex-direction: row;
   margin: 0;
   overflow: hidden;
