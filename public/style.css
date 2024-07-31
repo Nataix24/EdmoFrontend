@@ -45,7 +45,7 @@ div.mainContent {
   flex: 1;
 }
 
-div.textBox {
+.textBox {
   background-color: var(--backgroundColor);
   height: 2em;
   padding: 1em;
@@ -121,43 +121,19 @@ div.wrapContainer {
   border-radius: 5px;
   border: none;
 }
+
 .canvasContainer {
   flex: 0 0 auto;
   height: 100%;
   width: 50%;
+  margin-bottom: -1em;
+  /*Negate the margin of mainPanel*/
 }
 
 .controllerContainer {
   display: flex;
   height: 100%;
   width: 100%
-}
-.slidersContainer {
-  display: flex;
-  width: 100%;
-  flex-direction: row;
-}
-.slider{
-  accent-color: #ff9cff;
-  flex: 1 2 auto;
-}
-.panelButtons{
-  border-radius: 17px;
-  border: transparent;
-  background: transparent;
-}
-.selectedButton{
-  font-weight: bolder;
-}
-.sliderbox{
- display: flex;
- flex-direction: row;
-}
-.sliderinput{
-  max-width: 1em;
-}
-.sliderinputText{
-  text-align: center;
 }
 
 @media screen and (orientation: portrait) {
@@ -168,7 +144,79 @@ div.wrapContainer {
   .canvasContainer {
     width: 100%;
     height: 50%;
-
   }
+}
 
+
+.slidersContainer {
+  flex: 1;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.slider {
+  accent-color: var(--backgroundColor);
+  flex: 1;
+}
+
+.panelButtons {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.panelButton {
+  align-self: flex-end;
+  border-radius: 0.5em;
+  background-color: transparent;
+  color: white;
+  padding: 1em;
+  font-size: x-large;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+.panelButtonSelected {
+  background-color: var(--baseTextColor);
+}
+
+.panelButtonIcon {
+  font-size: xxx-large;
+}
+
+.selectedButton {
+  font-weight: bolder;
+}
+
+.sliderbox {
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
+
+.sliderinput {
+  max-width: 2em;
+  border-radius: 0.5em;
+}
+
+.sliderinputText {
+  text-align: center;
+  font-weight: bold;
+  font-family: "monospace";
+}
+
+
+/*This removes the arrows on the number input box*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/*This removes the arrows on the number input box*/
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
