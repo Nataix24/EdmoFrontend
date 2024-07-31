@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/vite.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="style.css">
   <title>EDMO App</title>
 </head>
@@ -15,6 +16,55 @@
       <canvas id="renderCanvas" style="height: 100%; width: 100%;display: block;"></canvas>
     </div>
     <div class="mainPanel">
+      <div style="flex:1;display: flex;flex-direction: row;align-items: center;border-radius: 17px;background: #94408e;">
+        <div style="flex:1;display: flex;justify-content: center;">
+          <div class="button" id="submitButton" style="opacity: 0.2;">
+            <i class="selectedButton fa-solid fa-gamepad" style="font-size: xxx-large;"></i>
+          </div>
+        </div>
+        <div style="flex:1;display: flex;justify-content: center;">
+          <i class="fa-solid fa-list" style="font-size: xxx-large;"></i>
+        </div>
+        <div style="flex:1;display: flex;justify-content: center;">
+          <i class="fa-solid fa-user-group" style="font-size: xxx-large;"></i>
+        </div>
+      </div>
+        <div style="flex: 4;display: flex;flex-direction: column;" class="slidersContainer">
+          <p>Change Frequancy:</p>
+          <div class="sliderbox">
+            <input type="range" min="1" max="100" value="50" class="slider">
+            <div class="textBox sliderinput">
+              <input class="sliderinputText textBoxInput" type="number" name="" id="nameInput" autocomplete="off" max="180" maxlength="3" min="0">
+            </div>
+          </div>
+
+          <p>Change Amplitude:</p>
+          <div class="sliderbox">
+            <input type="range" min="1" max="100" value="50" class="slider">
+            <div class="textBox sliderinput">
+              <input class="sliderinputText textBoxInput" type="number" name="" id="nameInput" autocomplete="off" max="180" maxlength="3" min="0">
+            </div>
+          </div>
+
+          <p>Change Offset:</p>
+          <div class="sliderbox">
+            <input type="range" min="1" max="100" value="50" class="slider">
+            <div class="textBox sliderinput">
+              <input class="sliderinputText textBoxInput" type="number" name="" id="nameInput" autocomplete="off" max="180" maxlength="3" min="0">
+            </div>
+          </div>
+
+          <p>Change Phase:</p>
+          <div class="sliderbox">
+            <input type="range" min="1" max="100" value="50" class="slider">
+            <div class="textBox sliderinput">
+              <input class="sliderinputText textBoxInput" type="number" name="" id="nameInput" autocomplete="off" max="180" maxlength="3" min="0">
+            </div>
+          </div>
+
+        </div>
+      <div style="flex: 4;"></div>
+    </div>
 
     </div>
   </div>

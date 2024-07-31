@@ -121,12 +121,6 @@ div.wrapContainer {
   border-radius: 5px;
   border: none;
 }
-
-button:hover {
-  box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;
-  cursor: pointer;
-}
-
 .canvasContainer {
   flex: 0 0 auto;
   height: 100%;
@@ -137,6 +131,33 @@ button:hover {
   display: flex;
   height: 100%;
   width: 100%
+}
+.slidersContainer {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+}
+.slider{
+  accent-color: #ff9cff;
+  flex: 1 2 auto;
+}
+.panelButtons{
+  border-radius: 17px;
+  border: transparent;
+  background: transparent;
+}
+.selectedButton{
+  font-weight: bolder;
+}
+.sliderbox{
+ display: flex;
+ flex-direction: row;
+}
+.sliderinput{
+  max-width: 1em;
+}
+.sliderinputText{
+  text-align: center;
 }
 
 @media screen and (orientation: portrait) {
