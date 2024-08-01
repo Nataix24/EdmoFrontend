@@ -4,16 +4,16 @@ import { EDMOClient } from "../EDMOClient";
 import { relativeURLWithPort } from "../scripts/API";
 import { EdmoProperty } from "./EdmoProperty";
 
+const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
+
+var freq: number = 0;
+var amp: number = 0;
+var offset: number = 90;
+var phaseShift: number = 0;
+
+// Create canvas
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
-
-const robotID = localStorage.getItem("ConnectTarget") ?? "";
-
 const engine = new Engine(canvas);
-
-const edmoClient = new EDMOClient(relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"));
-
-await edmoClient.waitForId(10000);
-
 const scene = new ControllerScene(canvas, engine);
 
 engine.runRenderLoop(() => {
@@ -21,36 +21,112 @@ engine.runRenderLoop(() => {
     scene.render();
 });
 
+window.addEventListener('resize', _ => engine.resize());
+window.addEventListener('beforeunload', _ => edmoClient.close());
 
-window.addEventListener('resize', function () {
-    engine.resize();
-});
+const robotID = localStorage.getItem("ConnectTarget") ?? "";
+const edmoClient = new EDMOClient(relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"));
 
-window.addEventListener('beforeunload', function (e) {
-    //e.preventDefault();
-    edmoClient.close();
-});
+function createPanelButtons(currentPanel: number) {
+    const div = document.createElement("div");
+    div.className = "panelButtons";
 
+    div.replaceChildren(
+        createButton("fa-gamepad", currentPanel == 0, createSliderPanel),
+        createButton("fa-list", currentPanel == 1, createTasksPanel),
+        createButton("fa-user-group", currentPanel == 2, createPlayerPanel));
+    return div;
+}
 
-const freqSlider = document.getElementById('freqSlider') as HTMLInputElement;
-const freqText = document.getElementById("freqInputText") as HTMLInputElement;
-freqSlider.addEventListener("input", onFrequencyChanged);
-freqText.addEventListener("input", onFrequencyChanged);
+function createButton(iconName: string, isSelected: boolean, onClickCallback: () => void) {
+    const div = document.createElement("div");
+    div.className = "panelButton";
 
-const ampSlider = document.getElementById('ampSlider') as HTMLInputElement;
-const ampText = document.getElementById("ampInputText") as HTMLInputElement;
-ampSlider.addEventListener("input", onAmplitudeChanged);
-ampText.addEventListener("input", onAmplitudeChanged);
+    if (isSelected)
+        div.classList.add("panelButtonSelected");
 
-const offsetSlider = document.getElementById('offsetSlider') as HTMLInputElement;
-const offsetText = document.getElementById("offsetInputText") as HTMLInputElement;
-offsetSlider.addEventListener("input", onOffsetChanged);
-offsetText.addEventListener("input", onOffsetChanged);
+    const icon = document.createElement("i");
+    icon.className = `panelButtonIcon  fa-solid ${iconName}`;
 
-const phaseSlider = document.getElementById('phaseSlider') as HTMLInputElement;
-const phaseText = document.getElementById("phaseInputText") as HTMLInputElement;
-phaseSlider.addEventListener("input", onPhaseShiftChanged);
-phaseText.addEventListener("input", onPhaseShiftChanged);
+    div.appendChild(icon);
+    div.addEventListener("click", _ => onClickCallback());
+
+    return div;
+}
+
+function createSliderPanel() {
+    const div = document.createElement("div");
+    div.className = "slidersContainer";
+
+    div.replaceChildren(
+        createSlider("Frequency", freq, 0, 2, 0.05, onFrequencyChanged),
+        createSlider("Amplitude", amp, 0, 90, 1, onAmplitudeChanged),
+        createSlider("Offset", offset, 0, 180, 1, onOffsetChanged),
+        createSlider("Relation", phaseShift, 0, 360, 1, onPhaseShiftChanged),
+    );
+
+    const spacer = document.createElement("div");
+    spacer.className = "spacer";
+
+    panelArea.replaceChildren(createPanelButtons(0), div, spacer);
+}
+
+function createTasksPanel() {
+    panelArea.replaceChildren(createPanelButtons(1));
+}
+
+function createPlayerPanel() {
+    panelArea.replaceChildren(createPanelButtons(2));
+}
+
+function createSlider(title: string, value: number, min: number, max: number, step: number, valueChangedCallback: (x: number) => void) {
+    const div = document.createElement("div");
+
+    const header = document.createElement("h2");
+    header.innerText = title;
+    div.appendChild(header);
+
+    const sliderBox = document.createElement("div");
+    sliderBox.className = "sliderbox";
+    div.appendChild(sliderBox);
+
+    //<input type="range" min="0" max="2" step="0.05" value="0" class="slider" id="freqSlider">
+    const slider = document.createElement("input");
+    slider.type = "range";
+    slider.className = "slider";
+
+    const inputDiv = document.createElement("div");
+    inputDiv.className = "textBox sliderinput";
+
+    const inputText = document.createElement("input");
+    inputText.type = "number";
+    inputText.classList.add("sliderinputText", "textBoxInput");
+    inputText.autocomplete = "off";
+    inputDiv.appendChild(inputText);
+
+    slider.min = inputText.min = min.toString();
+    slider.max = inputText.max = max.toString();
+    slider.step = inputText.step = step.toString();
+    slider.value = inputText.value = value.toString();
+
+    function onValueChanged(e: Event) {
+        const value = clamp((e.target as HTMLInputElement).value, min, max);
+
+        slider.value = inputText.value = value.toString();
+
+        valueChangedCallback(value);
+    }
+
+    slider.addEventListener("input", onValueChanged);
+    inputText.addEventListener("input", onValueChanged);
+
+    sliderBox.replaceChildren(slider, inputDiv);
+    div.replaceChildren(header, sliderBox);
+
+    return div;
+}
+
+createSliderPanel();
 
 const DEG2RADFACTOR = Math.PI / 180;
 
@@ -68,34 +144,26 @@ function clamp(value: string, min: number, max: number) {
     }
 }
 
-function onFrequencyChanged(e: Event) {
-    const value = clamp((e.target as HTMLInputElement).value, 0, 2);
-
-    freqSlider.value = freqText.value = value.toString();
-
+function onFrequencyChanged(value: number) {
+    freq = value;
     edmoClient.sendMessage(`freq ${value}`);
     scene.updateEdmoModel(EdmoProperty.Frequency, value);
 };
-function onAmplitudeChanged(e: Event) {
-    const value = clamp((e.target as HTMLInputElement).value, 0, 90);
-    ampSlider.value = ampText.value = value.toString();
 
+function onAmplitudeChanged(value: number) {
+    amp = value;
     edmoClient.sendMessage(`amp ${value}`);
     scene.updateEdmoModel(EdmoProperty.Amplitude, value);
 };
-function onOffsetChanged(e: Event) {
-    const value = clamp((e.target as HTMLInputElement).value, 0, 180);
-    offsetSlider.value = offsetText.value = value.toString();
 
-
+function onOffsetChanged(value: number) {
+    offset = value;
     scene.updateEdmoModel(EdmoProperty.Offset, value);
     edmoClient.sendMessage(`off ${value}`);
 };
-function onPhaseShiftChanged(e: Event) {
-    const value = clamp((e.target as HTMLInputElement).value, 0, 360);
 
-    phaseSlider.value = phaseText.value = value.toString();
-
+function onPhaseShiftChanged(value: number) {
+    phaseShift = value;
     edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
     scene.updateEdmoModel(EdmoProperty.Relation, value);
 };

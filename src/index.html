@@ -18,64 +18,7 @@
       <canvas class="renderCanvas" id="renderCanvas"></canvas>
       <div class="canvasOverlay"></div>
     </div>
-    <div class="mainPanel">
-      <div class="panelButtons">
-        <div class="panelButton panelButtonSelected" id="submitButton">
-          <i class="panelButtonIcon  fa-solid fa-gamepad" "></i>
-          </div>
-          <div class=" panelButton " id=" submitButton">
-            <i class="panelButtonIcon  fa-solid fa-list"></i>
-        </div>
-        <div class="panelButton " id="submitButton">
-          <i class="panelButtonIcon fa-solid fa-user-group"></i>
-        </div>
-      </div>
-      <div class="slidersContainer">
-        <div>
-          <h2>Frequency:</h2>
-          <div class="sliderbox">
-            <input type="range" min="0" max="2" step="0.05" value="0" class="slider" id="freqSlider">
-            <div class="textBox sliderinput">
-              <input class="sliderinputText textBoxInput" type="number" name="" id="freqInputText" autocomplete="off"
-                max="2" min="0" step="0.05" value="0">
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h2>Amplitude:</h2>
-          <div class="sliderbox">
-            <input type="range" min="0" max="90" value="0" class="slider" id="ampSlider">
-            <div class="textBox sliderinput">
-              <input class="sliderinputText textBoxInput" type="number" name="" id="ampInputText" autocomplete="off"
-                max="90" maxlength="3" min="0" value="0">
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h2>Offset:</h2>
-          <div class="sliderbox">
-            <input type="range" min="0" max="180" value="90" class="slider" id="offsetSlider">
-            <div class="textBox sliderinput">
-              <input class="sliderinputText textBoxInput" type="number" name="" id="offsetInputText" autocomplete="off"
-                max="180" maxlength="3" min="0" value="90">
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <h2>Phase:</h2>
-          <div class="sliderbox">
-            <input type="range" min="0" max="360" value="0" class="slider" id="phaseSlider">
-            <div class="textBox sliderinput">
-              <input class="sliderinputText textBoxInput" type="number" name="" id="phaseInputText" autocomplete="off"
-                max="360" maxlength="3" min="0" value="0">
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="spacer"></div>
+    <div class="mainPanel" id="panelArea">
     </div>
   </div>
 </body>
