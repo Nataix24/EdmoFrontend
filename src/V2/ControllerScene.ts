@@ -27,7 +27,7 @@ export class ControllerScene extends Scene {
             this.GUI = new EdmoGUI();
         }
 
-        this.clearColor = new Color4(0,0,0,0.0000000000000001);
+        this.clearColor = new Color4(0,0,0,0);
 
         this.GUI.onSliderChanged(this.updateEdmoModel.bind(this));
         this.client.OnDataChannelMessage(this.onDataChannelMessage.bind(this));

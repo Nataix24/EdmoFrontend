@@ -13,7 +13,7 @@ const edmoClient = new EDMOClient(relativeURLWithPort(`controller/${robotID}`, "
 
 await edmoClient.waitForId(10000);
 
-const scene = new ControllerScene(true, edmoClient, canvas, engine);
+const scene = new ControllerScene(false, edmoClient, canvas, engine);
 
 engine.runRenderLoop(() => {
     scene.Update();
