@@ -14,7 +14,8 @@ export class RobotSprite extends Image implements IUpdatable {
 
         this.horizontalAlignment = Control.HORIZONTAL_ALIGNMENT_LEFT;
         this.verticalAlignment = Control.VERTICAL_ALIGNMENT_BOTTOM;
-        this.widthInPixels = this.heightInPixels = 300;
+        this.width = this.height = 0.2;
+        this.fixedRatio = 1;
         this.isPointerBlocker = true;
         this.onPointerEnterObservable.add(this.onMouseOver.bind(this));
     }
