@@ -21,7 +21,6 @@ export class EdmoModel {
 
             armModel.rotationQuaternion = null;
             armModel.rotation.y = -90 * EdmoModel.DEG2RADFACTOR;
-            armModel.position.z = -63; // Why?
 
             loadedMeshes.forEach(mesh => {
                 mesh.material = new StandardMaterial("material", scene);
