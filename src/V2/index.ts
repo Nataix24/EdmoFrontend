@@ -57,10 +57,10 @@ const DEG2RADFACTOR = Math.PI / 180;
 function clamp(value: string, min: number, max: number) {
     try {
         let num = Number(value);
+
         if (isNaN(num)) {
             return min;
         }
-
 
         return Math.max(Math.min(num, max));
     } catch (error) {
@@ -73,29 +73,30 @@ function onFrequencyChanged(e: Event) {
 
     freqSlider.value = freqText.value = value.toString();
 
-    //edmoClient.sendMessage(`freq ${value}`);
+    edmoClient.sendMessage(`freq ${value}`);
     scene.updateEdmoModel(EdmoProperty.Frequency, value);
 };
 function onAmplitudeChanged(e: Event) {
     const value = clamp((e.target as HTMLInputElement).value, 0, 90);
     ampSlider.value = ampText.value = value.toString();
 
-    //edmoClient.sendMessage(`amp ${value}`);
+    edmoClient.sendMessage(`amp ${value}`);
     scene.updateEdmoModel(EdmoProperty.Amplitude, value);
 };
 function onOffsetChanged(e: Event) {
     const value = clamp((e.target as HTMLInputElement).value, 0, 180);
     offsetSlider.value = offsetText.value = value.toString();
 
-    //edmoClient.sendMessage(`off ${value}`);
+
     scene.updateEdmoModel(EdmoProperty.Offset, value);
+    edmoClient.sendMessage(`off ${value}`);
 };
 function onPhaseShiftChanged(e: Event) {
     const value = clamp((e.target as HTMLInputElement).value, 0, 360);
 
     phaseSlider.value = phaseText.value = value.toString();
 
-    //edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
+    edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
     scene.updateEdmoModel(EdmoProperty.Relation, value);
 };
 

@@ -94,6 +94,9 @@ export class EDMOClient {
     }
 
     public sendMessage(message: string): void {
+        if (this.dataChannel.readyState != "open")
+            return;
+        
         this.dataChannel.send(message);
     }
 
@@ -122,7 +125,7 @@ export class EDMOClient {
         const data = JSON.parse(event.data);
         this.pc.setRemoteDescription(new RTCSessionDescription(data));
 
-        this.ws.close()
+        this.ws.close();
     }
 
     public close(): void {
