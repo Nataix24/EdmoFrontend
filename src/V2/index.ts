@@ -1,7 +1,8 @@
-import { Engine, SceneOptions } from "@babylonjs/core";
+import { Engine } from "@babylonjs/core";
 import { ControllerScene } from "./ControllerScene";
 import { EDMOClient } from "../EDMOClient";
 import { relativeURLWithPort } from "../scripts/API";
+import { EdmoProperty } from "./EdmoProperty";
 
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 
@@ -13,7 +14,7 @@ const edmoClient = new EDMOClient(relativeURLWithPort(`controller/${robotID}`, "
 
 await edmoClient.waitForId(10000);
 
-const scene = new ControllerScene(false, edmoClient, canvas, engine);
+const scene = new ControllerScene(canvas, engine);
 
 engine.runRenderLoop(() => {
     scene.Update();

@@ -7,12 +7,10 @@ export class EdmoModel {
     private armModel: AbstractMesh | undefined;
     private scene: Scene;
 
-    private isLoaded = false;
     private _color: Color3 = new Color3(0.8, 0.8, 0.8);
 
-    public constructor(scene: Scene, ID: number) {
+    public constructor(scene: Scene) {
         this.scene = scene;
-        console.log(ID);
         SceneLoader.ImportMesh("", "/Assets/Models/", "untitled.glb", scene, (loadedMeshes) => {
             this.model = loadedMeshes;
             let armModel = this.armModel = loadedMeshes[1];
