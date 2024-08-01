@@ -128,12 +128,31 @@ div.wrapContainer {
   width: 50%;
   margin-bottom: -1em;
   /*Negate the margin of mainPanel*/
+  position: relative;
+}
+
+.canvasOverlay {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-color: var(--backgroundColor);
+  mix-blend-mode: color;
+  pointer-events: none;
 }
 
 .controllerContainer {
   display: flex;
   height: 100%;
   width: 100%
+}
+
+.renderCanvas {
+  height: 100%;
+  width: 100%;
+  display: block;
+  filter: grayscale(1);
+  position: absolute;
+  outline: none;
 }
 
 @media screen and (orientation: portrait) {
