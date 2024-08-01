@@ -15,6 +15,9 @@ export class ControllerScene extends Scene {
         this.client = edmoClient;
 
         const light = new HemisphericLight("Global lights", new Vector3(0, 1, 0), this);
+        light.diffuse = new Color3(1, 1, 1);
+        light.specular = new Color3(1, 1, 1);
+        light.groundColor = new Color3(0.4, 0.4, 0.4);
 
         const camera = new ArcRotateCamera("Camera2", 0.4, 0.9, 260, Vector3.ZeroReadOnly, this);
         camera.attachControl(canvas, true);
@@ -27,7 +30,7 @@ export class ControllerScene extends Scene {
             this.GUI = new EdmoGUI();
         }
 
-        this.clearColor = new Color4(0,0,0,0);
+        this.clearColor = new Color4(0, 0, 0, 0);
 
         this.GUI.onSliderChanged(this.updateEdmoModel.bind(this));
         this.client.OnDataChannelMessage(this.onDataChannelMessage.bind(this));

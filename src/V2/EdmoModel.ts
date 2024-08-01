@@ -8,12 +8,10 @@ export class EdmoModel {
     private scene: Scene;
 
     private isLoaded = false;
-    private _color: Color3 = new Color3(1, 1, 1);
-    private colorIDArray = [new Color3(1, 0, 0.333333333), new Color3(0, 1, 0), new Color3(0, 0, 1), new Color3(1, 1, 0)];
+    private _color: Color3 = new Color3(0.8, 0.8, 0.8);
 
     public constructor(scene: Scene, ID: number) {
         this.scene = scene;
-        this.color = this.colorIDArray[ID % 4];
         console.log(ID);
         SceneLoader.ImportMesh("", "/Assets/Models/", "untitled.glb", scene, (loadedMeshes) => {
             this.model = loadedMeshes;
@@ -23,9 +21,12 @@ export class EdmoModel {
             armModel.rotation.y = -90 * EdmoModel.DEG2RADFACTOR;
 
             loadedMeshes.forEach(mesh => {
+                mesh.renderOutline = true;
+                mesh.outlineColor = new Color3(0.4, 0.4, 0.4);
+                mesh.outlineWidth = 1;
                 mesh.material = new StandardMaterial("material", scene);
-
                 (mesh.material as StandardMaterial).diffuseColor = this._color;
+
             });
         }, (event) => {
             console.log(event.loaded, event.total);
