@@ -35,11 +35,13 @@ export class EDMOClient {
 
     private _id = 1;
     private _simpleMode = false;
+    private readonly name: string;
 
-    public constructor(serverURL: string = "ws://localhost:8080") {
+    public constructor(name: string, serverURL: string = "ws://localhost:8080") {
         if (!this.checkWebSocketURL(serverURL))
             throw new Error("Invalid WebSocket URL");
 
+        this.name = name;
         this.pc = new RTCPeerConnection(/*EDMOClient.ICE_SERVERS*/);
         this.ws = new WebSocket(serverURL);
 
@@ -96,11 +98,11 @@ export class EDMOClient {
     public sendMessage(message: string): void {
         if (this.dataChannel.readyState != "open")
             return;
-        
+
         this.dataChannel.send(message);
     }
 
-    private onDataChannelMessage(event: MessageEvent<string>): void {
+    private onDataChannelMessage(event: MessageEvent<string>) {
         this.callbacks.forEach(callback => callback(event.data));
         console.log("Received message:", event.data);
     }
@@ -109,21 +111,27 @@ export class EDMOClient {
         this.callbacks.push(callback);
     }
 
-    private webSocketOpen = (): void => {
+    private async webSocketOpen() {
         console.log("OPEN");
 
         const pc = this.pc; // Store reference to pc variable
         const ws = this.ws; // Store reference to ws variable
 
-        pc.createOffer().then((offer) => {
-            pc.setLocalDescription(offer);
-            ws.send(JSON.stringify(offer));
-        });
+        const offer = await pc.createOffer();
+
+        await pc.setLocalDescription(offer);
+
+        const info = {
+            "playerName": this.name,
+            "handshake": JSON.stringify(offer)
+        };
+
+        ws.send(JSON.stringify(info));
     };
 
-    private onWebSocketMessage(event: MessageEvent<string>): void {
+    private async onWebSocketMessage(event: MessageEvent<string>) {
         const data = JSON.parse(event.data);
-        this.pc.setRemoteDescription(new RTCSessionDescription(data));
+        await this.pc.setRemoteDescription(new RTCSessionDescription(data));
 
         this.ws.close();
     }

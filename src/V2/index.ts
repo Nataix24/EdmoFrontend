@@ -25,7 +25,8 @@ window.addEventListener('resize', _ => engine.resize());
 window.addEventListener('beforeunload', _ => edmoClient.close());
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
-const edmoClient = new EDMOClient(relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"));
+const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer"
+const edmoClient = new EDMOClient(playerName, relativeURLWithPort( `controller/${robotID}`, "8080", "ws:"));
 
 function createPanelButtons(currentPanel: number) {
     const div = document.createElement("div");
