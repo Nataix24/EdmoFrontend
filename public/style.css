@@ -1,13 +1,15 @@
 :root {
+  --colorTrasition: background-color 300ms, color 300ms;
   --hue: 300;
   --backgroundColor: hsl(var(--hue), 50%, 75%);
 
   --baseLayerColor: hsl(var(--hue), 50%, 55%);
   --baseAccentColor: hsl(var(--hue), 50%, 65%);
-  --baseTextColor: hsl(var(--hue), 50%, 20%);
+  --baseTextColor: hsl(var(--hue), 50%, 10%);
 
   --secondaryBaseColor: hsl(var(--hue), 50%, 35%);
   --secondaryContentColor: hsl(var(--hue), 60%, 55%);
+
 
   --mainLayerShadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.3);
   font-family: sans-serif;
@@ -21,6 +23,7 @@ body {
   flex-direction: row;
   margin: 0;
   overflow: hidden;
+  transition: var(--colorTrasition)
 }
 
 div.mainPanel {
@@ -35,6 +38,7 @@ div.mainPanel {
   margin: 1em;
   flex-direction: column;
   overflow: auto;
+  transition: var(--colorTrasition)
 }
 
 div.mainContent {
@@ -56,6 +60,8 @@ div.mainContent {
   align-items: center;
   flex: 1;
   height: fit-content;
+  
+  transition: var(--colorTrasition)
 }
 
 .textBoxInput {
@@ -90,12 +96,16 @@ div.wrapContainer {
   text-decoration: none;
   min-height: 20%;
   min-width: 20%;
+
+  transition: var(--colorTrasition)
 }
 
 .selected {
   border-color: var(--baseTextColor);
   border-width: thick;
   border-style: solid;
+
+  transition: var(--colorTrasition)
 }
 
 .button {
@@ -105,6 +115,8 @@ div.wrapContainer {
   color: white;
   padding: 1em;
   font-size: x-large;
+
+  transition: var(--colorTrasition)
 }
 
 .spacer {
@@ -138,12 +150,14 @@ div.wrapContainer {
   background-color: var(--backgroundColor);
   mix-blend-mode: color;
   pointer-events: none;
+
+  transition: var(--colorTrasition)
 }
 
 .controllerContainer {
   display: flex;
   height: 100%;
-  width: 100%
+  width: 100%;
 }
 
 .renderCanvas {
@@ -178,6 +192,7 @@ div.wrapContainer {
 .slider {
   accent-color: var(--backgroundColor);
   flex: 1;
+  transition: var(--colorTrasition)
 }
 
 .panelButtons {
@@ -199,6 +214,7 @@ div.wrapContainer {
 
 .panelButtonSelected {
   background-color: var(--baseTextColor);
+  transition: var(--colorTrasition)
 }
 
 .panelButtonIcon {

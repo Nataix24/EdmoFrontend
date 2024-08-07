@@ -1,4 +1,4 @@
-type DataChannelMessageCallback = (receivedMessage: string) => void;
+export type DataChannelMessageCallback = (receivedMessage: string) => void;
 export class EDMOClient {
     private static readonly ICE_SERVERS: RTCConfiguration = {
         iceServers: [
@@ -33,11 +33,9 @@ export class EDMOClient {
     private readonly dataChannel: RTCDataChannel;
     private readonly callbacks: DataChannelMessageCallback[] = [];
 
-    private _id = 1;
-    private _simpleMode = false;
     private readonly name: string;
 
-    public constructor(name: string, serverURL: string = "ws://localhost:8080") {
+    public constructor(name: string, serverURL: string = "ws://localhost:8080", onMessageHandler: DataChannelMessageCallback[] = []) {
         if (!this.checkWebSocketURL(serverURL))
             throw new Error("Invalid WebSocket URL");
 
@@ -51,25 +49,14 @@ export class EDMOClient {
         this.dataChannel.onmessage = this.onDataChannelMessage.bind(this);
         this.ws.onopen = this.webSocketOpen.bind(this);
         this.ws.onmessage = this.onWebSocketMessage.bind(this);
+
+        onMessageHandler.forEach(h => {
+            this.OnDataChannelMessage(h);
+        }, this);
     }
 
     private checkWebSocketURL(url: string): boolean {
         return url.startsWith("ws://") || url.startsWith("wss://");
-    }
-
-    public get simpleMode(): boolean {
-        return this._simpleMode;
-    }
-    public set simpleMode(enabled: boolean) {
-        this._simpleMode = enabled;
-    }
-
-    public get ID(): number {
-        return this._id;
-    }
-
-    private set ID(id: number) {
-        this._id = id;
     }
 
     private connectionStateChangedHandlers: ((state: RTCIceConnectionState) => void)[] = [];
@@ -80,19 +67,6 @@ export class EDMOClient {
 
     private onConnectionStateChange() {
         this.connectionStateChangedHandlers.forEach(callback => callback(this.pc.iceConnectionState));
-    }
-
-
-    public async waitForId(timeout: number) {
-        var counter: number = 0;
-        while (counter < timeout) {
-            if (this.ID >= 0)
-                return;
-
-            const step = Math.min(timeout - counter, 50);
-            counter += step;
-            await new Promise(resolve => setTimeout(resolve, step)); // Wait for 100 milliseconds
-        }
     }
 
     public sendMessage(message: string): void {
@@ -112,8 +86,6 @@ export class EDMOClient {
     }
 
     private async webSocketOpen() {
-        console.log("OPEN");
-
         const pc = this.pc; // Store reference to pc variable
         const ws = this.ws; // Store reference to ws variable
 

@@ -5,6 +5,7 @@ import { relativeURLWithPort } from "../scripts/API";
 import { EdmoProperty } from "./EdmoProperty";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
+let currentView = 0;
 
 var freq: number = 0;
 var amp: number = 0;
@@ -21,12 +22,18 @@ engine.runRenderLoop(() => {
     scene.render();
 });
 
+const hues = [
+    0, 120, 240, 60
+];
+
+var id = -1;
+
 window.addEventListener('resize', _ => engine.resize());
 window.addEventListener('beforeunload', _ => edmoClient.close());
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
-const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer"
-const edmoClient = new EDMOClient(playerName, relativeURLWithPort( `controller/${robotID}`, "8080", "ws:"));
+const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
+const edmoClient = new EDMOClient(playerName, relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"), [handleRTCMessage]);
 
 function createPanelButtons(currentPanel: number) {
     const div = document.createElement("div");
@@ -56,6 +63,7 @@ function createButton(iconName: string, isSelected: boolean, onClickCallback: ()
 }
 
 function createSliderPanel() {
+    currentView = 0;
     const div = document.createElement("div");
     div.className = "slidersContainer";
 
@@ -73,10 +81,12 @@ function createSliderPanel() {
 }
 
 function createTasksPanel() {
+    currentView = 1;
     panelArea.replaceChildren(createPanelButtons(1));
 }
 
 function createPlayerPanel() {
+    currentView = 2;
     panelArea.replaceChildren(createPanelButtons(2));
 }
 
@@ -145,27 +155,109 @@ function clamp(value: string, min: number, max: number) {
     }
 }
 
-function onFrequencyChanged(value: number) {
+
+interface PlayerInfo {
+    name: string;
+    number: number;
+    voted: boolean;
+}
+
+interface TaskInfo {
+    Title: string;
+    Value: boolean;
+}
+
+let playerList: PlayerInfo[] = [];
+let taskList: TaskInfo[] = [];
+
+//#region RTC messages
+async function handleRTCMessage(message: string) {
+    const firstSpaceIndex = message.indexOf(' ');
+
+    const instruction = message.substring(0, firstSpaceIndex).trim();
+    const data = message.substring(firstSpaceIndex).trim();
+
+    switch (instruction) {
+        case "ID":
+            id = parseInt(data);
+            document.documentElement.style.setProperty('--hue', `${hues[id]}`);
+
+        case "amp":
+            onAmplitudeChanged(parseFloat(data), false);
+
+            if (currentView == 0)
+                createSliderPanel();
+            break;
+
+        case "freq":
+            onFrequencyChanged(parseFloat(data), false);
+
+            if (currentView == 0)
+                createSliderPanel();
+            break;
+
+        case "phb":
+            onPhaseShiftChanged(parseFloat(data) / DEG2RADFACTOR, false);
+
+            if (currentView == 0)
+                createSliderPanel();
+            break;
+
+        case "off":
+            onOffsetChanged(parseFloat(data), false);
+
+            if (currentView == 0)
+                createSliderPanel();
+            break;
+
+        case "TaskInfo":
+            taskList = JSON.parse(data);
+            // Refresh the tasks panel
+            if (currentView == 1)
+                createTasksPanel();
+
+            break;
+
+        case "PlayerInfo":
+            playerList = JSON.parse(data);
+
+            if (currentView == 2)
+                createPlayerPanel();
+
+            break;
+    }
+}
+//#endregion
+
+function onFrequencyChanged(value: number, userTriggered = true) {
     freq = value;
-    edmoClient.sendMessage(`freq ${value}`);
     scene.updateEdmoModel(EdmoProperty.Frequency, value);
+
+    if (userTriggered)
+        edmoClient.sendMessage(`freq ${value}`);
 };
 
-function onAmplitudeChanged(value: number) {
+function onAmplitudeChanged(value: number, userTriggered = true) {
     amp = value;
-    edmoClient.sendMessage(`amp ${value}`);
     scene.updateEdmoModel(EdmoProperty.Amplitude, value);
+
+    if (userTriggered)
+        edmoClient.sendMessage(`amp ${value}`);
 };
 
-function onOffsetChanged(value: number) {
+function onOffsetChanged(value: number, userTriggered = true) {
     offset = value;
     scene.updateEdmoModel(EdmoProperty.Offset, value);
-    edmoClient.sendMessage(`off ${value}`);
+
+    if (userTriggered)
+        edmoClient.sendMessage(`off ${value}`);
+
 };
 
-function onPhaseShiftChanged(value: number) {
+function onPhaseShiftChanged(value: number, userTriggered = true) {
     phaseShift = value;
-    edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
     scene.updateEdmoModel(EdmoProperty.Relation, value);
-};
 
+    if (userTriggered)
+        edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
+};
