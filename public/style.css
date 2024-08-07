@@ -60,7 +60,7 @@ div.mainContent {
   align-items: center;
   flex: 1;
   height: fit-content;
-  
+
   transition: var(--colorTrasition)
 }
 
@@ -83,21 +83,29 @@ div.wrapContainer {
 
 .card {
   display: flex;
-  padding: 1em 2em;
+  /*padding: 1em 2em;*/
   border-radius: 1em;
   background-color: var(--baseAccentColor);
   color: var(--baseTextColor);
-  /*gap: 2em;*/
-  text-align: justify;
   flex-direction: column;
-  flex: 1;
+  /*  flex: 1 1 auto; */
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  min-height: 20%;
-  min-width: 20%;
+  transition: var(--colorTrasition);
+  text-align: center;
+}
 
-  transition: var(--colorTrasition)
+/* Simply a helper style to allow overriding of the existing hue*/
+.playerCard {
+  --hue: 300;
+  --baseAccentColor: hsl(var(--hue), 50%, 65%);
+  --baseTextColor: hsl(var(--hue), 50%, 10%);
+}
+
+.taskCompleted {
+  text-decoration: line-through;
+  text-decoration-thickness: 0.2em;
 }
 
 .selected {

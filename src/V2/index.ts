@@ -82,13 +82,48 @@ function createSliderPanel() {
 
 function createTasksPanel() {
     currentView = 1;
-    panelArea.replaceChildren(createPanelButtons(1));
+
+    const div = document.createElement("div");
+    div.className = "mainContent";
+
+    for (const task of taskList) {
+        const taskCard = document.createElement("div");
+        taskCard.className = "card";
+
+        const text = document.createElement("h2");
+        text.innerText = task.Title;
+        taskCard.appendChild(text);
+        if (task.Value) //  If it is completed
+            text.className = "taskCompleted";
+        div.appendChild(taskCard);
+    }
+
+    panelArea.replaceChildren(createPanelButtons(1), div);
 }
 
 function createPlayerPanel() {
     currentView = 2;
-    panelArea.replaceChildren(createPanelButtons(2));
+    const div = document.createElement("div");
+    div.className = "mainContent";
+
+    for (const player of playerList) {
+        const playerCard = document.createElement("div");
+        playerCard.classList.add("card", "playerCard");
+
+        playerCard.style.setProperty("--hue", hues[player.number].toString());
+
+        const text = document.createElement("h2");
+        text.innerText = player.name;
+        playerCard.appendChild(text);
+
+
+        div.appendChild(playerCard);
+    }
+
+    panelArea.replaceChildren(createPanelButtons(2), div);
 }
+
+
 
 function createSlider(title: string, value: number, min: number, max: number, step: number, valueChangedCallback: (x: number) => void) {
     const div = document.createElement("div");
