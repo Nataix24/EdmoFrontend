@@ -88,7 +88,7 @@ function createTasksPanel() {
 
     for (const task of taskList) {
         const taskCard = document.createElement("div");
-        taskCard.className = "card";
+        taskCard.classList.add("card", "noflex");
 
         const text = document.createElement("h2");
         text.innerText = task.Title;
@@ -108,12 +108,12 @@ function createPlayerPanel() {
 
     for (const player of playerList) {
         const playerCard = document.createElement("div");
-        playerCard.classList.add("card", "playerCard");
+        playerCard.classList.add("card", "noflex", "playerCard");
 
         playerCard.style.setProperty("--hue", hues[player.number].toString());
 
         const text = document.createElement("h2");
-        text.innerText = player.name;
+        text.innerText = `${player.name}${(player.number == id) ? " (You)" : ""}`;
         playerCard.appendChild(text);
 
 
@@ -255,7 +255,7 @@ async function handleRTCMessage(message: string) {
 
         case "PlayerInfo":
             playerList = JSON.parse(data);
-            playerList.sort()
+            playerList.sort();
 
             if (currentView == 2)
                 createPlayerPanel();

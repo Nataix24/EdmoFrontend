@@ -88,7 +88,7 @@ div.wrapContainer {
   background-color: var(--baseAccentColor);
   color: var(--baseTextColor);
   flex-direction: column;
-  /*  flex: 1 1 auto; */
+  flex: 1 1 auto;
   justify-content: center;
   align-items: center;
   text-decoration: none;
@@ -101,6 +101,10 @@ div.wrapContainer {
   --hue: 300;
   --baseAccentColor: hsl(var(--hue), 50%, 65%);
   --baseTextColor: hsl(var(--hue), 50%, 10%);
+}
+
+.noflex {
+  flex: 0;
 }
 
 .taskCompleted {
