@@ -255,6 +255,7 @@ async function handleRTCMessage(message: string) {
 
         case "PlayerInfo":
             playerList = JSON.parse(data);
+            playerList.sort()
 
             if (currentView == 2)
                 createPlayerPanel();
