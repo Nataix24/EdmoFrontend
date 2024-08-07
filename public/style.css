@@ -83,17 +83,18 @@ div.wrapContainer {
 
 .card {
   display: flex;
-  /*padding: 1em 2em;*/
+  padding: 1em 2em;
   border-radius: 1em;
   background-color: var(--baseAccentColor);
   color: var(--baseTextColor);
-  flex-direction: column;
+  flex-direction: row;
   flex: 1 1 auto;
   justify-content: center;
   align-items: center;
   text-decoration: none;
   transition: var(--colorTrasition);
   text-align: center;
+
 }
 
 /* Simply a helper style to allow overriding of the existing hue*/
@@ -101,6 +102,17 @@ div.wrapContainer {
   --hue: 300;
   --baseAccentColor: hsl(var(--hue), 50%, 65%);
   --baseTextColor: hsl(var(--hue), 50%, 10%);
+}
+
+.cardText {
+  flex: 1;
+  text-align: left;
+}
+
+
+.playerCardIcon {
+  font-size: 2em;
+  justify-self: flex-end;
 }
 
 .noflex {

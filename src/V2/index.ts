@@ -91,10 +91,11 @@ function createTasksPanel() {
         taskCard.classList.add("card", "noflex");
 
         const text = document.createElement("h2");
+        text.className = "cardText";
         text.innerText = task.Title;
         taskCard.appendChild(text);
         if (task.Value) //  If it is completed
-            text.className = "taskCompleted";
+            text.classList.add("taskCompleted");
         div.appendChild(taskCard);
     }
 
@@ -113,10 +114,15 @@ function createPlayerPanel() {
         playerCard.style.setProperty("--hue", hues[player.number].toString());
 
         const text = document.createElement("h2");
+        text.className = "cardText";
         text.innerText = `${player.name}${(player.number == id) ? " (You)" : ""}`;
         playerCard.appendChild(text);
 
-
+        if (player.voted) {
+            const icon = document.createElement("i");
+            icon.className = `playerCardIcon fa-solid fa-question-circle`;
+            playerCard.appendChild(icon);
+        }
         div.appendChild(playerCard);
     }
 
