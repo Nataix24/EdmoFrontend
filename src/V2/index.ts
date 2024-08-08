@@ -7,6 +7,9 @@ import { RobotSprite2 } from "../scripts/RobotSprite2";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackArea = document.getElementById('feedbackArea') as HTMLDivElement;
+const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
+const robotSpriteHandler = new RobotSprite2(robotSprite);
+
 let currentView = 0;
 
 var freq: number = 0;
