@@ -49,17 +49,25 @@ export class RobotSprite2 {
         this.setImage(RobotSprite2.robotImagesURI[frameNumber]);
     }
 
+    public show() {
+        this.target.classList.remove("hidden");
+        this.wave(100);
+    }
+    public hide() {
+        this.target.classList.add("hidden");
+    }
+
     private onMouseOver(ev: Event) {
         this.wave();
     }
 
-    public wave() {
+    public wave(time: number = 200) {
         if (this.timer != null) {
             clearInterval(this.timer);
             this.frameNumber = 0;
         }
 
-        this.timer = setInterval(this.updateWave.bind(this), 200);
+        this.timer = setInterval(this.updateWave.bind(this), time);
     }
 
 

@@ -4,11 +4,14 @@ import { EDMOClient } from "../EDMOClient";
 import { relativeURLWithPort } from "../scripts/API";
 import { EdmoProperty } from "./EdmoProperty";
 import { RobotSprite2 } from "../scripts/RobotSprite2";
+import { FeedbackBubble } from "../scripts/FeedbackBubble";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
-const feedbackArea = document.getElementById('feedbackArea') as HTMLDivElement;
+const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;
 const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
 const robotSpriteHandler = new RobotSprite2(robotSprite);
+const feedbackHandler = new FeedbackBubble(feedbackBubble);
+
 
 let currentView = 0;
 
@@ -34,7 +37,7 @@ const hues = [
 
 var id = -1;
 
-window.addEventListener('resize', _ => {engine.resize(); scene.Resize()});
+window.addEventListener('resize', _ => { engine.resize(); scene.Resize(); });
 window.addEventListener('beforeunload', _ => edmoClient.close());
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
@@ -264,6 +267,18 @@ async function handleRTCMessage(message: string) {
                 createTasksPanel();
 
             break;
+
+        case "HelpEnabled":
+            const enabled = parseInt(data) == 0 ? false : true;
+            console.log(enabled);
+
+            enabled ? robotSpriteHandler.show() : robotSpriteHandler.hide();
+            break;
+
+        case "Feedback":
+            feedbackHandler.show(data);
+            break;
+
 
         case "PlayerInfo":
             playerList = JSON.parse(data);
