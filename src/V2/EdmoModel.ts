@@ -1,40 +1,46 @@
 import "@babylonjs/loaders";
-import { AbstractMesh, Color3, Scene, SceneLoader, StandardMaterial } from "@babylonjs/core";
+import { AbstractMesh, Color3, CreateSphere, MeshBuilder, Scene, SceneLoader, StandardMaterial, Vector3 } from "@babylonjs/core";
 
 export class EdmoModel {
     private static readonly DEG2RADFACTOR = Math.PI / 180;
-    private model: AbstractMesh[] | undefined;
-    private armModel: AbstractMesh | undefined;
+    public model: AbstractMesh = null!;
+    public root: AbstractMesh = null!;
+    public boundingSphere: AbstractMesh = null!;
+    private armModel: AbstractMesh = null!;
     private scene: Scene;
 
     private _color: Color3 = new Color3(0.8, 0.8, 0.8);
 
     public constructor(scene: Scene) {
         this.scene = scene;
-        SceneLoader.ImportMesh("", "/Assets/Models/", "untitled.glb", scene, (loadedMeshes) => {
-            this.model = loadedMeshes;
-            let armModel = this.armModel = loadedMeshes[1];
+    }
 
-            armModel.rotationQuaternion = null;
-            armModel.rotation.y = -90 * EdmoModel.DEG2RADFACTOR;
+    public async loadAsync() {
+        let loadedMeshes = await SceneLoader.ImportMeshAsync("", "/Assets/Models/", "untitled.glb", this.scene);
+        this.model = loadedMeshes.meshes[0];
 
-            loadedMeshes.forEach(mesh => {
-                mesh.renderOutline = true;
-                mesh.outlineColor = new Color3(0.4, 0.4, 0.4);
-                mesh.outlineWidth = 1;
-                mesh.material = new StandardMaterial("material", scene);
-                (mesh.material as StandardMaterial).diffuseColor = this._color;
+        var min = null;
+        var max = null;
 
-            });
-        }, (event) => {
-            console.log(event.loaded, event.total);
-        });
+        for (const mesh of this.model.getChildMeshes()) {
+            mesh.renderOutline = true;
+            mesh.outlineColor = new Color3(0.4, 0.4, 0.4);
+            mesh.outlineWidth = 1;
+            mesh.material = new StandardMaterial("material", this.scene);
+            (mesh.material as StandardMaterial).diffuseColor = this._color;
+            mesh.normalizeToUnitCube(true);
+        }
+
+        this.boundingSphere = CreateSphere("t", { diameter: 1.5 });
+        this.boundingSphere.setEnabled(false);
+
+        this.armModel = loadedMeshes.meshes[2];
     }
 
     set color(value: Color3) {
         this._color = value;
 
-        this.model?.forEach(mesh => {
+        this.model.getChildMeshes(true)?.forEach(mesh => {
             if (mesh.material as StandardMaterial)
                 (mesh.material as StandardMaterial).diffuseColor = value;
         });

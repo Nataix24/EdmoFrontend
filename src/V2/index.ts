@@ -18,6 +18,7 @@ var phaseShift: number = 0;
 const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 const engine = new Engine(canvas);
 const scene = new ControllerScene(canvas, engine);
+let loadTask = scene.loadAsync();
 
 engine.runRenderLoop(() => {
     scene.Update();
@@ -30,7 +31,7 @@ const hues = [
 
 var id = -1;
 
-window.addEventListener('resize', _ => engine.resize());
+window.addEventListener('resize', _ => {engine.resize(); scene.Resize()});
 window.addEventListener('beforeunload', _ => edmoClient.close());
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
