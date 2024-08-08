@@ -1,11 +1,9 @@
 import { ArcRotateCamera, BinaryFileAssetTask, Color3, Color4, Engine, HemisphericLight, Layer, Scene, SceneOptions, Vector3, Viewport } from "@babylonjs/core";
 import { EdmoModel } from "./EdmoModel";
-import { EdmoGUI } from "./EdmoGUI";
 import { EdmoProperty } from "./EdmoProperty";
 
 export class ControllerScene extends Scene {
     private readonly edmoModel: EdmoModel = null!;
-    private readonly GUI: EdmoGUI;
     public constructor(canvas: HTMLCanvasElement, engine: Engine, options?: SceneOptions | undefined) {
         super(engine, options);
 
@@ -17,8 +15,6 @@ export class ControllerScene extends Scene {
         const camera = new ArcRotateCamera("Camera2", 0.4, 0.9, 260, Vector3.ZeroReadOnly, this);
         camera.attachControl(canvas, true);
         this.edmoModel = new EdmoModel(this);
-        this.GUI = new EdmoGUI();
-
         this.clearColor = new Color4(0, 0, 0, 0);
     }
 
@@ -26,8 +22,6 @@ export class ControllerScene extends Scene {
         this.edmoModel?.updateAnimation();
         if (isNaN(this.deltaTime))
             return;
-
-        this.GUI?.Update(this.deltaTime / 1000);
     }
 
 

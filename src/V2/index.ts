@@ -3,8 +3,10 @@ import { ControllerScene } from "./ControllerScene";
 import { EDMOClient } from "../EDMOClient";
 import { relativeURLWithPort } from "../scripts/API";
 import { EdmoProperty } from "./EdmoProperty";
+import { RobotSprite2 } from "../scripts/RobotSprite2";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
+const feedbackArea = document.getElementById('feedbackArea') as HTMLDivElement;
 let currentView = 0;
 
 var freq: number = 0;
@@ -303,7 +305,7 @@ function onPhaseShiftChanged(value: number, userTriggered = true) {
     if (userTriggered)
         edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
 };
-createFeedbackPopUp(true); //instead of true server chcecj if teacher sent feedback 
+/* createFeedbackPopUp(true); //instead of true server chcecj if teacher sent feedback 
 function createFeedbackPopUp(feedbackSent: boolean){
     //if button is turned on - display pop up with task and turn on robot animation 
     if(feedbackSent){
@@ -316,4 +318,4 @@ function createFeedbackPopUp(feedbackSent: boolean){
         //Set the robot spriter to wave (how do i access robot from here?)
     }
     // if not ignore
-}
+} */

@@ -191,6 +191,7 @@ div.wrapContainer {
   filter: grayscale(1);
   position: absolute;
   outline: none;
+  mix-blend-mode: luminosity;
 }
 
 @media screen and (orientation: portrait) {
@@ -216,7 +217,7 @@ div.wrapContainer {
 .slider {
   accent-color: var(--backgroundColor);
   flex: 1;
-  transition: var(--colorTrasition)
+  transition: var(--colorTrasition), accent-color 300ms;
 }
 
 .panelButtons {
@@ -279,7 +280,8 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
-.feedbackPopUp{
+
+.feedbackPopUp {
   height: 20%;
   display: none;
   width: 80%;
@@ -296,9 +298,43 @@ input[type=number] {
   bottom: 0;
   right: 0;
 }
-.popUpText{
-    margin-left: 1em;
-    background-color: azure;
-    border-radius: 17px;
-    padding: 1em;
+
+.popUpText {
+  margin-left: 1em;
+  background-color: azure;
+  border-radius: 17px;
+  padding: 1em;
+}
+
+.feedbackArea {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  bottom: 0;
+}
+
+.feedbackBubble {
+  background-color: var(--baseLayerColor);
+  color: var(--baseTextColor);
+  font-size: larger;
+  font-weight: bold;
+  flex: 1;
+  margin: 2%;
+  border-radius: 0.5em;
+  padding: 0.5em;
+  opacity: 0.8;
+}
+
+.robotSprite {
+  background-image: url(./Assets/Textures/robot1.png);
+  color: #9C5586;
+  aspect-ratio: 1.46987;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: contain;
+  flex: 0 1 auto;
+  width: 15%;
+  margin: 0 1em;
+  filter: grayscale(1);
+  mix-blend-mode: luminosity;
 }
