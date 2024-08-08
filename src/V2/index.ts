@@ -303,3 +303,17 @@ function onPhaseShiftChanged(value: number, userTriggered = true) {
     if (userTriggered)
         edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
 };
+createFeedbackPopUp(true); //instead of true server chcecj if teacher sent feedback 
+function createFeedbackPopUp(feedbackSent: boolean){
+    //if button is turned on - display pop up with task and turn on robot animation 
+    if(feedbackSent){
+        const div = document.getElementById('canvasPopUp') as HTMLCanvasElement;
+        const feedbackText = document.createElement("p"); 
+        feedbackText.textContent="place holder feedback"; //TODO: here fetch the feedback received from the server 
+        feedbackText.className="popUpText";
+        div.style.display='flex';
+        div.appendChild(feedbackText);
+        //Set the robot spriter to wave (how do i access robot from here?)
+    }
+    // if not ignore
+}

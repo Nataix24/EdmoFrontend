@@ -279,3 +279,26 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+.feedbackPopUp{
+  height: 20%;
+  display: none;
+  width: 80%;
+  position: absolute;
+  background-color: transparent;
+  /* mix-blend-mode: color; */
+  /* pointer-events: none; */
+  display: absolute;
+  /* top: 20px; */
+  /* left: 20px; */
+
+  /* padding: 10px; */
+  border-radius: 5px;
+  bottom: 0;
+  right: 0;
+}
+.popUpText{
+    margin-left: 1em;
+    background-color: azure;
+    border-radius: 17px;
+    padding: 1em;
+}
