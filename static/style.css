@@ -10,7 +10,6 @@
   --secondaryBaseColor: hsl(var(--hue), 50%, 35%);
   --secondaryContentColor: hsl(var(--hue), 60%, 55%);
 
-
   --mainLayerShadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.3);
   font-family: sans-serif;
 }
@@ -39,6 +38,10 @@ div.mainPanel {
   flex-direction: column;
   overflow: auto;
   transition: var(--colorTrasition)
+}
+
+div.mainPanel:has(.buttonHidden) {
+  gap: 0;
 }
 
 div.mainContent {
@@ -92,9 +95,12 @@ div.wrapContainer {
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  transition: var(--colorTrasition);
+  transition: var(--colorTrasition), height 100ms, transform 100ms;
   text-align: center;
+}
 
+.noflex {
+  flex: 0;
 }
 
 /* Simply a helper style to allow overriding of the existing hue*/
@@ -129,7 +135,7 @@ div.wrapContainer {
   border-width: thick;
   border-style: solid;
 
-  transition: var(--colorTrasition)
+  transition: var(--colorTrasition), height 100ms, transform 100ms;
 }
 
 .button {
@@ -240,6 +246,12 @@ div.wrapContainer {
 .panelButtonSelected {
   background-color: var(--baseTextColor);
   transition: var(--colorTrasition)
+}
+
+.buttonHidden {
+  height: 0;
+  transform: scaleY(0);
+  transition: height 100ms, transform 100ms;
 }
 
 .panelButtonIcon {

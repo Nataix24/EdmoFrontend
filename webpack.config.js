@@ -22,6 +22,10 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    usedExports: true, // <- remove unused function
+  },
+  
   
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
@@ -31,12 +35,17 @@ module.exports = {
       template: './src/index.html',
       filename: 'index.html',
       chunks: ['Index'],
-  }),
-    new HtmlWebpackPlugin({
-        template: './src/landing.html',
-        filename: 'landing.html',
-        chunks: ['Landing'],
     }),
+    new HtmlWebpackPlugin({
+      template: './src/landing.html',
+      filename: 'landing.html',
+      chunks: ['Landing'],
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'static' }
+      ]
+    })
   ],
   cache: true,
 };

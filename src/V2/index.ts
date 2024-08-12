@@ -5,6 +5,10 @@ import { relativeURLWithPort } from "../scripts/API";
 import { EdmoProperty } from "./EdmoProperty";
 import { RobotSprite2 } from "../scripts/RobotSprite2";
 import { FeedbackBubble } from "../scripts/FeedbackBubble";
+import { ControlPanel } from "../Controller/ControlsPanel";
+import { PanelButtons } from "../Controller/PanelButtons";
+import { TaskPanel } from "../Controller/TasksPanel";
+import { PlayersPanel } from "../Controller/PlayersPanel";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;
@@ -12,199 +16,24 @@ const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
 const robotSpriteHandler = new RobotSprite2(robotSprite);
 const feedbackHandler = new FeedbackBubble(feedbackBubble);
 
+var helpEnabled: boolean = false;
 
-let currentView = 0;
+const panelButtons = new PanelButtons([
+    { faIcon: "fa-gamepad", selectionCallback: () => createSliderPanel() },
+    { faIcon: "fa-list", selectionCallback: () => createTasksPanel() },
+    { faIcon: "fa-user-group", selectionCallback: () => createPlayerPanel() },
+]);
 
-var freq: number = 0;
-var amp: number = 0;
-var offset: number = 90;
-var phaseShift: number = 0;
-
-// Create canvas
-const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
-const engine = new Engine(canvas);
-const scene = new ControllerScene(canvas, engine);
-let loadTask = scene.loadAsync();
-
-engine.runRenderLoop(() => {
-    scene.Update();
-    scene.render();
+const controlPanel = new ControlPanel(null, {
+    frequencyChangedCallback: onFrequencyChanged,
+    amplitudeChangedCallback: onAmplitudeChanged,
+    offsetChangedCallback: onOffsetChanged,
+    phaseShiftChangedCallback: onPhaseShiftChanged,
+    helpButtonClicked: toggleVote
 });
 
-const hues = [
-    0, 120, 240, 60
-];
-
-var id = -1;
-
-window.addEventListener('resize', _ => { engine.resize(); scene.Resize(); });
-window.addEventListener('beforeunload', _ => edmoClient.close());
-
-const robotID = localStorage.getItem("ConnectTarget") ?? "";
-const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
-const edmoClient = new EDMOClient(playerName, relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"), [handleRTCMessage]);
-
-function createPanelButtons(currentPanel: number) {
-    const div = document.createElement("div");
-    div.className = "panelButtons";
-
-    div.replaceChildren(
-        createButton("fa-gamepad", currentPanel == 0, createSliderPanel),
-        createButton("fa-list", currentPanel == 1, createTasksPanel),
-        createButton("fa-user-group", currentPanel == 2, createPlayerPanel));
-    return div;
-}
-
-function createButton(iconName: string, isSelected: boolean, onClickCallback: () => void) {
-    const div = document.createElement("div");
-    div.className = "panelButton";
-
-    if (isSelected)
-        div.classList.add("panelButtonSelected");
-
-    const icon = document.createElement("i");
-    icon.className = `panelButtonIcon  fa-solid ${iconName}`;
-
-    div.appendChild(icon);
-    div.addEventListener("click", _ => onClickCallback());
-
-    return div;
-}
-
-function createSliderPanel() {
-    currentView = 0;
-    const div = document.createElement("div");
-    div.className = "slidersContainer";
-
-    div.replaceChildren(
-        createSlider("Frequency", freq, 0, 2, 0.05, onFrequencyChanged),
-        createSlider("Amplitude", amp, 0, 90, 1, onAmplitudeChanged),
-        createSlider("Offset", offset, 0, 180, 1, onOffsetChanged),
-        createSlider("Relation", phaseShift, 0, 360, 1, onPhaseShiftChanged),
-    );
-
-    const spacer = document.createElement("div");
-    spacer.className = "spacer";
-
-    panelArea.replaceChildren(createPanelButtons(0), div, spacer);
-}
-
-function createTasksPanel() {
-    currentView = 1;
-
-    const div = document.createElement("div");
-    div.className = "mainContent";
-
-    for (const task of taskList) {
-        const taskCard = document.createElement("div");
-        taskCard.classList.add("card", "noflex");
-
-        const text = document.createElement("h2");
-        text.className = "cardText";
-        text.innerText = task.Title;
-        taskCard.appendChild(text);
-        if (task.Value) //  If it is completed
-            text.classList.add("taskCompleted");
-        div.appendChild(taskCard);
-    }
-
-    panelArea.replaceChildren(createPanelButtons(1), div);
-}
-
-function createPlayerPanel() {
-    currentView = 2;
-    const div = document.createElement("div");
-    div.className = "mainContent";
-
-    for (const player of playerList) {
-        const playerCard = document.createElement("div");
-        playerCard.classList.add("card", "noflex", "playerCard");
-
-        playerCard.style.setProperty("--hue", hues[player.number].toString());
-
-        const text = document.createElement("h2");
-        text.className = "cardText";
-        text.innerText = `${player.name}${(player.number == id) ? " (You)" : ""}`;
-        playerCard.appendChild(text);
-
-        if (player.voted) {
-            const icon = document.createElement("i");
-            icon.className = `playerCardIcon fa-solid fa-question-circle`;
-            playerCard.appendChild(icon);
-        }
-        div.appendChild(playerCard);
-    }
-
-    panelArea.replaceChildren(createPanelButtons(2), div);
-}
-
-
-
-function createSlider(title: string, value: number, min: number, max: number, step: number, valueChangedCallback: (x: number) => void) {
-    const div = document.createElement("div");
-
-    const header = document.createElement("h2");
-    header.innerText = title;
-    div.appendChild(header);
-
-    const sliderBox = document.createElement("div");
-    sliderBox.className = "sliderbox";
-    div.appendChild(sliderBox);
-
-    //<input type="range" min="0" max="2" step="0.05" value="0" class="slider" id="freqSlider">
-    const slider = document.createElement("input");
-    slider.type = "range";
-    slider.className = "slider";
-
-    const inputDiv = document.createElement("div");
-    inputDiv.className = "textBox sliderinput";
-
-    const inputText = document.createElement("input");
-    inputText.type = "number";
-    inputText.classList.add("sliderinputText", "textBoxInput");
-    inputText.autocomplete = "off";
-    inputDiv.appendChild(inputText);
-
-    slider.min = inputText.min = min.toString();
-    slider.max = inputText.max = max.toString();
-    slider.step = inputText.step = step.toString();
-    slider.value = inputText.value = value.toString();
-
-    function onValueChanged(e: Event) {
-        const value = clamp((e.target as HTMLInputElement).value, min, max);
-
-        slider.value = inputText.value = value.toString();
-
-        valueChangedCallback(value);
-    }
-
-    slider.addEventListener("input", onValueChanged);
-    inputText.addEventListener("input", onValueChanged);
-
-    sliderBox.replaceChildren(slider, inputDiv);
-    div.replaceChildren(header, sliderBox);
-
-    return div;
-}
-
-createSliderPanel();
-
-const DEG2RADFACTOR = Math.PI / 180;
-
-function clamp(value: string, min: number, max: number) {
-    try {
-        let num = Number(value);
-
-        if (isNaN(num)) {
-            return min;
-        }
-
-        return Math.max(Math.min(num, max));
-    } catch (error) {
-        return min;
-    }
-}
-
+const taskPanel = new TaskPanel();
+const playersPanel = new PlayersPanel();
 
 interface PlayerInfo {
     name: string;
@@ -212,13 +41,39 @@ interface PlayerInfo {
     voted: boolean;
 }
 
-interface TaskInfo {
-    Title: string;
-    Value: boolean;
+let playerList: PlayerInfo[] = [];
+
+// Create canvas
+const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
+const scene = new ControllerScene(canvas);
+let loadTask = scene.loadAsync();
+
+const hues = [
+    0, 120, 240, 60
+];
+
+var id = -1;
+
+const robotID = localStorage.getItem("ConnectTarget") ?? "";
+const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
+const edmoClient = new EDMOClient(playerName, relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"), [handleRTCMessage]);
+
+
+function createTasksPanel() {
+    panelArea.replaceChildren(panelButtons.element, taskPanel.element);
 }
 
-let playerList: PlayerInfo[] = [];
-let taskList: TaskInfo[] = [];
+function createPlayerPanel() {
+    panelArea.replaceChildren(panelButtons.element, playersPanel.element);
+}
+
+function createSliderPanel() {
+    panelArea.replaceChildren(panelButtons.element, controlPanel.element);
+}
+
+createSliderPanel()
+
+const DEG2RADFACTOR = Math.PI / 180;
 
 //#region RTC messages
 async function handleRTCMessage(message: string) {
@@ -232,47 +87,53 @@ async function handleRTCMessage(message: string) {
             id = parseInt(data);
             document.documentElement.style.setProperty('--hue', `${hues[id]}`);
 
-        case "amp":
-            onAmplitudeChanged(parseFloat(data), false);
-
-            if (currentView == 0)
-                createSliderPanel();
+        case "amp": {
+            const value = parseFloat(data);
+            controlPanel.amplitude = value;
+            onAmplitudeChanged(value, false);
             break;
+        }
 
-        case "freq":
-            onFrequencyChanged(parseFloat(data), false);
-
-            if (currentView == 0)
-                createSliderPanel();
+        case "freq": {
+            const value = parseFloat(data);
+            controlPanel.frequency = value;
+            onFrequencyChanged(value, false);
             break;
+        }
 
-        case "phb":
-            onPhaseShiftChanged(parseFloat(data) / DEG2RADFACTOR, false);
-
-            if (currentView == 0)
-                createSliderPanel();
+        case "phb": {
+            const value = parseFloat(data) / DEG2RADFACTOR;
+            controlPanel.phaseShift = value;
+            onPhaseShiftChanged(value, false);
             break;
+        }
 
-        case "off":
-            onOffsetChanged(parseFloat(data), false);
-
-            if (currentView == 0)
-                createSliderPanel();
+        case "off": {
+            const value = parseFloat(data);
+            controlPanel.offset = value;
+            onOffsetChanged(value, false);
             break;
+        }
 
         case "TaskInfo":
-            taskList = JSON.parse(data);
-            // Refresh the tasks panel
-            if (currentView == 1)
-                createTasksPanel();
+            const taskList = JSON.parse(data);
+            taskPanel.refreshTasks(taskList);
 
             break;
 
         case "HelpEnabled":
-            const enabled = parseInt(data) == 0 ? false : true;
-            console.log(enabled);
+            helpEnabled = parseInt(data) == 0 ? false : true;
+            console.log(helpEnabled);
 
-            enabled ? robotSpriteHandler.show() : robotSpriteHandler.hide();
+            if (helpEnabled) {
+                robotSpriteHandler.show();
+                controlPanel.showHelpButton();
+            }
+            else {
+                robotSpriteHandler.hide();
+                controlPanel.hideHelpButton();
+            }
+
             break;
 
         case "Feedback":
@@ -284,16 +145,24 @@ async function handleRTCMessage(message: string) {
             playerList = JSON.parse(data);
             playerList.sort();
 
-            if (currentView == 2)
-                createPlayerPanel();
+            playersPanel.refreshPlayers(playerList);
 
             break;
     }
 }
+
+function toggleVote() {
+    edmoClient.sendMessage(`vote ${getCurrentPlayerInfo()?.voted ? 0 : 1}`);
+}
+
+function getCurrentPlayerInfo() {
+    for (const playerInfo of playerList)
+        if (playerInfo.number == id)
+            return playerInfo;
+}
 //#endregion
 
 function onFrequencyChanged(value: number, userTriggered = true) {
-    freq = value;
     scene.updateEdmoModel(EdmoProperty.Frequency, value);
 
     if (userTriggered)
@@ -301,7 +170,6 @@ function onFrequencyChanged(value: number, userTriggered = true) {
 };
 
 function onAmplitudeChanged(value: number, userTriggered = true) {
-    amp = value;
     scene.updateEdmoModel(EdmoProperty.Amplitude, value);
 
     if (userTriggered)
@@ -309,7 +177,6 @@ function onAmplitudeChanged(value: number, userTriggered = true) {
 };
 
 function onOffsetChanged(value: number, userTriggered = true) {
-    offset = value;
     scene.updateEdmoModel(EdmoProperty.Offset, value);
 
     if (userTriggered)
@@ -318,23 +185,8 @@ function onOffsetChanged(value: number, userTriggered = true) {
 };
 
 function onPhaseShiftChanged(value: number, userTriggered = true) {
-    phaseShift = value;
     scene.updateEdmoModel(EdmoProperty.Relation, value);
 
     if (userTriggered)
-        edmoClient.sendMessage(`freq ${Number(value) * DEG2RADFACTOR}`);
+        edmoClient.sendMessage(`phb ${Number(value) * DEG2RADFACTOR}`);
 };
-/* createFeedbackPopUp(true); //instead of true server chcecj if teacher sent feedback 
-function createFeedbackPopUp(feedbackSent: boolean){
-    //if button is turned on - display pop up with task and turn on robot animation 
-    if(feedbackSent){
-        const div = document.getElementById('canvasPopUp') as HTMLCanvasElement;
-        const feedbackText = document.createElement("p"); 
-        feedbackText.textContent="place holder feedback"; //TODO: here fetch the feedback received from the server 
-        feedbackText.className="popUpText";
-        div.style.display='flex';
-        div.appendChild(feedbackText);
-        //Set the robot spriter to wave (how do i access robot from here?)
-    }
-    // if not ignore
-} */

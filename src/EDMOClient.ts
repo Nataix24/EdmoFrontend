@@ -53,6 +53,8 @@ export class EDMOClient {
         onMessageHandler.forEach(h => {
             this.OnDataChannelMessage(h);
         }, this);
+
+        window.addEventListener("beforeunload", () => this.close())
     }
 
     private checkWebSocketURL(url: string): boolean {

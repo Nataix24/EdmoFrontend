@@ -5,8 +5,12 @@ import { EdmoProperty } from "./EdmoProperty";
 export class ControllerScene extends Scene {
     private readonly edmoModel: EdmoModel = null!;
     private readonly camera: ArcRotateCamera;
-    public constructor(canvas: HTMLCanvasElement, engine: Engine, options?: SceneOptions | undefined) {
+    private readonly engine: Engine;
+    public constructor(canvas: HTMLCanvasElement, options?: SceneOptions | undefined) {
+        const engine = new Engine(canvas);
         super(engine, options);
+
+        this.engine = engine;
 
         const light = new HemisphericLight("Global lights", new Vector3(0, 1, 0), this);
         light.diffuse = new Color3(1, 1, 1);
@@ -23,6 +27,12 @@ export class ControllerScene extends Scene {
         camera.useFramingBehavior = true;
         if (camera.framingBehavior)
             camera.framingBehavior.mode = FramingBehavior.FitFrustumSidesMode;
+
+        window.addEventListener("resize", () => this.Resize());
+        engine.runRenderLoop(() => {
+            this.Update();
+            this.render();
+        });
     }
 
     public async loadAsync() {
@@ -32,6 +42,7 @@ export class ControllerScene extends Scene {
     }
 
     public Resize() {
+        this.engine.resize();
         this.camera.setTarget(this.edmoModel.boundingSphere);
     }
 
