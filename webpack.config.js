@@ -5,8 +5,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: {
-    Index: './src/V2/index.ts',
-    Landing: './src/scripts/landing.ts'
+    Index: './src/index.ts',
+    Controller: './src/controller.ts'
   },
   output: {
     filename: '[name].bundle.js',
@@ -37,9 +37,9 @@ module.exports = {
       chunks: ['Index'],
     }),
     new HtmlWebpackPlugin({
-      template: './src/landing.html',
-      filename: 'landing.html',
-      chunks: ['Landing'],
+      template: './src/controller.html',
+      filename: 'controller.html',
+      chunks: ['Controller'],
     }),
     new CopyWebpackPlugin({
       patterns: [

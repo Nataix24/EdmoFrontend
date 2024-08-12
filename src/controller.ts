@@ -1,14 +1,14 @@
 import { Engine } from "@babylonjs/core";
-import { ControllerScene } from "./ControllerScene";
-import { EDMOClient } from "../EDMOClient";
-import { relativeURLWithPort } from "../scripts/API";
-import { EdmoProperty } from "./EdmoProperty";
-import { RobotSprite2 } from "../scripts/RobotSprite2";
-import { FeedbackBubble } from "../scripts/FeedbackBubble";
-import { ControlPanel } from "../Controller/ControlsPanel";
-import { PanelButtons } from "../Controller/PanelButtons";
-import { TaskPanel } from "../Controller/TasksPanel";
-import { PlayersPanel } from "../Controller/PlayersPanel";
+import { ControllerScene } from "./V2/ControllerScene";
+import { EDMOClient } from "./EDMOClient";
+import { relativeURLWithPort } from "./scripts/API";
+import { EdmoProperty } from "./V2/EdmoProperty";
+import { RobotSprite2 } from "./scripts/RobotSprite2";
+import { FeedbackBubble } from "./scripts/FeedbackBubble";
+import { ControlPanel } from "./Controller/ControlsPanel";
+import { PanelButtons } from "./Controller/PanelButtons";
+import { TaskPanel } from "./Controller/TasksPanel";
+import { PlayersPanel } from "./Controller/PlayersPanel";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;

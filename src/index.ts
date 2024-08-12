@@ -1,6 +1,6 @@
 // Generate dynamically group panels in the GroupsPage.html
 
-import { fetchEDMOs } from "./API";
+import { fetchEDMOs } from "./scripts/API";
 
 const submitButton = document.getElementById("submitButton")!;
 const nameInput = (document.getElementById("nameInput") as HTMLInputElement)!;
@@ -101,7 +101,7 @@ async function onSubmitAttempt(e: Event) {
     localStorage.setItem("ConnectTarget", currentSelection);
     localStorage.setItem("ConnectName", currentName);
 
-    window.location.assign("/");
+    window.location.assign("/controller.html");
 }
 
 init();

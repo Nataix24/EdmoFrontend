@@ -2,28 +2,43 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-    crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link rel="stylesheet" href="style.css">
-  <title>EDMO App</title>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css">
+    <title>EDMO App</title>
 </head>
 
 <body>
-  <div class="controllerContainer">
-    <div class="canvasContainer" id="canvasContainer">
-      <canvas class="renderCanvas" id="renderCanvas"></canvas>
-      <div class="feedbackArea">
-        <div class="robotSprite hidden" id="robotSprite"></div>
-        <div class="feedbackBubble hidden" id="feedbackBubble"></div>
-      </div>
+    <div class="mainPanel">
+        <div>
+            <h1>Controller setup</h1>
+            <h2>Enter your name and select the robot you've been assigned to</h2>
+        </div>
+
+        <div class="mainContent">
+            <div>
+                <h3>Name</h3>
+                <div class="textBox">
+                    <!--<i class="textBoxIcon fa-solid fa-magnifying-glass"></i>-->
+                    <input class="textBoxInput" type="search" name="" id="nameInput" placeholder="Enter your name"
+                        autocomplete="off" />
+                </div>
+            </div>
+            <div>
+                <h3>Select your EDMO</h3>
+                <div class="mainContent wrapContainer" id="creatingGroupPanels">
+                </div>
+            </div>
+            <div class="spacer">
+
+            </div>
+
+            <div class="button" id="submitButton">
+                Let's start!
+            </div>
+        </div>
     </div>
-    <div class="mainPanel" id="panelArea">
-    </div>
-  </div>
 </body>
 
 </html>
