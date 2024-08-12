@@ -19,9 +19,6 @@ export class EdmoModel {
         let loadedMeshes = await SceneLoader.ImportMeshAsync("", "/Assets/Models/", "untitled.glb", this.scene);
         this.model = loadedMeshes.meshes[0];
 
-        var min = null;
-        var max = null;
-
         for (const mesh of this.model.getChildMeshes()) {
             mesh.renderOutline = true;
             mesh.outlineColor = new Color3(0.4, 0.4, 0.4);
@@ -34,7 +31,9 @@ export class EdmoModel {
         this.boundingSphere = CreateSphere("t", { diameter: 1.5 });
         this.boundingSphere.setEnabled(false);
 
-        this.armModel = loadedMeshes.meshes[2];
+        const armModel = this.armModel = loadedMeshes.meshes[1];
+        armModel.rotationQuaternion = null;
+        armModel.rotation.y = -90 * EdmoModel.DEG2RADFACTOR;
     }
 
     set color(value: Color3) {
