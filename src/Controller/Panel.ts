@@ -1,4 +1,4 @@
-export class Panel {
+export abstract class Panel {
     public element: HTMLDivElement;
 
     public constructor(parent: HTMLElement | null) {

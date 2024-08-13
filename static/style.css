@@ -97,10 +97,14 @@ div.wrapContainer {
   text-decoration: none;
   transition: var(--colorTrasition), height 100ms, transform 100ms;
   text-align: center;
+  border-width: thick;
+  border-style: solid;
+  border-color: transparent;
 }
 
-.noflex {
-  flex: 0;
+.bigText {
+  font-size: larger;
+  font-weight: bolder;
 }
 
 /* Simply a helper style to allow overriding of the existing hue*/

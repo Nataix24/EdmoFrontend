@@ -51,10 +51,12 @@ export class ControlPanel extends Panel {
     private unrequestHelp() {
         this.helpRequested = false;
         this.helpButton.classList.remove("selected");
+        this.helpButton.innerText = "Request help";
     }
     private requestHelp() {
         this.helpRequested = true;
         this.helpButton.classList.add("selected");
+        this.helpButton.innerText = "Unrequest help";
     }
 
     set frequency(x: number) {
@@ -75,12 +77,8 @@ export class ControlPanel extends Panel {
 
     private createHelpButton() {
         const div = document.createElement("div");
-        div.className = "card noflex buttonHidden";
-
-        const text = document.createElement("h2");
-        text.innerText = "I need help";
-
-        div.appendChild(text);
+        div.className = "card noflex buttonHidden bigText";
+        div.innerText = "Request help";
 
         div.addEventListener("click", _ => this.toggleHelp());
         return div;
