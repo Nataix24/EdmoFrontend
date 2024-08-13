@@ -17,7 +17,7 @@ const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;
 const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
-const robotSpriteHandler = playerName == "Bloom" ? new BloomSprite(robotSprite) : new RobotSprite2(robotSprite);
+const robotSpriteHandler = playerName.toLowerCase() == "bloom" ? new BloomSprite(robotSprite) : new RobotSprite2(robotSprite);
 const feedbackHandler = new FeedbackBubble(feedbackBubble);
 
 const canvasContainer = document.getElementById("canvasContainer") as HTMLCanvasElement;
@@ -92,6 +92,8 @@ async function handleRTCMessage(message: string) {
         case "ID":
             id = parseInt(data);
             document.documentElement.style.setProperty('--hue', `${hues[id]}`);
+            playersPanel.setID(id);
+            break;
 
         case "amp": {
             const value = parseFloat(data);

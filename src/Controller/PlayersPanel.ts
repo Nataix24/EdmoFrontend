@@ -11,6 +11,9 @@ const hues = [
 ];
 
 export class PlayersPanel extends Panel {
+
+    private playerID: number = 0;
+
     public constructor() {
         super(null);
 
@@ -19,14 +22,18 @@ export class PlayersPanel extends Panel {
         this.refreshPlayers();
     }
 
-    public refreshPlayers(playerList: PlayerInfo[] = [], playerID: number = 0) {
+    public setID(playerID: number) {
+        this.playerID = playerID;
+    }
+
+    public refreshPlayers(playerList: PlayerInfo[] = []) {
         if (playerList.length == 0) {
             this.element.innerHTML = "There are no players in this session.";
             return;
         }
 
         this.element.replaceChildren(
-            ...playerList.map(p => this.createPlayerCard(p, playerID))
+            ...playerList.map(p => this.createPlayerCard(p, this.playerID))
         );
     }
 
@@ -38,7 +45,12 @@ export class PlayersPanel extends Panel {
 
         const text = document.createElement("h2");
         text.className = "cardText";
-        text.innerText = `${player.name}${(player.number == playerID) ? " (You)" : ""}`;
+        if (player.name.toLowerCase() == "baba" || player.name.toLowerCase() == "kiki") {
+            text.innerText = `[${player.name}] ${(player.number == playerID) ? "is [You]" : ""}`;
+
+        }
+        else
+            text.innerText = `${player.name}${(player.number == playerID) ? " (You)" : ""}`;
         playerCard.appendChild(text);
 
         if (player.voted) {
