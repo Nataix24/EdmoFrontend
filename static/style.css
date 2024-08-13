@@ -37,7 +37,8 @@ div.mainPanel {
   margin: 1em;
   flex-direction: column;
   overflow: auto;
-  transition: var(--colorTrasition)
+  transition: var(--colorTrasition);
+  overflow: hidden;
 }
 
 div.mainPanel:has(.buttonHidden) {
@@ -50,6 +51,7 @@ div.mainContent {
   flex-direction: column;
   overflow: auto;
   flex: 1;
+  overflow: auto;
 }
 
 .textBox {
@@ -74,6 +76,7 @@ div.mainContent {
   padding: 0;
   flex: 1;
   resize: vertical;
+  width: 100%;
 }
 
 
@@ -82,6 +85,7 @@ div.wrapContainer {
   flex-wrap: wrap;
   flex-direction: row;
   gap: 1.5em;
+  overflow: auto;
 }
 
 .card {
@@ -175,24 +179,16 @@ div.wrapContainer {
   margin-bottom: -1em;
   /*Negate the margin of mainPanel*/
   position: relative;
-}
-
-.canvasOverlay {
-  height: 100%;
-  width: 100%;
-  position: absolute;
-  background-color: var(--backgroundColor);
-  mix-blend-mode: color;
-  pointer-events: none;
-
-  transition: var(--colorTrasition)
+  transition: height 200ms, width 200ms;
 }
 
 .controllerContainer {
   display: flex;
   height: 100%;
   width: 100%;
+  transition: height 200ms, width 200ms;
 }
+
 
 .renderCanvas {
   height: 100%;
@@ -202,6 +198,7 @@ div.wrapContainer {
   position: absolute;
   outline: none;
   mix-blend-mode: luminosity;
+  transition: height 200ms, width 200ms;
 }
 
 @media screen and (orientation: portrait) {
@@ -215,6 +212,19 @@ div.wrapContainer {
   }
 }
 
+.canvasContainer.simple {
+  height: 20%;
+  width: 100%;
+}
+
+.controllerContainer.simple {
+  flex-direction: column;
+}
+
+.renderCanvas.simple {
+  height: 0%;
+}
+
 
 .slidersContainer {
   flex: 1;
@@ -222,6 +232,7 @@ div.wrapContainer {
   width: 100%;
   flex-direction: column;
   justify-content: space-around;
+  overflow: auto;
 }
 
 .slider {

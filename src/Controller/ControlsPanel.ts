@@ -26,6 +26,8 @@ export class ControlPanel extends Panel {
 
         this.helpButton = this.createHelpButton();
 
+        this.element.className = "mainContent";
+
         this.element.appendChild(this.helpButton);
         this.element.appendChild(this.createSliders());
     }

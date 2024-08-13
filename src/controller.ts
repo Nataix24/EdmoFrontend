@@ -16,6 +16,9 @@ const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
 const robotSpriteHandler = new RobotSprite2(robotSprite);
 const feedbackHandler = new FeedbackBubble(feedbackBubble);
 
+const canvasContainer = document.getElementById("canvasContainer") as HTMLCanvasElement;
+const controllerContainer = document.getElementById("controllerContainer") as HTMLCanvasElement;
+
 var helpEnabled: boolean = false;
 
 const panelButtons = new PanelButtons([
@@ -71,7 +74,7 @@ function createSliderPanel() {
     panelArea.replaceChildren(panelButtons.element, controlPanel.element);
 }
 
-createSliderPanel()
+createSliderPanel();
 
 const DEG2RADFACTOR = Math.PI / 180;
 
@@ -123,7 +126,6 @@ async function handleRTCMessage(message: string) {
 
         case "HelpEnabled":
             helpEnabled = parseInt(data) == 0 ? false : true;
-            console.log(helpEnabled);
 
             if (helpEnabled) {
                 robotSpriteHandler.show();
@@ -134,6 +136,11 @@ async function handleRTCMessage(message: string) {
                 controlPanel.hideHelpButton();
             }
 
+            break;
+        case "SimpleMode":
+            const simpleMode = parseInt(data) == 0 ? false : true;
+
+            setSimpleMode(simpleMode);
             break;
 
         case "Feedback":
@@ -190,3 +197,16 @@ function onPhaseShiftChanged(value: number, userTriggered = true) {
     if (userTriggered)
         edmoClient.sendMessage(`phb ${Number(value) * DEG2RADFACTOR}`);
 };
+
+function setSimpleMode(value: boolean) {
+    if (!value) {
+        canvasContainer.classList.remove("simple");
+        canvas.classList.remove("simple");
+        controllerContainer.classList.remove("simple");
+    }
+    else {
+        canvasContainer.classList.add("simple");
+        canvas.classList.add("simple");
+        controllerContainer.classList.add("simple");
+    }
+}
