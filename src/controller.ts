@@ -9,11 +9,15 @@ import { ControlPanel } from "./Controller/ControlsPanel";
 import { PanelButtons } from "./Controller/PanelButtons";
 import { TaskPanel } from "./Controller/TasksPanel";
 import { PlayersPanel } from "./Controller/PlayersPanel";
+import { BloomSprite } from "./scripts/BloomSprite";
+
+const robotID = localStorage.getItem("ConnectTarget") ?? "";
+const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;
 const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
-const robotSpriteHandler = new RobotSprite2(robotSprite);
+const robotSpriteHandler = playerName == "Bloom" ? new BloomSprite(robotSprite) : new RobotSprite2(robotSprite);
 const feedbackHandler = new FeedbackBubble(feedbackBubble);
 
 const canvasContainer = document.getElementById("canvasContainer") as HTMLCanvasElement;
@@ -57,8 +61,7 @@ const hues = [
 
 var id = -1;
 
-const robotID = localStorage.getItem("ConnectTarget") ?? "";
-const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
+
 const edmoClient = new EDMOClient(playerName, relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"), [handleRTCMessage]);
 
 
@@ -145,6 +148,7 @@ async function handleRTCMessage(message: string) {
 
         case "Feedback":
             feedbackHandler.show(data);
+            robotSpriteHandler.speak();
             break;
 
 

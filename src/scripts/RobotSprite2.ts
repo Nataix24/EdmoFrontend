@@ -57,6 +57,10 @@ export class RobotSprite2 {
         this.target.classList.add("hidden");
     }
 
+    public speak() {
+
+    }
+
     private onMouseOver(ev: Event) {
         this.wave();
     }

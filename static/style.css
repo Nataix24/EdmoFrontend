@@ -332,7 +332,6 @@ input[type=number] {
 
 .robotSprite {
   background-image: url(./Assets/Textures/robot1.png);
-  color: #9C5586;
   aspect-ratio: 1.46987;
   background-repeat: no-repeat;
   background-position: bottom;
@@ -344,8 +343,29 @@ input[type=number] {
   mix-blend-mode: luminosity;
   z-index: -1;
   transition: transform 150ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.75,1.3);
 }
+
+
+.bloomSprite {
+  aspect-ratio: 1;
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: contain;
+  flex: 0 1 auto;
+  width: 15%;
+  margin: 0 1em;
+  z-index: -1;
+  transition: transform 200ms;
+  transition-timing-function: cubic-bezier(0, 0, 0.75,1.3);
+}
+
 
 .hidden {
   transform: translateY(200%) scale(0);
+}
+
+.bloomSprite.hidden{
+  transform: translateY(200%) scale(1);
+  transition: transform 400ms;
 }
