@@ -25,8 +25,8 @@ module.exports = {
   optimization: {
     usedExports: true, // <- remove unused function
   },
-  
-  
+
+
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
   },
@@ -47,5 +47,10 @@ module.exports = {
       ]
     })
   ],
+  devServer: {
+    compress: true,
+    port: 8081,
+    historyApiFallback: true,
+  },
   cache: true,
 };
