@@ -24,6 +24,26 @@ export class LocalizationManager {
         return this.currentLanguage;
     }
 
+    public static getString(key: string, args: any = null) {
+        for (const bank of this.localisationBanks) {
+            if (!(key in bank))
+                continue;
+
+            const localisationEntry = bank[key];
+
+            if (!(this.currentLanguage in localisationEntry))
+                continue;
+
+            return this.format(localisationEntry[this.currentLanguage], args);
+        }
+
+        const msg: string = `Can't find string with key {${key}} for language code {${this.currentLanguage}}`;
+        console.log(msg);
+
+
+        return "";
+    }
+
     public static addLocalisationBanks(...localisationBanks: NonNullable<any>[]) {
         for (const bank of localisationBanks)
             this.localisationBanks.push(bank);
@@ -70,28 +90,7 @@ export class LocalizationManager {
         if (!i18nKey)
             return;
 
-        let localisedText: string | null = null;
-
-        for (const bank of this.localisationBanks) {
-            if (!(i18nKey in bank))
-                continue;
-
-            const localisationEntry = bank[i18nKey];
-
-
-            if (!(this.currentLanguage in localisationEntry))
-                continue;
-
-            localisedText = this.format(localisationEntry[this.currentLanguage], i18nArgs);
-            break;
-        }
-
-        if (!localisedText) {
-            const msg: string = `Can't find string with key {${i18nKey}} for language code {${this.currentLanguage}}`;
-            console.log(msg);
-
-            localisedText = "";
-        }
+        const localisedText = this.getString(i18nKey, i18nArgs);
 
         if (element instanceof HTMLInputElement) {
             element.placeholder = localisedText;
