@@ -10,6 +10,9 @@ import { PanelButtons } from "./Controller/PanelButtons";
 import { TaskPanel } from "./Controller/TasksPanel";
 import { PlayersPanel } from "./Controller/PlayersPanel";
 import { BloomSprite } from "./scripts/BloomSprite";
+import { LocalizationManager } from "./scripts/Localization";
+
+await LocalizationManager.loadLocalisationBanks("/strings/controllerStrings.json")
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
 const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";

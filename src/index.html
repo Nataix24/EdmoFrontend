@@ -11,22 +11,21 @@
 
 <body>
     <div class="mainPanel">
-        <div>
-            <h1>Controller setup</h1>
-            <h2>Enter your name and select the robot you've been assigned to</h2>
+        <div lang="en">
+            <h1 data-i18n-key="controllerSetup">Controller setup</h1>
+            <h2 data-i18n-key="controllerSetupDesc">Enter your name and select the robot you've been assigned to</h2>
         </div>
-
         <div class="mainContent">
             <div>
-                <h3>Name</h3>
+                <h3 data-i18n-key="name">Name</h3>
                 <div class="textBox">
                     <!--<i class="textBoxIcon fa-solid fa-magnifying-glass"></i>-->
                     <input class="textBoxInput" type="search" name="" id="nameInput" placeholder="Enter your name"
-                        autocomplete="off" />
+                        autocomplete="off" data-i18n-key="nameInputPlaceholder"/>
                 </div>
             </div>
             <div>
-                <h3>Select your EDMO</h3>
+                <h3 data-i18n-key="selectEdmo">Select your EDMO</h3>
                 <div class="mainContent wrapContainer" id="creatingGroupPanels">
                 </div>
             </div>
@@ -34,7 +33,7 @@
 
             </div>
 
-            <div class="button" id="submitButton">
+            <div class="button" id="submitButton" data-i18n-key="letsStart">
                 Let's start!
             </div>
         </div>

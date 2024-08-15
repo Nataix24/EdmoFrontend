@@ -1,0 +1,66 @@
+{
+    "name": {
+        "en": "Name",
+        "nl": "Naam"
+    },
+    "controllerSetup": {
+        "en": "Controller setup",
+        "nl": "Controller-instelling"
+    },
+    "controllerSetupDesc": {
+        "en": "Enter your name and select the robot you've been assigned to",
+        "nl": "Voer uw naam in en selecteer de robot waaraan u bent toegewezen"
+    },
+    "selectEdmo": {
+        "en": "Select your EDMO",
+        "nl": "Selecteer uw EDMO"
+    },
+    "letsStart": {
+        "en": "Let's start!",
+        "nl": "Laten we beginnen!"
+    },
+    "nameInputPlaceholder": {
+        "en": "Enter your name",
+        "nl": "Vul uw naam in"
+    },
+    "noActiveEdmos": {
+        "en": "No EDMOs are active at this moment.",
+        "nl": "Er zijn op dit moment geen EDMO's actief."
+    },
+    "requestHelp": {
+        "en": "Request help",
+        "nl": "Hulp aanvragen"
+    },
+    "unrequestHelp": {
+        "en": "Undo help request",
+        "nl": "Hulpverzoek ongedaan maken"
+    },
+    "frequency": {
+        "en": "Frequency",
+        "nl": "Frequentie"
+    },
+    "amplitude": {
+        "en": "Amplitude",
+        "nl": "Amplitude"
+    },
+    "offset": {
+        "en": "Offset",
+        "nl": "Verschuiven"
+    },
+    "relation": {
+        "en": "Relation",
+        "nl": "Relatie"
+    },
+    "noPlayers": {
+        "en": "There are no players in this session.",
+        "nl": "Er zijn geen spelers in deze sessie."
+    },
+    "playerIsYou": {
+        "en": "{name} (You)",
+        "nl": "{name} (Uw)"
+    },
+    "playerIsBabaIsYou": {
+        "en": "[{name}] is [You]",
+        "nl": "[{name}] ben [Jij]"
+    }
+}

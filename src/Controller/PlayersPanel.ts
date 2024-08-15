@@ -1,3 +1,4 @@
+import { LocalizationManager } from "../scripts/Localization";
 import { Panel } from "./Panel";
 
 
@@ -29,12 +30,14 @@ export class PlayersPanel extends Panel {
     public refreshPlayers(playerList: PlayerInfo[] = []) {
         if (playerList.length == 0) {
             this.element.innerHTML = "There are no players in this session.";
+            LocalizationManager.setLocalisationKey(this.element, "noPlayers");
             return;
         }
 
         this.element.replaceChildren(
             ...playerList.map(p => this.createPlayerCard(p, this.playerID))
         );
+        LocalizationManager.removeLocalisationKey(this.element);
     }
 
     private createPlayerCard(player: PlayerInfo, playerID: number) {
@@ -45,12 +48,22 @@ export class PlayersPanel extends Panel {
 
         const text = document.createElement("h2");
         text.className = "cardText";
-        if (player.name.toLowerCase() == "baba" || player.name.toLowerCase() == "kiki") {
-            text.innerText = `[${player.name}] ${(player.number == playerID) ? "is [You]" : ""}`;
-
+        
+        if (player.number != playerID) {
+            text.innerText = `${player.name}`;
+            LocalizationManager.removeLocalisationKey(text);
         }
-        else
+        else {
             text.innerText = `${player.name}${(player.number == playerID) ? " (You)" : ""}`;
+
+            const isBaba = player.name.toLowerCase() == "baba" || player.name.toLowerCase() == "kiki";
+
+            const args = {
+                name: player.name
+            };
+            LocalizationManager.setLocalisationKey(text, isBaba ? "playerIsBabaIsYou" : "playerIsYou", args);
+        }
+
         playerCard.appendChild(text);
 
         if (player.voted) {

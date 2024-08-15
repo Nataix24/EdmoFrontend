@@ -1,6 +1,7 @@
 // Generate dynamically group panels in the GroupsPage.html
 
 import { fetchEDMOs } from "./scripts/API";
+import { LocalizationManager } from "./scripts/Localization";
 
 const submitButton = document.getElementById("submitButton")!;
 const nameInput = (document.getElementById("nameInput") as HTMLInputElement)!;
@@ -35,7 +36,12 @@ async function updateGroupsDisplay() {
         return;
 
     if (edmos.length === 0) {
-        contentDiv.innerHTML = "<h2>No edmos are active at this moment.</h2>";
+        const placeholderText = document.createElement("h2");
+
+        placeholderText.innerText = "No edmos are active at this moment.";
+        LocalizationManager.setLocalisationKey(placeholderText, "noActiveEdmos");
+
+        contentDiv.replaceChildren(placeholderText);
         return;
     }
 
@@ -104,6 +110,11 @@ async function onSubmitAttempt(e: Event) {
     window.location.assign("/controller.html");
 }
 
-init();
+await init();
+await LocalizationManager.loadLocalisationBanks("strings/controllerStrings.json");
+
 setInterval(refreshGroupData, 5000);
+
+
+
 

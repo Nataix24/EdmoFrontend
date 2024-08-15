@@ -1,3 +1,4 @@
+import { LocalizationManager } from "../scripts/Localization";
 import { Panel } from "./Panel";
 
 
@@ -54,11 +55,14 @@ export class ControlPanel extends Panel {
         this.helpRequested = false;
         this.helpButton.classList.remove("selected");
         this.helpButton.innerText = "Request help";
+        LocalizationManager.setLocalisationKey(this.helpButton, "requestHelp");
+
     }
     private requestHelp() {
         this.helpRequested = true;
         this.helpButton.classList.add("selected");
         this.helpButton.innerText = "Unrequest help";
+        LocalizationManager.setLocalisationKey(this.helpButton, "unrequestHelp");
     }
 
     set frequency(x: number) {
@@ -81,6 +85,7 @@ export class ControlPanel extends Panel {
         const div = document.createElement("div");
         div.className = "card noflex buttonHidden bigText";
         div.innerText = "Request help";
+        LocalizationManager.setLocalisationKey(div, "requestHelp");
 
         div.addEventListener("click", _ => this.toggleHelp());
         return div;
@@ -115,6 +120,9 @@ class Slider {
 
         const header = document.createElement("h2");
         header.innerText = title;
+        LocalizationManager.setLocalisationKey(header, title.toLowerCase());
+
+
         element.appendChild(header);
 
         const sliderBox = document.createElement("div");
