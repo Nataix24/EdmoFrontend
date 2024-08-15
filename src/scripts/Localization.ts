@@ -20,6 +20,10 @@ export class LocalizationManager {
         this.applyLocalisationToAllElements();
     }
 
+    static get CurrentLanguage(): string {
+        return this.currentLanguage;
+    }
+
     public static addLocalisationBanks(...localisationBanks: NonNullable<any>[]) {
         for (const bank of localisationBanks)
             this.localisationBanks.push(bank);
@@ -50,7 +54,7 @@ export class LocalizationManager {
 
     }
 
-    private static setLanguage(languageCode: string) {
+    public static setLanguage(languageCode: string) {
         this.currentLanguage = languageCode;
         localStorage.setItem("language", languageCode);
 
@@ -62,7 +66,7 @@ export class LocalizationManager {
 
         const i18nArgsAtt = element.getAttribute("data-i18n-args");
         const i18nArgs = i18nArgsAtt ? JSON.parse(i18nArgsAtt) : null;
-        
+
         if (!i18nKey)
             return;
 

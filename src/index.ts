@@ -20,6 +20,7 @@ async function init() {
     currentSelection = lastTarget;
 
     nameInput.value = currentName = lastName;
+    createLanguageButtons();
     refreshGroupData();
 }
 
@@ -27,6 +28,54 @@ async function refreshGroupData() {
     edmos = await fetchEDMOs();
     updateGroupsDisplay();
     updateButtonState();
+}
+
+async function createLanguageButtons() {
+    const supportedLanguage = [
+        {
+            name: "Netherlands",
+            code: "nl"
+        },
+        {
+            name: "English",
+            code: "en"
+        }
+    ];
+
+    const contentDiv = document.getElementById('languagePanel');
+
+    if (!contentDiv)
+        return;
+
+    var newChildren: Node[] = [];
+
+    // Loop through all the groups 0 - n
+
+    var selectionFound = false;
+
+    for (const language of supportedLanguage) {
+        const groupCard = document.createElement('div');
+        groupCard.classList.add('card', "groupCard");
+        groupCard.id = language.code;
+
+        if (language.code == LocalizationManager.CurrentLanguage) {
+            selectionFound = true;
+            groupCard.classList.add("selected");
+        }
+
+        groupCard.addEventListener("click", onLanguageSelected);
+
+        const languageTag = document.createElement('h1');
+        languageTag.innerHTML = language.name;
+        languageTag.id = language.code;
+
+        groupCard.appendChild(languageTag);
+
+        newChildren.push(groupCard);
+    };
+
+    contentDiv.replaceChildren(...newChildren);
+
 }
 
 async function updateGroupsDisplay() {
@@ -87,6 +136,13 @@ async function onEDMOSelected(e: MouseEvent) {
 
     updateGroupsDisplay();
     updateButtonState();
+}
+async function onLanguageSelected(e: MouseEvent) {
+    const target = (e.target as HTMLElement);
+
+    LocalizationManager.setLanguage(target.id);
+
+    createLanguageButtons();
 }
 
 async function onNameInput(e: Event) {
