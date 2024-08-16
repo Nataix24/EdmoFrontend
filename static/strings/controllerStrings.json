@@ -57,7 +57,7 @@
     },
     "playerIsYou": {
         "en": "{name} (You)",
-        "nl": "{name} (Uw)"
+        "nl": "{name} (Jij)"
     },
     "playerIsBabaIsYou": {
         "en": "[{name}] is [You]",
