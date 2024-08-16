@@ -1,8 +1,10 @@
+import { LocalizationManager } from "../scripts/Localization";
 import { Panel } from "./Panel";
 
 interface TaskInfo {
-    Title: string;
-    Value: boolean;
+    key: string;
+    strings: Record<string, string>;
+    completed: boolean;
 }
 
 export class TaskPanel extends Panel {
@@ -20,6 +22,7 @@ export class TaskPanel extends Panel {
             return;
         }
 
+
         this.element.replaceChildren(
             ...taskList.map(t => this.createTaskCard(t))
         );
@@ -31,9 +34,11 @@ export class TaskPanel extends Panel {
 
         const text = document.createElement("h2");
         text.className = "cardText";
-        text.innerText = task.Title;
+
+        const currentLanguage = LocalizationManager.CurrentLanguage;
+        text.innerText = task.strings[currentLanguage];
         taskCard.appendChild(text);
-        if (task.Value) //  If it is completed
+        if (task.completed) //  If it is completed
             text.classList.add("taskCompleted");
 
         return taskCard;
