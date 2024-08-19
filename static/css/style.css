@@ -331,7 +331,7 @@ input[type=number] {
 }
 
 .robotSprite {
-  background-image: url(./Textures/robot1.png);
+  background-image: url(../Textures/robot1.png);
   aspect-ratio: 1.46987;
   background-repeat: no-repeat;
   background-position: bottom;
