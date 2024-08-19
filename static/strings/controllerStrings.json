@@ -51,6 +51,10 @@
         "en": "Relation",
         "nl": "Relatie"
     },
+    "resetSliders":{
+        "en": "Reset values",
+        "nl": "Waarden resetten"
+    },
     "noPlayers": {
         "en": "There are no players in this session.",
         "nl": "Er zijn geen spelers in deze sessie."

@@ -25,12 +25,13 @@ export class ControlPanel extends Panel {
         super(parent);
         this.callbacks = callbacks;
 
-        this.helpButton = this.createHelpButton();
-
         this.element.className = "mainContent";
 
-        this.element.appendChild(this.helpButton);
-        this.element.appendChild(this.createSliders());
+        this.element.replaceChildren(
+            this.helpButton = this.createHelpButton(),
+            this.createSliders(),
+            this.createResetButton()
+        );
     }
 
     public showHelpButton() {
@@ -89,7 +90,6 @@ export class ControlPanel extends Panel {
 
         div.addEventListener("click", _ => this.toggleHelp());
         return div;
-
     }
 
     private createSliders() {
@@ -107,6 +107,23 @@ export class ControlPanel extends Panel {
         spacer.className = "spacer";
 
         return div;
+    }
+
+    private createResetButton() {
+        const div = document.createElement("div");
+        div.className = "card noflex bigText";
+        div.innerText = "Reset sliders";
+        LocalizationManager.setLocalisationKey(div, "resetSliders");
+
+        div.addEventListener("click", _ => this.resetValues());
+        return div;
+    }
+
+    private resetValues() {
+        this.callbacks.frequencyChangedCallback(this.frequency = 0);
+        this.callbacks.amplitudeChangedCallback(this.amplitude = 0);
+        this.callbacks.offsetChangedCallback(this.offset = 90);
+        this.callbacks.phaseShiftChangedCallback(this.phaseShift = 0);
     }
 }
 
