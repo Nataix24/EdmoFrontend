@@ -16,7 +16,7 @@ export class EdmoModel {
     }
 
     public async loadAsync() {
-        let loadedMeshes = await SceneLoader.ImportMeshAsync("", "/Assets/Models/", "untitled.glb", this.scene);
+        let loadedMeshes = await SceneLoader.ImportMeshAsync("", "/Models/", "untitled.glb", this.scene);
         this.model = loadedMeshes.meshes[0];
 
         for (const mesh of this.model.getChildMeshes()) {

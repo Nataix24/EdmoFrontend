@@ -1,9 +1,9 @@
 export class RobotSprite2 {
     private static readonly robotImagesURI: string[] = [
-        "./Assets/Textures/robot1.png",
-        "./Assets/Textures/robot2.png",
-        "./Assets/Textures/robot3.png",
-        "./Assets/Textures/robot4.png"
+        "./Textures/robot1.png",
+        "./Textures/robot2.png",
+        "./Textures/robot3.png",
+        "./Textures/robot4.png"
     ];
 
     private static readonly cachedImages: HTMLImageElement[] = [];

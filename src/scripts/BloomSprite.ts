@@ -1,13 +1,13 @@
 export class BloomSprite {
     private static readonly imagesURI: string[] = [
-        "./Assets/Textures/Bloom/Idle.png",
-        "./Assets/Textures/Bloom/Idle+Wave.png",
-        "./Assets/Textures/Bloom/IdleBlink.png",
-        "./Assets/Textures/Bloom/IdleBlink+Wave.png",
-        "./Assets/Textures/Bloom/Speaking.png",
-        "./Assets/Textures/Bloom/Speaking+Wave.png",
-        "./Assets/Textures/Bloom/SpeakingBlink.png",
-        "./Assets/Textures/Bloom/SpeakingBlink+Wave.png",
+        "./Textures/Bloom/Idle.png",
+        "./Textures/Bloom/Idle+Wave.png",
+        "./Textures/Bloom/IdleBlink.png",
+        "./Textures/Bloom/IdleBlink+Wave.png",
+        "./Textures/Bloom/Speaking.png",
+        "./Textures/Bloom/Speaking+Wave.png",
+        "./Textures/Bloom/SpeakingBlink.png",
+        "./Textures/Bloom/SpeakingBlink+Wave.png",
     ];
 
     private static readonly cachedImages: HTMLImageElement[] = [];
