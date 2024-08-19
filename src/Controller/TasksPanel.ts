@@ -18,7 +18,10 @@ export class TaskPanel extends Panel {
 
     public refreshTasks(taskList: TaskInfo[] = []) {
         if (taskList.length == 0) {
-            this.element.innerHTML = "There are no tasks in this session.";
+            const message = document.createElement("h2");
+            message.innerText = "There are no tasks in this session.";
+            LocalizationManager.setLocalisationKey(message, "noTasks");
+            this.element.replaceChildren(message);
             return;
         }
 

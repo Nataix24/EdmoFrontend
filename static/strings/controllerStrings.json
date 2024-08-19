@@ -51,7 +51,7 @@
         "en": "Relation",
         "nl": "Relatie"
     },
-    "resetSliders":{
+    "resetSliders": {
         "en": "Reset values",
         "nl": "Waarden resetten"
     },
@@ -66,5 +66,9 @@
     "playerIsBabaIsYou": {
         "en": "[{name}] is [You]",
         "nl": "[{name}] ben [Jij]"
+    },
+    "noTasks": {
+        "en": "There are no tasks in this session.",
+        "nl": "Er zijn geen taken in deze sessie."
     }
 }
