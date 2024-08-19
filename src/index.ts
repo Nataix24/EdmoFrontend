@@ -91,6 +91,8 @@ async function updateGroupsDisplay() {
         LocalizationManager.setLocalisationKey(placeholderText, "noActiveEdmos");
 
         contentDiv.replaceChildren(placeholderText);
+        currentSelection = "";
+        updateButtonState();
         return;
     }
 
@@ -99,7 +101,7 @@ async function updateGroupsDisplay() {
     // Loop through all the groups 0 - n
 
     var selectionFound = false;
-    edmos.forEach(robotID => {
+    for (const robotID of edmos) {
         const groupCard = document.createElement('div');
         groupCard.classList.add('card', "groupCard");
         groupCard.id = robotID;
@@ -118,12 +120,13 @@ async function updateGroupsDisplay() {
         groupCard.appendChild(robotNameTag);
 
         newChildren.push(groupCard);
-    });
+    };
 
     if (!selectionFound)
         currentSelection = "";
 
     contentDiv.replaceChildren(...newChildren);
+    updateButtonState();
 }
 
 async function onEDMOSelected(e: MouseEvent) {
