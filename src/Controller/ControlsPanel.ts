@@ -29,8 +29,7 @@ export class ControlPanel extends Panel {
 
         this.element.replaceChildren(
             this.helpButton = this.createHelpButton(),
-            this.createSliders(),
-            this.createResetButton()
+            this.createSliders()
         );
     }
 
@@ -101,6 +100,7 @@ export class ControlPanel extends Panel {
             (this.ampSlider = new Slider("Amplitude", 0, 0, 90, 1, this.callbacks.amplitudeChangedCallback)).element,
             (this.offsetSlider = new Slider("Offset", 90, 0, 180, 1, this.callbacks.offsetChangedCallback)).element,
             (this.phaseShiftSlider = new Slider("Relation", 0, 0, 360, 1, this.callbacks.phaseShiftChangedCallback)).element,
+            this.createResetButton()
         );
 
         const spacer = document.createElement("div");
@@ -112,6 +112,7 @@ export class ControlPanel extends Panel {
     private createResetButton() {
         const div = document.createElement("div");
         div.className = "card noflex bigText";
+        div.style.marginTop = "1em";
         div.innerText = "Reset sliders";
         LocalizationManager.setLocalisationKey(div, "resetSliders");
 
