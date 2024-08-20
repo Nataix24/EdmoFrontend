@@ -295,7 +295,7 @@ div.wrapContainer {
   font-weight: bold;
   font-family: "monospace";
   font-size: x-large;
-  width: auto;
+  width: 4ch;
 }
 
 
