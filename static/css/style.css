@@ -319,7 +319,21 @@ input[type=number] {
   bottom: 0;
 }
 
-.feedbackBubble {
+.topBarArea {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  top: 0;
+  margin: 0.5em;
+  align-items: center;
+}
+
+.topBarIcon {
+  font-size: xxx-large;
+  color: var(--secondaryContentColor);
+}
+
+.bubble {
   background-color: var(--baseLayerColor);
   color: var(--baseTextColor);
   font-size: larger;
@@ -332,6 +346,9 @@ input[type=number] {
   transition: transform 150ms;
   z-index: -1;
   transform-origin: left;
+}
+.taskBubble{
+  margin: 0;
 }
 
 .robotSprite {

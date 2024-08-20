@@ -15,9 +15,17 @@
   <div class="controllerContainer" id="controllerContainer">
     <div class="canvasContainer" id="canvasContainer">
       <canvas class="renderCanvas" id="renderCanvas"></canvas>
-      <div class="feedbackArea">
+      <div class="topBarArea">
+        <i class="topBarIcon fa-solid fa-person-through-window">
+        </i>
+        <div class="bubble taskBubble" id="taskBubble">
+          There are no text available
+        </div>
+
+      </div>
+      <div class=" feedbackArea">
         <div class="robotSprite hidden" id="robotSprite"></div>
-        <div class="feedbackBubble hidden" id="feedbackBubble"></div>
+        <div class="bubble  hidden" id="feedbackBubble"></div>
       </div>
     </div>
     <div class="mainPanel" id="panelArea">
