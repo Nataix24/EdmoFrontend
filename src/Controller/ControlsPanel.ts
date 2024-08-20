@@ -114,6 +114,7 @@ export class ControlPanel extends Panel {
         div.className = "card noflex bigText";
         div.style.marginTop = "1em";
         div.innerText = "Reset sliders";
+        div.style.padding = "1em";
         LocalizationManager.setLocalisationKey(div, "resetSliders");
 
         div.addEventListener("click", _ => this.resetValues());
