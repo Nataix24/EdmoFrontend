@@ -33,7 +33,7 @@ async function refreshGroupData() {
 async function createLanguageButtons() {
     const supportedLanguage = [
         {
-            name: "Netherlands",
+            name: "Nederlands",
             code: "nl"
         },
         {
@@ -65,7 +65,7 @@ async function createLanguageButtons() {
 
         groupCard.addEventListener("click", onLanguageSelected);
 
-        const languageTag = document.createElement('h1');
+        const languageTag = document.createElement('h2');
         languageTag.innerHTML = language.name;
         languageTag.id = language.code;
 
@@ -113,7 +113,7 @@ async function updateGroupsDisplay() {
 
         groupCard.addEventListener("click", onEDMOSelected);
 
-        const robotNameTag = document.createElement('h1');
+        const robotNameTag = document.createElement('h2');
         robotNameTag.innerHTML = robotID;
         robotNameTag.id = robotID;
 
