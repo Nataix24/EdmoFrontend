@@ -19,6 +19,7 @@ const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;
+const taskBubble = document.getElementById('taskBubble') as HTMLDivElement;
 const robotSprite = document.getElementById('robotSprite') as HTMLDivElement;
 const robotSpriteHandler = playerName.toLowerCase() == "bloom" ? new BloomSprite(robotSprite) : new RobotSprite2(robotSprite);
 const feedbackHandler = new FeedbackBubble(feedbackBubble);
@@ -42,7 +43,7 @@ const controlPanel = new ControlPanel(null, {
     helpButtonClicked: toggleVote
 });
 
-const taskPanel = new TaskPanel();
+const taskPanel = new TaskPanel(taskBubble);
 const playersPanel = new PlayersPanel();
 
 interface PlayerInfo {

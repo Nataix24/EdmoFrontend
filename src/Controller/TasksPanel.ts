@@ -8,9 +8,11 @@ interface TaskInfo {
 }
 
 export class TaskPanel extends Panel {
-    public constructor() {
+    private readonly taskBubble: HTMLElement;
+    public constructor(taskBubble: HTMLElement) {
         super(null);
 
+        this.taskBubble = taskBubble;
         this.element.className = "mainContent";
 
         this.refreshTasks();
@@ -19,10 +21,24 @@ export class TaskPanel extends Panel {
     public refreshTasks(taskList: TaskInfo[] = []) {
         if (taskList.length == 0) {
             const message = document.createElement("h2");
-            message.innerText = "There are no tasks in this session.";
+
+            this.taskBubble.innerText = message.innerText = "There are no tasks in this session.";
             LocalizationManager.setLocalisationKey(message, "noTasks");
+            LocalizationManager.setLocalisationKey(this.taskBubble, "noTasks");
+
             this.element.replaceChildren(message);
+
             return;
+        }
+
+        const firstUncompleted = taskList.find(t => !t.completed);
+        if (firstUncompleted) {
+            const currentLanguage = LocalizationManager.CurrentLanguage;
+            this.taskBubble.innerText = firstUncompleted.strings[currentLanguage];
+        }
+        else {
+            this.taskBubble.innerText = "You've completed all tasks";
+            LocalizationManager.setLocalisationKey(this.taskBubble, "tasksCompleted");
         }
 
 
