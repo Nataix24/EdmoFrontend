@@ -36,15 +36,15 @@
         "nl": "Hulpverzoek ongedaan maken"
     },
     "frequency": {
-        "en": "Frequency",
-        "nl": "Frequentie"
+        "en": "Speed",
+        "nl": "Snelheid"
     },
     "amplitude": {
-        "en": "Amplitude",
-        "nl": "Amplitude"
+        "en": "Range",
+        "nl": "Omvang"
     },
     "offset": {
-        "en": "Offset",
+        "en": "Baseline position",
         "nl": "Startpunt"
     },
     "relation": {

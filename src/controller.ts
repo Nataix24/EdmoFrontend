@@ -12,7 +12,7 @@ import { PlayersPanel } from "./Controller/PlayersPanel";
 import { BloomSprite } from "./scripts/BloomSprite";
 import { LocalizationManager } from "./scripts/Localization";
 
-await LocalizationManager.loadLocalisationBanks("/strings/controllerStrings.json")
+await LocalizationManager.loadLocalisationBanks("/strings/controllerStrings.json");
 
 const robotID = localStorage.getItem("ConnectTarget") ?? "";
 const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
@@ -29,8 +29,15 @@ const controllerContainer = document.getElementById("controllerContainer") as HT
 
 var helpEnabled: boolean = false;
 
+const playerNumberContainer = document.createElement("span");
+playerNumberContainer.innerText = "\xA0\xA0";
+
+const playerNumber = document.createElement("span");
+playerNumberContainer.appendChild(playerNumber);
+playerNumber.innerText = "-1";
+
 const panelButtons = new PanelButtons([
-    { faIcon: "fa-gamepad", selectionCallback: () => createSliderPanel() },
+    { faIcon: "fa-gamepad", selectionCallback: () => createSliderPanel(), overlayElement: playerNumberContainer },
     { faIcon: "fa-list", selectionCallback: () => createTasksPanel() },
     { faIcon: "fa-user-group", selectionCallback: () => createPlayerPanel() },
 ]);
@@ -97,6 +104,7 @@ async function handleRTCMessage(message: string) {
             id = parseInt(data);
             document.documentElement.style.setProperty('--hue', `${hues[id]}`);
             playersPanel.setID(id);
+            playerNumber.innerText = id.toString();
             break;
 
         case "amp": {

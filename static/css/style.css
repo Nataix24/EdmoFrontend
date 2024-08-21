@@ -39,6 +39,7 @@ div.mainPanel {
   overflow: auto;
   transition: var(--colorTrasition);
   overflow: hidden;
+  ;
 }
 
 div.mainPanel:has(.buttonHidden) {

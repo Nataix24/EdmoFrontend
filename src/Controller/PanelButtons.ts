@@ -2,6 +2,7 @@
 export interface PanelButtonEntry {
     faIcon: string;
     selectionCallback: () => void;
+    overlayElement?: HTMLElement;
 }
 
 export class PanelButtons {
@@ -19,7 +20,7 @@ export class PanelButtons {
         const element = this.element = document.createElement("div");
         element.className = "panelButtons";
 
-        this.buttons = entries.map((entry, index) => PanelButtons.createButton(entry.faIcon, () => { this.CurrentSelection = index; }));
+        this.buttons = entries.map((entry, index) => PanelButtons.createButton(entry.faIcon, () => { this.CurrentSelection = index; }, entry.overlayElement));
 
         this.CurrentSelection = 0;
 
@@ -40,12 +41,15 @@ export class PanelButtons {
         catch (e) { }
     }
 
-    private static createButton(iconName: string, onClickCallback: () => void) {
+    private static createButton(iconName: string, onClickCallback: () => void, overlayElement?: HTMLElement) {
         const div = document.createElement("div");
         div.className = "panelButton";
 
         const icon = document.createElement("i");
         icon.className = `panelButtonIcon fa-solid ${iconName}`;
+
+        if (overlayElement)
+            icon.appendChild(overlayElement);
 
         div.appendChild(icon);
         div.addEventListener("click", _ => onClickCallback());
