@@ -65,6 +65,23 @@ export class ControlPanel extends Panel {
         LocalizationManager.setLocalisationKey(this.helpButton, "unrequestHelp");
     }
 
+    public highlight(sliderTitle: string) {
+        switch (sliderTitle) {
+            case "frequency":
+                this.freqSlider.highlight();
+                break;
+            case "amplitude":
+                this.ampSlider.highlight();
+                break;
+            case "offset":
+                this.offsetSlider.highlight();
+                break;
+            case "relation":
+                this.phaseShiftSlider.highlight();
+                break;
+        }
+    }
+
     set frequency(x: number) {
         this.freqSlider.value = x;
     }
@@ -134,8 +151,11 @@ class Slider {
     private text: HTMLInputElement;
     public element: HTMLElement;
 
+    private highlightInterval: any;
+
     public constructor(title: string, value: number, min: number, max: number, step: number, valueChangedCallback: (x: number) => void) {
         const element = this.element = document.createElement("div");
+        element.style.animationDuration = "5000ms";
 
         const header = document.createElement("h2");
         header.innerText = title;
@@ -193,6 +213,19 @@ class Slider {
         } catch (error) {
             return min;
         }
+    }
+
+    public highlight() {
+        if (this.highlightInterval)
+            this.unhighlight();
+
+        this.element.style.animationName = "highlight";
+        this.highlightInterval = setInterval(this.unhighlight.bind(this), 5000);
+    }
+    public unhighlight() {
+        this.element.style.animationName = "";
+        clearInterval(this.highlightInterval);
+        this.highlightInterval = null;
     }
 
     set value(x: number) {

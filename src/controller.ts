@@ -162,6 +162,13 @@ async function handleRTCMessage(message: string) {
 
         case "Feedback":
             feedbackHandler.show(data);
+
+            const keys = LocalizationManager.getKeysFor(data);
+
+            for (const key of new Set(keys)) {
+                controlPanel.highlight(key);
+            }
+
             robotSpriteHandler.speak();
             break;
 

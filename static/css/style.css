@@ -314,7 +314,7 @@ input[type=number] {
 }
 
 .feedbackArea {
-  position: relative;
+  position: absolute;
   width: 100%;
   display: flex;
   bottom: 0;
@@ -324,7 +324,7 @@ input[type=number] {
   position: relative;
   display: flex;
   top: 0;
-  margin: 0.5em;
+  margin: 1em;
   align-items: center;
   gap: 0.5em;
 }
@@ -383,6 +383,29 @@ input[type=number] {
   transition-timing-function: cubic-bezier(0, 0, 0.75, 1.3);
 }
 
+
+@keyframes highlight {
+  0% {
+    border-width: 0.2em;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 0.5em;
+  }
+
+  50% {
+    border-width: 0.2em;
+    border-style: solid;
+    border-color: white;
+    border-radius: 0.5em;
+  }
+
+  100% {
+    border-width: 0.2em;
+    border-style: solid;
+    border-color: transparent;
+    border-radius: 0.5em;
+  }
+}
 
 .hidden {
   transform: translateY(200%) scale(0);

@@ -44,6 +44,28 @@ export class LocalizationManager {
         return "";
     }
 
+    public static getKeysFor(sentence: string) {
+        const words = sentence.split(" ");
+        return words.map(this.getKeyFor.bind(this));
+    }
+
+    // Is not very quick, don't use it too enthusiastically
+    private static getKeyFor(word: string) {
+        for (const bank of this.localisationBanks) {
+            for (const key in bank) {
+                if (!word.localeCompare(key, undefined, { sensitivity: "accent" }))
+                    return key;
+
+                const languages = bank[key];
+                for (const language in languages) {
+                    if (!word.localeCompare(languages[language], undefined, { sensitivity: "accent" }))
+                        return key;
+                }
+            }
+        }
+        return "";
+    }
+
     public static addLocalisationBanks(...localisationBanks: NonNullable<any>[]) {
         for (const bank of localisationBanks)
             this.localisationBanks.push(bank);
