@@ -70,5 +70,9 @@
     "noTasks": {
         "en": "There are no tasks in this session.",
         "nl": "Er zijn geen taken in deze sessie."
+    },
+    "tasksCompleted":{
+        "en": "You've completed all tasks",
+        "nl": "Je hebt alle taken voltooid"
     }
 }
