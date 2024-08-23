@@ -102,6 +102,7 @@ export class ControlPanel extends Panel {
         const div = document.createElement("div");
         div.className = "card noflex buttonHidden bigText";
         div.innerText = "Request help";
+        div.style.padding = "1em";
         LocalizationManager.setLocalisationKey(div, "requestHelp");
 
         div.addEventListener("click", _ => this.toggleHelp());
