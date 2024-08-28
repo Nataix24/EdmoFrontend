@@ -57,6 +57,7 @@ export class RelationWheel {
     public setID(id: number) {
         this.id = id;
         this.dots[id].style.zIndex = "999";
+        (this.dots[id].firstChild as HTMLElement).style.width = "1.5em";
     }
 
     private createCircle(): HTMLDivElement {
