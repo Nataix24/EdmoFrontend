@@ -1,5 +1,6 @@
 import { LocalizationManager } from "../scripts/Localization";
 import { Panel } from "./Panel";
+import { RelationWheel } from "./RotationWheel";
 
 
 export interface ControlPanelCallbacks {
@@ -19,7 +20,7 @@ export class ControlPanel extends Panel {
     private freqSlider: Slider = null!;
     private ampSlider: Slider = null!;
     private offsetSlider: Slider = null!;
-    private phaseShiftSlider: Slider = null!;
+    private phaseShiftSlider: RelationWheel = null!;
 
     public constructor(parent: HTMLElement | null, callbacks: ControlPanelCallbacks) {
         super(parent);
@@ -31,6 +32,11 @@ export class ControlPanel extends Panel {
             this.helpButton = this.createHelpButton(),
             this.createSliders()
         );
+    }
+    private id = -1;
+    public setID(id: number) {
+        this.id = id;
+        this.phaseShiftSlider.setID(id);
     }
 
     public showHelpButton() {
@@ -93,9 +99,8 @@ export class ControlPanel extends Panel {
     set offset(x: number) {
         this.offsetSlider.value = x;
     }
-
-    set phaseShift(x: number) {
-        this.phaseShiftSlider.value = x;
+    public setPhaseShift(index: number, x: number) {
+        this.phaseShiftSlider.setValueOf(index, x);
     }
 
     private createHelpButton() {
@@ -117,7 +122,7 @@ export class ControlPanel extends Panel {
             (this.freqSlider = new Slider("Frequency", 0, 0, 2, 0.05, this.callbacks.frequencyChangedCallback)).element,
             (this.ampSlider = new Slider("Amplitude", 0, 0, 90, 1, this.callbacks.amplitudeChangedCallback)).element,
             (this.offsetSlider = new Slider("Offset", 90, 0, 180, 1, this.callbacks.offsetChangedCallback)).element,
-            (this.phaseShiftSlider = new Slider("Relation", 0, 0, 360, 1, this.callbacks.phaseShiftChangedCallback)).element,
+            (this.phaseShiftSlider = new RelationWheel(this.callbacks.phaseShiftChangedCallback)).element,
             this.createResetButton()
         );
 
@@ -143,7 +148,8 @@ export class ControlPanel extends Panel {
         this.callbacks.frequencyChangedCallback(this.frequency = 0);
         this.callbacks.amplitudeChangedCallback(this.amplitude = 0);
         this.callbacks.offsetChangedCallback(this.offset = 90);
-        this.callbacks.phaseShiftChangedCallback(this.phaseShift = 0);
+        this.setPhaseShift(this.id, 0)
+        this.callbacks.phaseShiftChangedCallback(0);
     }
 }
 

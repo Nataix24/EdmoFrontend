@@ -7,11 +7,10 @@ interface PlayerInfo {
     number: number;
     voted: boolean;
 }
-const hues = [
-    0, 120, 240, 60
-];
-
 export class PlayersPanel extends Panel {
+    public static readonly hues = [
+        0, 120, 240, 60
+    ];
 
     private playerID: number = 0;
 
@@ -45,7 +44,7 @@ export class PlayersPanel extends Panel {
         const playerCard = document.createElement("div");
         playerCard.classList.add("card", "noflex", "playerCard");
 
-        playerCard.style.setProperty("--hue", hues[player.number].toString());
+        playerCard.style.setProperty("--hue", PlayersPanel.hues[player.number].toString());
 
         const text = document.createElement("h2");
         text.className = "cardText";

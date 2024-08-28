@@ -66,10 +66,6 @@ const canvas = document.getElementById('renderCanvas') as HTMLCanvasElement;
 const scene = new ControllerScene(canvas);
 let loadTask = scene.loadAsync();
 
-const hues = [
-    0, 120, 240, 60
-];
-
 var id = -1;
 
 
@@ -102,8 +98,9 @@ async function handleRTCMessage(message: string) {
     switch (instruction) {
         case "ID":
             id = parseInt(data);
-            document.documentElement.style.setProperty('--hue', `${hues[id]}`);
+            document.documentElement.style.setProperty('--hue', `${PlayersPanel.hues[id]}`);
             playersPanel.setID(id);
+            controlPanel.setID(id);
             playerNumber.innerText = id.toString();
             break;
 
@@ -122,9 +119,12 @@ async function handleRTCMessage(message: string) {
         }
 
         case "phb": {
-            const value = parseFloat(data) / DEG2RADFACTOR;
-            controlPanel.phaseShift = value;
-            onPhaseShiftChanged(value, false);
+            const split = data.split(" ");
+            const index = parseFloat(split[0]);
+            const value = parseFloat(split[1]) / DEG2RADFACTOR;
+            controlPanel.setPhaseShift(index, value);
+            if (index == id)
+                onPhaseShiftChanged(value, false);
             break;
         }
 
