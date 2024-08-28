@@ -1,7 +1,7 @@
 import { Engine } from "@babylonjs/core";
 import { ControllerScene } from "./V2/ControllerScene";
 import { EDMOClient } from "./EDMOClient";
-import { relativeURLWithPort } from "./scripts/API";
+import { getQueryParam, relativeURLWithPort } from "./scripts/API";
 import { EdmoProperty } from "./V2/EdmoProperty";
 import { RobotSprite2 } from "./scripts/RobotSprite2";
 import { FeedbackBubble } from "./scripts/FeedbackBubble";
@@ -13,9 +13,19 @@ import { BloomSprite } from "./scripts/BloomSprite";
 import { LocalizationManager } from "./scripts/Localization";
 
 await LocalizationManager.loadLocalisationBanks("/strings/controllerStrings.json");
+const robotQuery = getQueryParam("robotID");
+const overrideIndexParam = getQueryParam("overrideIndex");
+const overrideIndex = overrideIndexParam ? parseInt(overrideIndexParam) : null;
 
-const robotID = localStorage.getItem("ConnectTarget") ?? "";
+const robotID = robotQuery ?? (localStorage.getItem("ConnectTarget") ?? "");
 const playerName = localStorage.getItem("ConnectName") ?? "UnnamedPlayer";
+
+const quitButton = document.getElementById("quitButton") as HTMLAnchorElement;
+
+if (overrideIndex != null && quitButton) {
+    quitButton.href = `http://localhost:9000/IndividualGroup.html?robotID=${robotID}`
+}
+
 
 const panelArea = document.getElementById('panelArea') as HTMLCanvasElement;
 const feedbackBubble = document.getElementById('feedbackBubble') as HTMLDivElement;
@@ -69,7 +79,7 @@ let loadTask = scene.loadAsync();
 var id = -1;
 
 
-const edmoClient = new EDMOClient(playerName, relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"), [handleRTCMessage]);
+const edmoClient = new EDMOClient(playerName, relativeURLWithPort(`controller/${robotID}`, "8080", "ws:"), [handleRTCMessage], overrideIndex);
 
 
 function createTasksPanel() {

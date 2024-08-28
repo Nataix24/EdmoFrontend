@@ -35,11 +35,14 @@ export class EDMOClient {
 
     private readonly name: string;
 
-    public constructor(name: string, serverURL: string = "ws://localhost:8080", onMessageHandler: DataChannelMessageCallback[] = []) {
+    private overrideIndex: number | null = null;
+
+    public constructor(name: string, serverURL: string = "ws://localhost:8080", onMessageHandler: DataChannelMessageCallback[] = [], overrideIndex: number | null = null) {
         if (!this.checkWebSocketURL(serverURL))
             throw new Error("Invalid WebSocket URL");
 
         this.name = name;
+        this.overrideIndex = overrideIndex;
         this.pc = new RTCPeerConnection(/*EDMOClient.ICE_SERVERS*/);
         this.ws = new WebSocket(serverURL);
 
@@ -54,7 +57,7 @@ export class EDMOClient {
             this.OnDataChannelMessage(h);
         }, this);
 
-        window.addEventListener("beforeunload", () => this.close())
+        window.addEventListener("beforeunload", () => this.close());
     }
 
     private checkWebSocketURL(url: string): boolean {
@@ -94,11 +97,21 @@ export class EDMOClient {
         const offer = await pc.createOffer();
 
         await pc.setLocalDescription(offer);
+        let info: any = {};
 
-        const info = {
-            "playerName": this.name,
-            "handshake": JSON.stringify(offer)
-        };
+        if (this.overrideIndex != null) {
+            info = {
+                "playerName": this.name,
+                "handshake": JSON.stringify(offer),
+                "overrideID": this.overrideIndex
+            };
+        }
+        else {
+            info = {
+                "playerName": this.name,
+                "handshake": JSON.stringify(offer)
+            };
+        }
 
         ws.send(JSON.stringify(info));
     };
