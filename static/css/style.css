@@ -419,21 +419,17 @@ input[type=number] {
 .diWheel {
   border-radius: 50%;
   height: 10em;
-  /* width: 10em; */
   aspect-ratio: 1;
   position: relative;
   border: 5px solid black;
-  /* Outer border */
-/*   padding: 10px; */
-  /* Space for inner border */
   touch-action: none;
 }
 
 .diDotWrapper {
-  position: absolute;;
+  position: absolute;
   width: 100%;
   height: 100%;
-  transition: transform 50ms;
+  transition: transform 100ms;
 }
 
 .diDot {
@@ -441,11 +437,29 @@ input[type=number] {
   width: 1em;
   border-radius: 50%;
   border-style: solid;
-  transition: var(--colorTrasition), top 16ms, left 16ms;
+  transition: var(--colorTrasition);
   transform: translateX(-50%) translateY(-50%);
-  background: #9C5586;
   top: 0;
   position: absolute;
   left: 50%;
   transform-origin: center;
+}
+
+
+.relationText {
+  display: flex;
+  text-align: center;
+  font-weight: bold;
+  font-family: "monospace";
+  font-size: xx-large;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  margin-top: auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  flex-wrap: nowrap;
 }

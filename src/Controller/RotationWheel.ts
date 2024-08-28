@@ -17,6 +17,8 @@ export class RelationWheel {
     private highlightInterval: any;
     private valueChangedCallback: (x: number) => void;
 
+    private currentSpan: HTMLSpanElement = null!;
+
     public constructor(valueChangedCallback: (x: number) => void) {
         this.valueChangedCallback = valueChangedCallback;
         const element = this.element = document.createElement("div");
@@ -60,6 +62,11 @@ export class RelationWheel {
     private createCircle(): HTMLDivElement {
         const circleElement = document.createElement("div");
         circleElement.className = "diWheel";
+        this.currentSpan = document.createElement("span");
+        this.currentSpan.className = "relationText";
+        this.currentSpan.textContent = "0";
+
+        circleElement.appendChild(this.currentSpan);
         let thisDial: HTMLDivElement;
         for (let i = 3; i >= 0; --i) {
             circleElement.appendChild(this.dots[i] = this.createDot(i));
@@ -132,8 +139,12 @@ export class RelationWheel {
     private dragMouseDown(e: MouseEvent) {
         if (this.id == -1)
             return;
+        if (e.button != 0)
+            return;
         e.preventDefault();
+
         this.onMouseEvent(e);
+
         document.onpointerup = this.closeDragElement;
         // call a function whenever the cursor moves:
         document.onpointermove = this.onMouseEvent.bind(this);
@@ -148,11 +159,21 @@ export class RelationWheel {
     private setPosition(index: number, angle: number, userTriggered = false) {
         if (this.dotValues[index] == undefined || isNaN(this.dotValues[index]))
             this.dotValues[index] = 0;
-        this.dotValues[index] += RelationWheel.GetDeltaAngle(this.dotValues[index], angle);
+
+        const delta = Math.round(RelationWheel.GetDeltaAngle(this.dotValues[index], angle));
+
+        if (delta == 0)
+            return;
+
+        this.dotValues[index] += delta;
         this.dots[index].style.transform = `rotate(${this.dotValues[index]}deg)`;
+        const modded = RelationWheel.Mod(angle, 360);
+
+        if (index == this.id)
+            this.currentSpan.textContent = `${modded.toFixed(0)}`;
 
         if (userTriggered)
-            this.valueChangedCallback(RelationWheel.Mod(angle, 360));
+            this.valueChangedCallback(modded);
     }
 
     public static GetDeltaAngle(a: number, b: number) {
