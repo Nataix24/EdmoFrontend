@@ -1,5 +1,5 @@
 :root {
-  --colorTrasition: background-color 300ms, color 300ms;
+  --colorTransition: background-color 300ms, color 300ms;
   --hue: 300;
   --backgroundColor: hsl(var(--hue), 50%, 75%);
 
@@ -10,8 +10,9 @@
   --secondaryBaseColor: hsl(var(--hue), 50%, 35%);
   --secondaryContentColor: hsl(var(--hue), 60%, 55%);
 
-  --mainLayerShadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.3);
+  --mainLayerShadow: 0 0 1rem 0.5rem rgba(0, 0, 0, 0.3);
   font-family: sans-serif;
+  font-size: clamp(0.5em, min(1.2dvw, 1.2dvh), 2rem);
 }
 
 body {
@@ -22,7 +23,7 @@ body {
   flex-direction: row;
   margin: 0;
   overflow: hidden;
-  transition: var(--colorTrasition)
+  transition: var(--colorTransition)
 }
 
 div.mainPanel {
@@ -32,12 +33,12 @@ div.mainPanel {
   display: flex;
   box-shadow: var(--mainLayerShadow);
   flex: 1 1 auto;
-  padding: 2em;
-  gap: 2em;
-  margin: 1em;
+  padding: 2rem;
+  gap: 2rem;
+  margin: 1rem;
   flex-direction: column;
   overflow: auto;
-  transition: var(--colorTrasition);
+  transition: var(--colorTransition);
   overflow: hidden;
   ;
 }
@@ -48,7 +49,7 @@ div.mainPanel:has(.buttonHidden) {
 
 div.mainContent {
   display: flex;
-  gap: 1em;
+  gap: 1rem;
   flex-direction: column;
   overflow: auto;
   flex: 1;
@@ -56,17 +57,17 @@ div.mainContent {
 
 .textBox {
   background-color: var(--backgroundColor);
-  height: 2em;
-  padding: 1em;
+  height: 2rem;
+  padding: 1rem;
   display: flex;
-  gap: 1em;
-  border-radius: 1em;
+  gap: 1rem;
+  border-radius: 1rem;
   justify-content: center;
   align-items: center;
   flex: 1;
   height: fit-content;
 
-  transition: var(--colorTrasition)
+  transition: var(--colorTransition)
 }
 
 .textBoxInput {
@@ -84,15 +85,15 @@ div.wrapContainer {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  gap: 1.5em;
+  gap: 1.5rem;
   overflow: auto;
 }
 
 .card {
   display: flex;
-  padding-left: 1em;
-  padding-right: 1em;
-  border-radius: 1em;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 1rem;
   background-color: var(--baseAccentColor);
   color: var(--baseTextColor);
   flex-direction: row;
@@ -100,7 +101,7 @@ div.wrapContainer {
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  transition: var(--colorTrasition), height 100ms, transform 100ms;
+  transition: var(--colorTransition), height 100ms, transform 100ms;
   text-align: center;
   border-width: thick;
   border-style: solid;
@@ -108,7 +109,7 @@ div.wrapContainer {
 }
 
 .bigText {
-  font-size: larger;
+  font-size: 1.25rem;
   font-weight: bolder;
 }
 
@@ -126,7 +127,7 @@ div.wrapContainer {
 
 
 .playerCardIcon {
-  font-size: 2em;
+  font-size: 2rem;
   justify-self: flex-end;
 }
 
@@ -136,7 +137,7 @@ div.wrapContainer {
 
 .taskCompleted {
   text-decoration: line-through;
-  text-decoration-thickness: 0.2em;
+  text-decoration-thickness: 0.2rem;
 }
 
 .selected {
@@ -144,18 +145,18 @@ div.wrapContainer {
   border-width: thick;
   border-style: solid;
 
-  transition: var(--colorTrasition), height 100ms, transform 100ms;
+  transition: var(--colorTransition), height 100ms, transform 100ms;
 }
 
 .button {
   align-self: flex-end;
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
   background-color: var(--baseTextColor);
   color: white;
-  padding: 1em;
-  font-size: x-large;
+  padding: 1rem;
+  font-size: 1.5rem;
 
-  transition: var(--colorTrasition)
+  transition: var(--colorTransition)
 }
 
 .spacer {
@@ -166,7 +167,7 @@ div.wrapContainer {
 #buttonHelp {
   display: flex;
   position: absolute;
-  top: 1em;
+  top: 1rem;
   background-color: #9C5586;
   padding: 10px;
   border-radius: 5px;
@@ -177,7 +178,7 @@ div.wrapContainer {
   flex: 0 0 auto;
   height: 100%;
   width: 50%;
-  margin-bottom: -1em;
+  margin-bottom: -1rem;
   /*Negate the margin of mainPanel*/
   position: relative;
   transition: height 200ms, width 200ms;
@@ -233,14 +234,14 @@ div.wrapContainer {
   display: flex;
   width: 100%;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-between;
   overflow: auto;
 }
 
 .slider {
   accent-color: var(--backgroundColor);
   flex: 1;
-  transition: var(--colorTrasition), accent-color 300ms;
+  transition: var(--colorTransition), accent-color 300ms;
   touch-action: none;
   flex: 8;
 }
@@ -253,18 +254,18 @@ div.wrapContainer {
 
 .panelButton {
   align-self: flex-end;
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
   background-color: transparent;
   color: white;
-  padding: 1em;
-  font-size: x-large;
+  padding: 1rem;
+  font-size: 1.5rem;
   justify-content: center;
   opacity: 0.5;
 }
 
 .panelButtonSelected {
   background-color: var(--baseTextColor);
-  transition: var(--colorTrasition)
+  transition: var(--colorTransition)
 }
 
 .buttonHidden {
@@ -274,7 +275,7 @@ div.wrapContainer {
 }
 
 .panelButtonIcon {
-  font-size: xxx-large;
+  font-size: 3rem;
 }
 
 .selectedButton {
@@ -284,30 +285,30 @@ div.wrapContainer {
 .sliderbox {
   display: flex;
   flex-direction: row;
-  gap: 1em;
+  gap: 1rem;
 }
 
 .sliderinput {
-  border-radius: 0.5em;
+  border-radius: 0.5rem;
 }
 
 .sliderinputText {
   text-align: center;
   font-weight: bold;
   font-family: "monospace";
-  font-size: x-large;
+  font-size: 1.5rem;
   width: 4ch;
 }
 
 
-/*This removes the arrows on the number input box*/
+/*This rremoves the arrows on the number input box*/
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/*This removes the arrows on the number input box*/
+/*This rremoves the arrows on the number input box*/
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
@@ -324,13 +325,13 @@ input[type=number] {
   position: relative;
   display: flex;
   top: 0;
-  margin: 1em;
+  margin: 1rem;
   align-items: center;
-  gap: 0.5em;
+  gap: 0.5rem;
 }
 
 .topBarIcon {
-  font-size: xxx-large;
+  font-size: 3rem;
   color: var(--baseLayerColor);
 }
 
@@ -341,10 +342,10 @@ input[type=number] {
   font-weight: bold;
   flex: 1 1 auto;
   margin: 2%;
-  border-radius: 0.5em;
-  padding: 0.5em;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
   opacity: 0.8;
-  transition: var(--colorTrasition), transform 150ms;
+  transition: var(--colorTransition), transform 150ms;
   z-index: -1;
   transform-origin: left;
 }
@@ -361,7 +362,7 @@ input[type=number] {
   background-size: contain;
   flex: 0 1 auto;
   width: 15%;
-  margin: 0 1em;
+  margin: 0 1rem;
   filter: grayscale(1);
   mix-blend-mode: luminosity;
   z-index: -1;
@@ -377,7 +378,7 @@ input[type=number] {
   background-size: contain;
   flex: 0 1 auto;
   width: 15%;
-  margin: 0 1em;
+  margin: 0 1rem;
   z-index: -1;
   transition: transform 200ms;
   transition-timing-function: cubic-bezier(0, 0, 0.75, 1.3);
@@ -386,24 +387,24 @@ input[type=number] {
 
 @keyframes highlight {
   0% {
-    border-width: 0.2em;
+    border-width: 0.2rem;
     border-style: solid;
     border-color: transparent;
-    border-radius: 0.5em;
+    border-radius: 0.5rem;
   }
 
   50% {
-    border-width: 0.2em;
+    border-width: 0.2rem;
     border-style: solid;
     border-color: white;
-    border-radius: 0.5em;
+    border-radius: 0.5rem;
   }
 
   100% {
-    border-width: 0.2em;
+    border-width: 0.2rem;
     border-style: solid;
     border-color: transparent;
-    border-radius: 0.5em;
+    border-radius: 0.5rem;
   }
 }
 
@@ -418,7 +419,7 @@ input[type=number] {
 
 .diWheel {
   border-radius: 50%;
-  height: 10em;
+  height: 10rem;
   aspect-ratio: 1;
   position: relative;
   border: 5px solid black;
@@ -434,10 +435,10 @@ input[type=number] {
 
 .diDot {
   aspect-ratio: 1;
-  width: 1em;
+  width: 1rem;
   border-radius: 50%;
   border-style: solid;
-  transition: var(--colorTrasition);
+  transition: var(--colorTransition);
   transform: translateX(-50%) translateY(-50%);
   top: 0;
   position: absolute;
@@ -451,7 +452,7 @@ input[type=number] {
   text-align: center;
   font-weight: bold;
   font-family: "monospace";
-  font-size: xx-large;
+  font-size: 2rem;
   position: absolute;
   text-align: center;
   width: 100%;
