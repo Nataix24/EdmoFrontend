@@ -115,19 +115,35 @@ export class ControlPanel extends Panel {
     }
 
     private createSliders() {
+
         const div = document.createElement("div");
         div.className = "slidersContainer";
 
-        div.replaceChildren(
-            (this.freqSlider = new Slider("Frequency", 0, 0, 2, 0.05, this.callbacks.frequencyChangedCallback)).element,
-            (this.ampSlider = new Slider("Amplitude", 0, 0, 90, 1, this.callbacks.amplitudeChangedCallback)).element,
-            (this.offsetSlider = new Slider("Offset", 90, 0, 180, 1, this.callbacks.offsetChangedCallback)).element,
-            (this.phaseShiftSlider = new RelationWheel(this.callbacks.phaseShiftChangedCallback)).element,
-            this.createResetButton()
-        );
+        fetch("configs/controllerConfigs.json").then(
+            async x => {
+                const lines = (await x.text()).split("\n").filter(s=>!s.startsWith("//")).join(("\n"));
 
-        const spacer = document.createElement("div");
-        spacer.className = "spacer";
+                const ranges = JSON.parse(lines)
+
+                
+
+                const freqConf = ranges["frequency"];
+                const offsetConf = ranges["offset"];
+                const ampConf = ranges["amplitude"];
+
+
+                div.replaceChildren(
+                    (this.freqSlider = new Slider("Frequency", 0, freqConf["min"], freqConf["max"], freqConf["step"], this.callbacks.frequencyChangedCallback)).element,
+                    (this.ampSlider = new Slider("Amplitude", 0, ampConf["min"], ampConf["max"], ampConf["step"], this.callbacks.amplitudeChangedCallback)).element,
+                    (this.offsetSlider = new Slider("Offset", 90, offsetConf["min"], offsetConf["max"], offsetConf["step"], this.callbacks.offsetChangedCallback)).element,
+                    (this.phaseShiftSlider = new RelationWheel(this.callbacks.phaseShiftChangedCallback)).element,
+                    this.createResetButton()
+                );
+
+                const spacer = document.createElement("div");
+                spacer.className = "spacer";
+            }
+        );
 
         return div;
     }
@@ -148,7 +164,7 @@ export class ControlPanel extends Panel {
         this.callbacks.frequencyChangedCallback(this.frequency = 0);
         this.callbacks.amplitudeChangedCallback(this.amplitude = 0);
         this.callbacks.offsetChangedCallback(this.offset = 90);
-        this.setPhaseShift(this.id, 0)
+        this.setPhaseShift(this.id, 0);
         this.callbacks.phaseShiftChangedCallback(0);
     }
 }

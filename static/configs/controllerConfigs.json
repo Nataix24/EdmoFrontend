@@ -1,0 +1,23 @@
+// If these values are adjusted, restart the frontend program, then refresh the controller page
+{
+    "frequency": {
+        "min": 0.0,
+        "max": 0.50,
+        "step": 0.05
+    },
+    "amplitude": {
+        "min": 0,
+        "max": 90,
+        "step": 1
+    },
+    "offset": {
+        "min": 0,
+        "max": 180,
+        "step": 1
+    },
+    "relation": {
+        "min": 0,
+        "max": 360,
+        "step": 1
+    }
+}
